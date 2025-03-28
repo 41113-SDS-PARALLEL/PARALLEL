@@ -38,7 +38,7 @@
     --fc-event-border-color: none;
 }
 
-#Calendar .fc-event:hover {
+#Calendar .fc-daygrid-event:hover {
     background-color: var(--gray);
     color: inherit;
 }

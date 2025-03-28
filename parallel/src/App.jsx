@@ -20,11 +20,12 @@ const events = [
 
 export function App() {
   const calendarRef = useRef(null);
+  const miniCalendarRef = useRef(null);
 
   return (
     <div id="App">
-      <Sidebar calendarRef={calendarRef} />
-      <Calendar calendarRef={calendarRef} events={events} />
+      <Sidebar miniCalendarRef={miniCalendarRef} calendarRef={calendarRef} />
+      <Calendar calendarRef={calendarRef} miniCalendarRef={miniCalendarRef} events={events} />
     </div>
   );
 }

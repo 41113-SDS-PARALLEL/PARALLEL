@@ -20,7 +20,7 @@ In addition to typical calendar functionality, PARALLEL has the following featur
    ```
 2. Navigate to the project directory:
    ```
-   cd PARALLEL
+   cd PARALLEL/parallel
    ```
 3. Install dependencies:
    ```
