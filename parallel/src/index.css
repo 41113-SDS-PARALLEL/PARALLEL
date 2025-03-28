@@ -11,10 +11,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  --sidebar-width: 250px;
-  --header-height: 60px;
-  --padding: 10px;
 }
 
 a {
