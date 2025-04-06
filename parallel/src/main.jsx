@@ -8,3 +8,8 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+document.title = 'PARALLEL';
+// const link = document.createElement('link');
+// link.rel = 'icon';
+// link.href = './assets/parallel_logo_mini.png';
+// document.head.appendChild(link);
