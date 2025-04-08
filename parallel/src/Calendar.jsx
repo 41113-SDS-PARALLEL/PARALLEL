@@ -7,7 +7,7 @@ import './Calendar.css'
 
 export function Calendar({ calendarRef, miniCalendarRef, events }) {
   function renderEventStyle(info) {
-    const eventColor = info.event.extendedProps.stream.color;
+    const eventColor = info.event.extendedProps.stream.getColor();
     info.el.style.setProperty('--fc-event-bg-color', eventColor);
     info.el.style.setProperty('--fc-event-border-color', eventColor);
   }
@@ -44,7 +44,7 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         }}
         firstDay={1}
-        // nowIndicator={True}
+        nowIndicator={true}
         customButtons={{
           customToday: {
             text: 'today',
