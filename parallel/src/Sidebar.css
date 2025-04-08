@@ -15,9 +15,16 @@
     height: var(--header-height);
 }
 
+@media (prefers-color-scheme: light) {
+    #Logo {
+        filter: invert(1);
+    }
+}
+
 #MiniCalendar {
   --fc-border-color: transparent;
   --fc-today-bg-color: transparent;
+  --fc-button-text-color: var(--content-color);
 }
 
 #MiniCalendar .fc-daygrid-day-frame,
@@ -41,7 +48,7 @@
 
 #MiniCalendar .fc-daygrid-day-number:hover {
     background-color: var(--theme-color);
-    color: black;
+    color: light-dark(white, black);
 }
 
 #MiniCalendar .fc-col-header-cell-cushion {

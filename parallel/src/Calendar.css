@@ -10,6 +10,7 @@
 
 #Calendar .fc-button {
     border-radius: var(--radius);
+    color: var(--content-color);
 }
 
 #Calendar .fc-icon {
@@ -26,7 +27,7 @@
 }
 
 #Calendar .fc-scrollgrid {
-    background-color: black;
+    background-color: light-dark(#f3f3f3, black);
 }
 
 #Calendar .fc-daygrid-day-number:hover {
@@ -51,8 +52,12 @@ needs to be here but it does. */
 }
 
 #Calendar .fc-daygrid-event {
-    color: white;
+    color: var(--content-color);
 }
+
+/* #Calendar .fc-h-event {
+    color: var(--content-color);
+} */
 
 #Calendar .fc table {
     border-top-left-radius: var(--radius);
