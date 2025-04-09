@@ -12,6 +12,10 @@ class Stream {
         }
         return color;
     }
+
+    getColor() {
+        return this.color;
+    }
 }
 
 export default Stream;
