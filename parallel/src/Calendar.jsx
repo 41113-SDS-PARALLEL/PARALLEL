@@ -5,9 +5,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interationPlugin from '@fullcalendar/interaction';
 import './Calendar.css'
 
-export function Calendar({ calendarRef, miniCalendarRef, events }) {
+export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams, streamManager }) {
   function renderEventStyle(info) {
-    const eventColor = info.event.extendedProps.stream.getColor();
+    const eventColor = streamManager.getStreamByName(info.event.extendedProps.stream).getColor();
     info.el.style.setProperty('--fc-event-bg-color', eventColor);
     info.el.style.setProperty('--fc-event-border-color', eventColor);
   }
@@ -23,6 +23,12 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
     }
   };
 
+  const filteredEvents = events.filter((event) =>
+    selectedStreams.has(event.extendedProps.stream)
+  );
+
+  // console.log("filteredEvents: ", filteredEvents)
+
   return (
     <div id="Calendar">
       <FullCalendar
@@ -30,7 +36,7 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
         plugins={[dayGridPlugin, timeGridPlugin, interationPlugin]}
         initialView='timeGridWeek'
         weekends={true}
-        events={events}
+        events={filteredEvents}
         eventDidMount={renderEventStyle}
         eventTimeFormat={{
             hour: 'numeric',
@@ -45,6 +51,7 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
         }}
         firstDay={1}
         nowIndicator={true}
+        selectable={true}
         customButtons={{
           customToday: {
             text: 'today',

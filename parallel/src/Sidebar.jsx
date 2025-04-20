@@ -5,7 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import parallelLogo from './assets/parallel_logo.png';
 import './Sidebar.css'
 
-export function Sidebar({ miniCalendarRef, calendarRef }) {
+export function Sidebar({ miniCalendarRef, calendarRef, streamManager }) {
   function navigateToDate(info) {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
@@ -45,6 +45,7 @@ export function Sidebar({ miniCalendarRef, calendarRef }) {
         />
       </div>
       <h3 className='sidebar-header'>Streams</h3>
+      {streamManager.streamList()}
     </div>
   );
 }
