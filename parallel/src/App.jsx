@@ -9,21 +9,15 @@ const streamManager = new StreamManager();
 streamManager.addStream(new Stream('Work', streamManager));
 streamManager.addStream(new Stream('University', streamManager));
 streamManager.addStream(new Stream('Personal', streamManager));
-streamManager.addStream(new Stream('1', streamManager));
-streamManager.addStream(new Stream('2', streamManager));
-streamManager.addStream(new Stream('3', streamManager));
-streamManager.addStream(new Stream('4', streamManager));
-streamManager.addStream(new Stream('5', streamManager));
-streamManager.addStream(new Stream('6', streamManager));
 
 export function App() {
   const calendarRef = useRef(null);
   const miniCalendarRef = useRef(null);
-  const [selectedStreams, setSelectedStreams] = useState(new Set(streamManager.getStreamNames()));
+  const [selectedStreams, setSelectedStreams] = useState(new Set(streamManager.getStreamIDs()));
 
   useEffect(() => {
     const handleStreamChange = (newSelectedStreams) => {
-      setSelectedStreams(newSelectedStreams);
+      setSelectedStreams(new Set(newSelectedStreams));
     };
     streamManager.addListener(handleStreamChange);
 
@@ -43,10 +37,10 @@ export function App() {
         calendarRef={calendarRef}
         miniCalendarRef={miniCalendarRef}
         events={[
-          { title: 'Meeting', start: new Date(2025, 3, 16, 9, 0), extendedProps: { stream: 'Work' } },
-          { title: 'Conference', start: new Date(2025, 3, 17, 11, 0), extendedProps: { stream: 'Work' } },
-          { title: 'Lecture', start: new Date(2025, 3, 17, 13, 30), extendedProps: { stream: 'University' } },
-          { title: 'Dinner', start: new Date(2025, 3, 17, 19, 0), extendedProps: { stream: 'Personal' } },
+          { title: 'Meeting', start: new Date(2025, 3, 16, 9, 0), extendedProps: { stream: 1 } },
+          { title: 'Conference', start: new Date(2025, 3, 17, 11, 0), extendedProps: { stream: 1 } },
+          { title: 'Lecture', start: new Date(2025, 3, 17, 13, 30), extendedProps: { stream: 2 } },
+          { title: 'Dinner', start: new Date(2025, 3, 17, 19, 0), extendedProps: { stream: 3 } },
         ]}
         selectedStreams={selectedStreams}
         streamManager={streamManager}

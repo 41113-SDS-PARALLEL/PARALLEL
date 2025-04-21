@@ -10,9 +10,12 @@ export function StreamList ({ streamManager }) {
 
     function toggleStreamSelection(stream) {
         if (streamManager.streamIsSelected(stream)) {
+            // console.log('Deselecting stream:', stream.getName());
             streamManager.deselectStream(stream);
         } else {
             streamManager.selectStream(stream);
+            // console.log('Selecting stream:', stream.getName());
+
         }
     };
 
@@ -58,7 +61,7 @@ export function StreamList ({ streamManager }) {
                             type="checkbox"
                             defaultChecked={true}
                             onChange={() => toggleStreamSelection(stream)}
-                            name={`stream-checkbox-${stream.getName()}`}
+                            name={`stream-checkbox-${stream.getID()}`}
                         />
                         {stream.getName()}
                         <button

@@ -7,7 +7,7 @@ import './Calendar.css'
 
 export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams, streamManager }) {
   function renderEventStyle(info) {
-    const eventColor = streamManager.getStreamByName(info.event.extendedProps.stream).getColor();
+    const eventColor = streamManager.getStreamByID(info.event.extendedProps.stream).getColor();
     info.el.style.setProperty('--fc-event-bg-color', eventColor);
     info.el.style.setProperty('--fc-event-border-color', eventColor);
   }

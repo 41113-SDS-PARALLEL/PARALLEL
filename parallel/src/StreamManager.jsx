@@ -10,10 +10,6 @@ class StreamManager {
     #selectedStreams = new Set();
     #listeners = [];
 
-    // constructor() {
-
-    // }
-
     getColors() {
         return colors;
     }
@@ -26,6 +22,19 @@ class StreamManager {
             }
         }
         return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    pickUnusedID() {
+        const usedIDs = new Set(this.#streams.map((stream) => stream.getID()));
+        let id = 1;
+        while (usedIDs.has(id)) {
+            id += 1;
+        }
+        return id;
+    }
+
+    getStreamByID(id) {
+        return this.#streams.find((stream) => stream.getID() === id) || null;
     }
 
     getStreamIndex(stream) {
@@ -41,16 +50,16 @@ class StreamManager {
     }
 
     notifyListeners() {
-        this.#listeners.forEach((listener) => listener(this.getSelectedStreamNames()));
+        this.#listeners.forEach((listener) => listener(this.getSelectedStreamIDs()));
     }
 
     selectStream(stream) {
-        this.#selectedStreams.add(stream);
+        this.#selectedStreams.add(stream.getID());
         this.notifyListeners();
     }
 
     deselectStream(stream) {
-        this.#selectedStreams.delete(stream);
+        this.#selectedStreams.delete(stream.getID());
         this.notifyListeners();
     }
 
@@ -58,8 +67,12 @@ class StreamManager {
         return new Set(Array.from(this.#selectedStreams).map((stream) => stream.getName()));
     }
 
+    getSelectedStreamIDs() {
+        return this.#selectedStreams;
+    }
+
     streamIsSelected(stream) {
-        return this.#selectedStreams.has(stream);
+        return this.#selectedStreams.has(stream.getID());
     }
     
     getStreams() {
@@ -68,6 +81,10 @@ class StreamManager {
 
     getStreamNames() {
         return this.#streams.map((stream) => stream.getName());
+    }
+
+    getStreamIDs() {
+        return this.#streams.map((stream) => stream.getID());
     }
 
     getStreamByName(name) {
@@ -84,8 +101,12 @@ class StreamManager {
     }
 
     addStream(stream) {
+        if (this.#streams.includes(stream)) {
+            return;
+        }
         this.#streams.push(stream);
-        this.#selectedStreams.add(stream);
+        this.#selectedStreams.add(stream.getID());
+        this.notifyListeners();
     }
 
     removeStream(stream) {

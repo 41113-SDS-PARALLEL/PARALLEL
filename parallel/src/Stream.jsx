@@ -2,6 +2,7 @@ import TimePeriod from './TimePeriod.jsx';
 
 class Stream {
     #name;
+    #streamID;
     #color;
     #timePeriods;
     #streamManager;
@@ -14,19 +15,16 @@ class Stream {
         }
         this.#timePeriods = timePeriods;
         this.#streamManager = streamManager;
+        this.#streamID = streamManager.pickUnusedID();
+        this.#streamManager.addStream(this);
     }
-
-    // generateRandomColor() {
-    //     const letters = '0123456789ABCDEF';
-    //     let color = '#';
-    //     for (let i = 0; i < 6; i++) {
-    //         color += letters[Math.floor(Math.random() * 16)];
-    //     }
-    //     return color;
-    // }
 
     getName() {
         return this.#name;
+    }
+
+    getID() {
+        return this.#streamID;
     }
 
     getColor() {
