@@ -3,9 +3,9 @@ import StreamOptions from './StreamOptions';
 import optionsIcon from './assets/options_icon.svg';
 import './StreamList.css';
 
-export function StreamList ({ streamManager }) {
-    const [activeStream, setActiveStream] = useState(null);
-    const [streamOptionsPosition, setStreamOptionsPosition] = useState({ top: 0, left: 0 });
+export function StreamList ({ streamManager, setActiveStream, setStreamOptionsPosition, activeStream, streamOptionsPosition }) {
+    // const [activeStream, setActiveStream] = useState(null);
+    // const [streamOptionsPosition, setStreamOptionsPosition] = useState({ top: 0, left: 0 });
     const listRef = useRef(null);
 
     function toggleStreamSelection(stream) {
@@ -19,8 +19,8 @@ export function StreamList ({ streamManager }) {
         }
     };
 
-    function handleOptionsClick(streamName, index) {
-        setActiveStream((prev) => (prev === streamName ? null : streamName));
+    function handleOptionsClick(streamID, index) {
+        setActiveStream((prev) => (prev === streamID ? null : streamID));
 
         const listItem = listRef.current?.children[index].children[1];
         if (listItem) {
@@ -39,7 +39,7 @@ export function StreamList ({ streamManager }) {
 
     useEffect(() => {
         function handleClickOutside(event) {
-            if (!event.target.closest('.stream-options') && !event.target.closest('.stream-list-options-button')) {
+            if (!event.target.closest('.stream-options') && !event.target.closest('.stream-list-options-button') && !event.target.closest('.add-stream-button')) {
                 setActiveStream(null);
             }
         }
@@ -66,7 +66,7 @@ export function StreamList ({ streamManager }) {
                         {stream.getName()}
                         <button
                             className='stream-list-options-button'
-                            onClick={() => handleOptionsClick(stream, index)}
+                            onClick={() => handleOptionsClick(stream.getID(), index)}
                         >
                             <img src={optionsIcon} alt='Options' className='stream-list-options-icon' />
                         </button>
@@ -74,7 +74,7 @@ export function StreamList ({ streamManager }) {
                 ))}
                 {activeStream && (
                     <StreamOptions 
-                        stream={activeStream} 
+                        stream={streamManager.getStreamByID(activeStream)} 
                         style={{
                             position: 'absolute',
                             top: `${streamOptionsPosition.top}px`,
