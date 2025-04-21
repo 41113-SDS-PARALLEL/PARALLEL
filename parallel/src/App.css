@@ -10,9 +10,10 @@
 }
 
 body, html {
-  font-family: 'Futura Std', Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background-color: light-dark(white, #242424);
   margin: 0;
+  /* overflow: hidden; */
 }
 
 @font-face {

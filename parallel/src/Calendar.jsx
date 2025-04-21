@@ -27,8 +27,6 @@ export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams
     selectedStreams.has(event.extendedProps.stream)
   );
 
-  // console.log("filteredEvents: ", filteredEvents)
-
   return (
     <div id="Calendar">
       <FullCalendar

@@ -5,11 +5,16 @@ import Calendar from './Calendar';
 import Sidebar from './Sidebar';
 import StreamManager from './StreamManager';
 
-const streamManager = new StreamManager([
-  new Stream('Work'),
-  new Stream('University'),
-  new Stream('Personal'),
-]);
+const streamManager = new StreamManager();
+streamManager.addStream(new Stream('Work', streamManager));
+streamManager.addStream(new Stream('University', streamManager));
+streamManager.addStream(new Stream('Personal', streamManager));
+streamManager.addStream(new Stream('1', streamManager));
+streamManager.addStream(new Stream('2', streamManager));
+streamManager.addStream(new Stream('3', streamManager));
+streamManager.addStream(new Stream('4', streamManager));
+streamManager.addStream(new Stream('5', streamManager));
+streamManager.addStream(new Stream('6', streamManager));
 
 export function App() {
   const calendarRef = useRef(null);
@@ -41,6 +46,7 @@ export function App() {
           { title: 'Meeting', start: new Date(2025, 3, 16, 9, 0), extendedProps: { stream: 'Work' } },
           { title: 'Conference', start: new Date(2025, 3, 17, 11, 0), extendedProps: { stream: 'Work' } },
           { title: 'Lecture', start: new Date(2025, 3, 17, 13, 30), extendedProps: { stream: 'University' } },
+          { title: 'Dinner', start: new Date(2025, 3, 17, 19, 0), extendedProps: { stream: 'Personal' } },
         ]}
         selectedStreams={selectedStreams}
         streamManager={streamManager}

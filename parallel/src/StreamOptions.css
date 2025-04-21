@@ -1,0 +1,36 @@
+:root {
+    --stream-options-height: 130px;
+    --stream-options-padding: 10px;
+}
+
+.stream-options {
+    z-index: 100;
+    position: absolute;
+    background-color: var(--gray);
+    width: 130px;
+    height: var(--stream-options-height);
+    border-radius: var(--radius);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: var(--stream-options-padding);
+}
+
+.grid {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+.color-button {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: none;
+    margin: 5px;
+}
+
+.color-button:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+}

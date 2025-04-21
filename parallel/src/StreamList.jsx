@@ -1,46 +1,13 @@
-// import React, { Component } from 'react';
-// import './StreamList.css';
-
-// class StreamList extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.streamManager = props.streamManager;
-//     }
-
-//     toggleStreamSelection (stream) {
-//         if (this.streamManager.streamIsSelected(stream)) {
-//             this.streamManager.deselectStream(stream);
-//         } else {
-//             this.streamManager.selectStream(stream);
-//         }
-//     };
-
-//     render() {
-//         return (
-//             <div>
-//             <ul>
-//                 {this.streamManager.getStreams().map((stream, index) => (
-//                 <li key={index}>
-//                     <input
-//                     type="checkbox"
-//                     defaultChecked={true}
-//                     onChange={() => this.toggleStreamSelection(stream)}
-//                     />
-//                     {stream.getName()}
-//                 </li>
-//                 ))}
-//             </ul>
-//             </div>
-//         );
-//     }
-// }
-
-// export default StreamList;
-
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import StreamOptions from './StreamOptions';
+import optionsIcon from './assets/options_icon.svg';
 import './StreamList.css';
 
 export function StreamList ({ streamManager }) {
+    const [activeStream, setActiveStream] = useState(null);
+    const [streamOptionsPosition, setStreamOptionsPosition] = useState({ top: 0, left: 0 });
+    const listRef = useRef(null);
+
     function toggleStreamSelection(stream) {
         if (streamManager.streamIsSelected(stream)) {
             streamManager.deselectStream(stream);
@@ -49,9 +16,40 @@ export function StreamList ({ streamManager }) {
         }
     };
 
+    function handleOptionsClick(streamName, index) {
+        setActiveStream((prev) => (prev === streamName ? null : streamName));
+
+        const listItem = listRef.current?.children[index].children[1];
+        if (listItem) {
+            const rect = listItem.getBoundingClientRect();
+            const panelHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stream-options-height')) + 2*parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stream-options-padding'));
+            const spaceBelow = window.innerHeight - (rect.top + rect.height);
+            
+            setStreamOptionsPosition({
+                top: spaceBelow >= panelHeight 
+                    ? rect.top + window.scrollY + rect.height 
+                    : rect.top + window.scrollY- panelHeight,
+                left: rect.left + window.scrollX,
+            });
+        }
+    }
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (!event.target.closest('.stream-options') && !event.target.closest('.stream-list-options-button')) {
+                setActiveStream(null);
+            }
+        }
+
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div>
-            <ul className='stream-list'>
+        <div className='stream-list-container'>
+            <ul className='stream-list' ref={listRef}>
                 {streamManager.getStreams().map((stream, index) => (
                     <li key={index} className='stream-list-item'>
                         <input
@@ -60,10 +58,27 @@ export function StreamList ({ streamManager }) {
                             type="checkbox"
                             defaultChecked={true}
                             onChange={() => toggleStreamSelection(stream)}
+                            name={`stream-checkbox-${stream.getName()}`}
                         />
                         {stream.getName()}
+                        <button
+                            className='stream-list-options-button'
+                            onClick={() => handleOptionsClick(stream, index)}
+                        >
+                            <img src={optionsIcon} alt='Options' className='stream-list-options-icon' />
+                        </button>
                     </li>
                 ))}
+                {activeStream && (
+                    <StreamOptions 
+                        stream={activeStream} 
+                        style={{
+                            position: 'absolute',
+                            top: `${streamOptionsPosition.top}px`,
+                            left: `${streamOptionsPosition.left}px`,
+                        }}
+                    />
+                )}
             </ul>
         </div>
     );

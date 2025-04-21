@@ -6,21 +6,24 @@ class Stream {
     #timePeriods;
     #streamManager;
 
-    constructor(name, color=this.generateRandomColor(), timePeriods=[], streamManager = null) {
+    constructor(name, streamManager, color=null, timePeriods=[]) {
         this.#name = name;
         this.#color = color;
+        if (this.#color === null) {
+            this.#color = streamManager.pickUnusedColor();
+        }
         this.#timePeriods = timePeriods;
         this.#streamManager = streamManager;
     }
 
-    generateRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
+    // generateRandomColor() {
+    //     const letters = '0123456789ABCDEF';
+    //     let color = '#';
+    //     for (let i = 0; i < 6; i++) {
+    //         color += letters[Math.floor(Math.random() * 16)];
+    //     }
+    //     return color;
+    // }
 
     getName() {
         return this.#name;
@@ -28,6 +31,10 @@ class Stream {
 
     getColor() {
         return this.#color;
+    }
+
+    getStreamManager() {
+        return this.#streamManager;
     }
 
     getTimePeriods() {

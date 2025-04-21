@@ -36,7 +36,7 @@ export function Sidebar({ miniCalendarRef, calendarRef, streamManager }) {
             right: 'prev,next',
             left: 'title'
           }}
-          dayHeaderContent={(args) => args.text.charAt(0)}
+          dayHeaderContent={(args) => args.text}
           firstDay={1}
           aspectRatio={1}
           fixedWeekCount={false}
