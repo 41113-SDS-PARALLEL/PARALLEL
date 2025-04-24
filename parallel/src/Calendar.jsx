@@ -3,14 +3,10 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interationPlugin from '@fullcalendar/interaction';
+import { Test } from './Test';
 import './Calendar.css'
 
 export function Calendar({ calendarRef, miniCalendarRef, events }) {
-  // function renderEventStyle(info) {
-  //   const eventColor = info.event.extendedProps.stream.color;
-  //   info.el.style.setProperty('--fc-event-bg-color', eventColor);
-  //   info.el.style.setProperty('--fc-event-border-color', eventColor);
-  // }
 
   function navigateCalendarsToToday() {
     if (miniCalendarRef.current) {
@@ -23,6 +19,12 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
     }
   };
 
+  const eventRef = React.useRef();
+
+  function selectModal(dateTime) {
+    eventRef.current.openModal(dateTime)
+  }
+
   return (
     <div id="Calendar">
       <FullCalendar
@@ -31,7 +33,8 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
         initialView='timeGridWeek'
         weekends={true}
         events={events}
-        // eventDidMount={renderEventStyle}
+        selectable={true}
+        select={selectModal}
         eventTimeFormat={{
             hour: 'numeric',
             minute: '2-digit',
@@ -44,7 +47,6 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
           right: 'dayGridMonth,timeGridWeek,timeGridDay'
         }}
         firstDay={1}
-        // nowIndicator={True}
         customButtons={{
           customToday: {
             text: 'today',
@@ -53,31 +55,14 @@ export function Calendar({ calendarRef, miniCalendarRef, events }) {
           eventButton: {
             text: 'add event...',
             click: function() {
-              onEventClick(calendarRef)
+              eventRef.current.openModal(null);
             }
           }
         }}
       />
+      <Test calendarRef={calendarRef} eventRef={eventRef}/>
     </div>
   );
-
-  function onEventClick(calendarRef) {
-    var dateStr = prompt('Enter a date in YYYY-MM-DD format');
-    var date = new Date(dateStr + 'T00:00:00'); // will be in local time
-  
-    if (!isNaN(date.valueOf())) { // valid?
-      const Calendar = calendarRef.current.getApi(); 
-      Calendar.addEvent({
-        title: 'dynamic event',
-        start: date,
-        allDay: true
-      });
-      alert('It worked!!!');
-    } else {
-      alert('Invalid date.');
-    }
-  }
-  
 }
 
 export default Calendar;

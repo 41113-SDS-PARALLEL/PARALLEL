@@ -3,6 +3,7 @@ import './App.css';
 import Stream from './Stream';
 import Calendar from './Calendar'
 import Sidebar from './Sidebar'
+import { Test } from './Test';
 
 // hardcoded streams
 const streams = {
@@ -26,6 +27,7 @@ export function App() {
     <div id="App">
       <Sidebar miniCalendarRef={miniCalendarRef} calendarRef={calendarRef} />
       <Calendar calendarRef={calendarRef} miniCalendarRef={miniCalendarRef} events={events} />
+      <Test calendarRef={calendarRef} />
     </div>
   );
 }
