@@ -7,17 +7,63 @@
 
 #Sidebar {
     width: var(--sidebar-width);
+    height: 100%;
     flex-grow: 0;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#Sidebar-Options {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.add-stream-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    height: 30px; 
+    background: transparent;
+    border: none;
+}
+
+.add-icon {
+    height: 20px; 
+    width: 20px; 
+}
+
+@media (prefers-color-scheme: dark) {
+    .add-icon {
+        filter: invert(1);
+    }
+}
+.add-stream-button:hover {
+    background-color: var(--theme-color);
+    border-radius: var(--radius);
 }
 
 #Logo {
     height: var(--header-height);
+    width: auto;
+    object-fit: contain;
+    margin-left: 0;
+    align-self: flex-start;
+}
+
+@media (prefers-color-scheme: light) {
+    #Logo {
+        filter: invert(1);
+    }
 }
 
 #MiniCalendar {
   --fc-border-color: transparent;
   --fc-today-bg-color: transparent;
+  --fc-button-text-color: var(--content-color);
 }
 
 #MiniCalendar .fc-daygrid-day-frame,
@@ -41,14 +87,16 @@
 
 #MiniCalendar .fc-daygrid-day-number:hover {
     background-color: var(--theme-color);
-    color: black;
+    color: light-dark(white, black);
 }
 
 #MiniCalendar .fc-col-header-cell-cushion {
-    border-radius: 50%;
-    border-bottom: 1px solid var(--theme-color);
+    /* border-radius: 50%; */
+    /* border-bottom: 1px solid var(--theme-color); */
     width: 2em;
     height: 2em;
+    font-weight: normal;
+    font-stretch: condensed;
 }
 
 #MiniCalendar .fc-button {

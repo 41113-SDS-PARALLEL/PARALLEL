@@ -1,13 +1,19 @@
 :root {
   --theme-color: #1771c2;
-  --gray: #4c4c4c;
+  --gray: light-dark(#bababa, #4c4c4c);
   --header-height: 60px;
   --padding: 10px;
   --radius: 20px;
+  --content-color: light-dark(black, white);
+
+  color-scheme: light dark;
 }
 
 body, html {
-  font-family: 'Futura Std', Arial, sans-serif;
+  font-family: Arial, sans-serif;
+  background-color: light-dark(white, #242424);
+  margin: 0;
+  /* overflow: hidden; */
 }
 
 @font-face {
@@ -53,14 +59,14 @@ body, html {
 }
 
 .fc-daygrid-day-number {
-  color: white;
+  color: var(--content-color);
 }
 
 .fc-col-header-cell-cushion {
-  color: white;
+  color: var(--content-color);
   font-weight: bold;
 }
 
 .fc-button {
-  --fc-button-active-bg-color: #000000;
+  --fc-button-active-bg-color: light-dark(#AAAAAA, black);
 }
