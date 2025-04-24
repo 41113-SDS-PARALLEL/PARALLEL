@@ -23,6 +23,11 @@ export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams
     }
   };
 
+  for (const event of events) {
+    console.log(event);
+  }
+  // console.log(selectedStreams);
+
   const filteredEvents = events.filter((event) =>
     selectedStreams.has(event.extendedProps.stream)
   );

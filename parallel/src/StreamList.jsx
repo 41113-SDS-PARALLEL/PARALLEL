@@ -1,21 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import StreamOptions from './StreamOptions';
+import DeleteStreamPanel from './DeleteStreamPanel';
 import optionsIcon from './assets/options_icon.svg';
 import './StreamList.css';
 
-export function StreamList ({ streamManager, setActiveStream, setStreamOptionsPosition, activeStream, streamOptionsPosition }) {
-    // const [activeStream, setActiveStream] = useState(null);
-    // const [streamOptionsPosition, setStreamOptionsPosition] = useState({ top: 0, left: 0 });
+export function calculateStreamOptionsPosition(listItem) {
+    const rect = listItem.getBoundingClientRect();
+    const panelHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stream-options-height')) + 2 * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stream-options-padding'));
+    const spaceBelow = window.innerHeight - (rect.top + rect.height);
+
+    return {
+        top: spaceBelow >= panelHeight
+            ? rect.top + window.scrollY + rect.height
+            : rect.top + window.scrollY - panelHeight,
+        left: rect.left + window.scrollX,
+    };
+}
+
+export function StreamList ({ streamManager, setActiveStream, setStreamOptionsPosition, activeStream, streamOptionsPosition, deleteStream }) {
+    const [deletingStream, setDeletingStream] = useState(null);
     const listRef = useRef(null);
 
     function toggleStreamSelection(stream) {
         if (streamManager.streamIsSelected(stream)) {
-            // console.log('Deselecting stream:', stream.getName());
             streamManager.deselectStream(stream);
         } else {
             streamManager.selectStream(stream);
-            // console.log('Selecting stream:', stream.getName());
-
         }
     };
 
@@ -24,16 +34,7 @@ export function StreamList ({ streamManager, setActiveStream, setStreamOptionsPo
 
         const listItem = listRef.current?.children[index].children[1];
         if (listItem) {
-            const rect = listItem.getBoundingClientRect();
-            const panelHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stream-options-height')) + 2*parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stream-options-padding'));
-            const spaceBelow = window.innerHeight - (rect.top + rect.height);
-            
-            setStreamOptionsPosition({
-                top: spaceBelow >= panelHeight 
-                    ? rect.top + window.scrollY + rect.height 
-                    : rect.top + window.scrollY- panelHeight,
-                left: rect.left + window.scrollX,
-            });
+            setStreamOptionsPosition(calculateStreamOptionsPosition(listItem));
         }
     }
 
@@ -80,6 +81,17 @@ export function StreamList ({ streamManager, setActiveStream, setStreamOptionsPo
                             top: `${streamOptionsPosition.top}px`,
                             left: `${streamOptionsPosition.left}px`,
                         }}
+                        deleteStream={deleteStream}
+                        closeOptions={() => setTimeout(() => {setActiveStream(null)})}
+                        deletingStream={deletingStream}
+                        setDeletingStream={setDeletingStream}
+                    />
+                )}
+                {deletingStream && (
+                    <DeleteStreamPanel
+                        stream={deletingStream}
+                        onClose={() => {setDeletingStream(null)}}
+                        deleteStream={deleteStream}
                     />
                 )}
             </ul>

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import editIcon from './assets/edit_icon.svg';
 import './StreamOptions.css';
 
-export function StreamOptions ({ stream, style }) {
+export function StreamOptions ({ stream, style, closeOptions, setDeletingStream }) {
     const [editingName, setEditingName] = useState(null);
 
-    return (stream) ? (
+    return (
         <div className='stream-options' style={style}>
             <div className='stream-options-name'>
                 {editingName ? (
@@ -40,8 +40,22 @@ export function StreamOptions ({ stream, style }) {
                     />
                 ))}
             </div>
+            <div className='stream-options-actions'>
+                <button
+                    className='edit-times-button'
+                    onClick={() => {}}
+                >
+                    Edit Times
+                </button>
+                <button
+                    className='delete-button'
+                    onClick={() => {setDeletingStream(stream); closeOptions()}}
+                >
+                    Delete Stream
+                </button>
+            </div>
         </div>
-    ) : null;
+    );
 }
 
 export default StreamOptions;

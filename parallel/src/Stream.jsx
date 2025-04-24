@@ -56,12 +56,16 @@ class Stream {
     }
 
     includesTime(time) {
-        for (const timePeriod of this.timePeriods.length) {
+        for (const timePeriod of this.#timePeriods.length) {
             if (timePeriod.includesTime(time)) {
                 return true;
             }
         }
         return false;
+    }
+
+    delete() {
+        this.#streamManager.deleteStream(this);
     }
 
     #orderTimePeriods() {

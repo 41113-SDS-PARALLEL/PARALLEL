@@ -1,4 +1,3 @@
-import Stream from "./Stream";
 import StreamList from "./StreamList";
 
 const colors = [
@@ -8,7 +7,33 @@ const colors = [
 class StreamManager {
     #streams = [];
     #selectedStreams = new Set();
+    #events = [];
     #listeners = [];
+
+    addEvent(event) {
+        this.#events.push(event);
+    }
+
+    getEvents() {
+        return this.#events;
+    }
+
+    deleteStreamAndEvents(stream) {
+        this.#events = this.#events.filter(
+            (event) => event.extendedProps.stream !== stream.getID()
+        );
+        this.removeStream(stream);
+        this.notifyListeners();
+    }
+
+    transferEvents(fromStream, toStream) {
+        this.#events.forEach((event) => {
+            if (event.extendedProps.stream === fromStream.getID()) {
+                event.extendedProps.stream = toStream.getID();
+            }
+        });
+        this.notifyListeners();
+    }
 
     getColors() {
         return colors;
@@ -114,6 +139,10 @@ class StreamManager {
         if (index > -1) {
             this.#streams.splice(index, 1);
         }
+        if (this.#selectedStreams.has(stream.getID())) {
+            this.#selectedStreams.delete(stream.getID());
+        }
+        this.notifyListeners();
     }
 
     resolveTimePeriodClashes(stream) {
