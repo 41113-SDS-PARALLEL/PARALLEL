@@ -6,10 +6,10 @@ import Sidebar from './Sidebar';
 import StreamManager from './StreamManager';
 
 const events = [
-  { title: 'Meeting', start: new Date(2025, 3, 16, 9, 0), extendedProps: { stream: 1 } },
-  { title: 'Conference', start: new Date(2025, 3, 17, 11, 0), extendedProps: { stream: 1 } },
-  { title: 'Lecture', start: new Date(2025, 3, 17, 13, 30), extendedProps: { stream: 2 } },
-  { title: 'Dinner', start: new Date(2025, 3, 17, 19, 0), extendedProps: { stream: 3 } },
+  { title: 'Meeting', start: new Date(2025, 4, 13, 9, 0), extendedProps: { stream: 1 } },
+  { title: 'Conference', start: new Date(2025, 4, 15, 11, 0), extendedProps: { stream: 1 } },
+  { title: 'Lecture', start: new Date(2025, 4, 15, 13, 30), extendedProps: { stream: 2 } },
+  { title: 'Dinner', start: new Date(2025, 4, 16, 19, 0), extendedProps: { stream: 3 } },
 ];
 
 const streamManager = new StreamManager();
@@ -25,10 +25,10 @@ export function App() {
   const miniCalendarRef = useRef(null);
   const [selectedStreams, setSelectedStreams] = useState(new Set(streamManager.getStreamIDs()));
   const [events, setEvents] = useState([
-    { title: 'Meeting', start: new Date(2025, 3, 16, 9, 0), extendedProps: { stream: 1 } },
-    { title: 'Conference', start: new Date(2025, 3, 17, 11, 0), extendedProps: { stream: 1 } },
-    { title: 'Lecture', start: new Date(2025, 3, 17, 13, 30), extendedProps: { stream: 2 } },
-    { title: 'Dinner', start: new Date(2025, 3, 17, 19, 0), extendedProps: { stream: 3 } },
+    { title: 'Meeting', start: new Date(2025, 4, 13, 9, 0), extendedProps: { stream: 1 } },
+    { title: 'Conference', start: new Date(2025, 4, 15, 11, 0), extendedProps: { stream: 1 } },
+    { title: 'Lecture', start: new Date(2025, 4, 15, 13, 30), extendedProps: { stream: 2 } },
+    { title: 'Dinner', start: new Date(2025, 4, 16, 19, 0), extendedProps: { stream: 3 } },
 ]);
 
   useEffect(() => {
@@ -43,10 +43,8 @@ export function App() {
   }, []);
 
   const deleteStream = (stream) => {
-    // console.log('deleting stream', stream.getID());
     setSelectedStreams(new Set(streamManager.getStreamIDs()));
     streamManager.deleteStreamAndEvents(stream);
-    // console.log(events);
     setEvents(streamManager.getEvents().slice());
   }
 

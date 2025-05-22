@@ -33,15 +33,15 @@ class TimePeriod {
     }
 
     equals(other) {
-        return this.start === other.getStart() && this.end === other.getEnd();
+        return this.start.getTime() === other.getStart().getTime() && this.end.getTime() === other.getEnd().getTime();
     }
 
     greaterThan(other) {
-        return this.start > other.getStart() || (this.start === other.getStart() && this.end > other.getEnd());
+        return this.start.getTime() > other.getStart().getTime() || (this.start.getTime() === other.getStart().getTime() && this.end.getTime() > other.getEnd().getTime());
     }
 
     lessThan(other) {
-        return this.start < other.getStart() || (this.start === other.getStart() && this.end < other.getEnd());
+        return this.start.getTime() < other.getStart().getTime() || (this.start.getTime() === other.getStart().getTime() && this.end.getTime() < other.getEnd().getTime());
     }
 }
 

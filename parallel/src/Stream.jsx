@@ -111,7 +111,7 @@ class Stream {
     }
 
     removeTimePeriod(timePeriod) {
-        for (const existingTimePeriod of this.timePeriods) {
+        for (const existingTimePeriod of this.#timePeriods) {
             if (existingTimePeriod.getStart() === timePeriod.getStart() && existingTimePeriod.getEnd() === timePeriod.getEnd()) {
                 this.#timePeriods.splice(this.#timePeriods.indexOf(existingTimePeriod), 1);
                 return;
@@ -136,5 +136,3 @@ class Stream {
 }
 
 export default Stream;
-
-// need to replace the generateRandomColor method with a method that will return a color based on the current colour theme.
