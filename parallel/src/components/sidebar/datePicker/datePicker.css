@@ -1,0 +1,76 @@
+/* DatePicker (DatePicker) Styles */
+#DatePicker {
+  --fc-border-color: transparent;
+  --fc-today-bg-color: transparent;
+  --fc-button-text-color: var(--content-color);
+}
+
+/* Day grid and header cell alignment */
+#DatePicker .fc-daygrid-day-frame,
+#DatePicker .fc-daygrid-day-number,
+#DatePicker .fc-col-header-cell-cushion,
+#DatePicker .fc-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Remove day cell borders */
+#DatePicker .fc-daygrid-day {
+  border: none;
+}
+
+/* Day number styling */
+#DatePicker .fc-daygrid-day-number {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
+}
+
+/* Day number hover effect */
+#DatePicker .fc-daygrid-day-number:hover {
+    background-color: var(--theme-color);
+}
+
+/* Today cell hover effect */
+#DatePicker .fc-day-today .fc-daygrid-day-number:hover {
+    background-color: var(--theme-color);
+}
+
+/* Today cell number styling */
+#DatePicker .fc-day-today .fc-daygrid-day-number {
+    background-color: var(--faded-theme-color);
+}
+
+/* Header cell styling */
+#DatePicker .fc-col-header-cell-cushion {
+  width: 2em;
+  height: 2em;
+  font-weight: normal;
+  font-stretch: condensed;
+}
+
+/* DatePicker navigation button styling */
+#DatePicker .fc-button {
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+}
+
+/* DatePicker header toolbar spacing */
+#DatePicker .fc-header-toolbar {
+  padding-top: 20px;
+  padding-right: 5px;
+  --fc-button-bg-color: transparent;
+  --fc-button-border-color: transparent;
+  --fc-button-hover-bg-color: var(--theme-color);
+  --fc-button-hover-border-color: transparent;
+}
+
+/* DatePicker title styling */
+#DatePicker .fc-toolbar-title {
+  font-weight: var(--sidebar-header-font-weight); 
+  font-stretch: var(--sidebar-header-font-stretch);
+  font-size: var(--sidebar-header-font-size);
+}

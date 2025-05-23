@@ -1,0 +1,35 @@
+:root {
+    --list-element-height: 20px;
+}
+
+.stream-list-div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.stream-list-checkbox {
+    height: var(--list-element-height); 
+    width: var(--list-element-height);
+    margin-right: 10px;
+}
+
+.stream-list-options-button {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    background-color: transparent;
+    border: none;
+    height: calc(var(--list-element-height) * 1.5);
+    width: calc(var(--list-element-height) * 1.5);
+}
+
+.stream-list-options-button:hover {
+    background-color: var(--theme-color);
+    border-radius: var(--radius);
+}
+
+.stream-list-options-icon {
+    height: calc(var(--list-element-height) * 0.8);
+}
