@@ -168,7 +168,17 @@ export function addTimePeriodToStream(stream, timePeriod, streams) {
 }
 
 export function removeTimePeriodFromStream(stream, timePeriod) {
-    return removeTimePeriod(stream.timePeriods, timePeriod);
+    // if (!stream.timePeriods.some((tp) => timePeriodOverlaps(tp, timePeriod))) {
+    //     return streams;
+    // };
+    // const newStreamTimePeriods = removeTimePeriod(stream.timePeriods, timePeriod);
+    // return streams.map((s) => {
+    //     if (s.id === stream.id) {
+    //         return { ...s, timePeriods: newStreamTimePeriods };
+    //     }
+    //     return s;
+    // });
+    return { ...stream, timePeriods: removeTimePeriod(stream.timePeriods, timePeriod) }
 }
 
 export function getStreamByTime(streams, time) {

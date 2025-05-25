@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import logo from "../../assets/parallel_logo.png";
 import arrowIcon from "../../assets/arrow_icon.svg";
+import eraserIcon from "../../assets/eraser_icon.svg";
 import splitIcon from "../../assets/parallel_icon_black.png";
 import "./navbar.css";
 
@@ -20,6 +21,9 @@ class Navbar extends Component {
       splitView,
       editingStreamTimes,
       onDoneEditingStreamTimes,
+      onClearStreamTimes,
+      onEraseStreamTimes,
+      erasingStreamTimes,
     } = this.props;
     return (
       <div id="Navbar">
@@ -30,6 +34,27 @@ class Navbar extends Component {
           {editingStreamTimes ? (
             <React.Fragment>
               <h1 id="title">Edit Stream Times</h1>
+              <button
+                id="eraseButton"
+                className={`navButton ${
+                  erasingStreamTimes && "checked-button"
+                }`}
+                onClick={onEraseStreamTimes}
+              >
+                <img
+                  id="erase"
+                  src={eraserIcon}
+                  alt="erase"
+                  className="icon nav-arrow"
+                />
+              </button>
+              <button
+                id="clearButton"
+                className="navButton"
+                onClick={onClearStreamTimes}
+              >
+                Clear
+              </button>
               <button
                 id="doneButton"
                 className="navButton"

@@ -3,6 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import auLocale from "@fullcalendar/core/locales/en-au";
 import "./calendar.css";
 
 class Calendar extends Component {
@@ -97,6 +98,7 @@ class Calendar extends Component {
         omitZeroMinute: false,
         meridiem: "short",
       },
+      locale: auLocale,
     };
   };
 

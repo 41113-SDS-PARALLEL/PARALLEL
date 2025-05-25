@@ -6,6 +6,7 @@ const Stream = ({
   onSelectStream,
   onOptionsClick,
   editingStreamTimes,
+  erasingStreamTimes,
   selectedEditingStream,
 }) => {
   return (
@@ -17,7 +18,7 @@ const Stream = ({
           type="radio"
           onChange={() => onSelectStream(stream)}
           name={`stream-radio-${stream.id}`}
-          checked={stream.id === selectedEditingStream}
+          checked={stream.id === selectedEditingStream && !erasingStreamTimes}
         />
       ) : (
         <input
