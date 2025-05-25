@@ -13,7 +13,6 @@ export function timeStringToMinutes(str) {
 //     return t >= start && t <= end;
 // }
 
-// Compare periods for ordering (by day, then startTime, then endTime)
 export function timePeriodLessThan(tp1, tp2) {
     if (tp1.day !== tp2.day) return tp1.day < tp2.day;
     if (tp1.startTime !== tp2.startTime) return tp1.startTime < tp2.startTime;
@@ -26,7 +25,6 @@ export function timePeriodGreaterThan(tp1, tp2) {
     return tp1.endTime > tp2.endTime;
 }
 
-// Returns true if two periods overlap (on the same day)
 export function timePeriodOverlaps(tp1, tp2) {
     if (tp1.day !== tp2.day) return false;
     const start1 = timeStringToMinutes(tp1.startTime);

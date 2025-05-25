@@ -10,6 +10,7 @@ class Sidebar extends Component {
   state = {
     optionsStream: null,
     optionsPosition: { top: 0, left: 0 },
+    selectedEditingStream: null,
   };
   sidebarRef = createRef();
 
@@ -113,12 +114,17 @@ class Sidebar extends Component {
       onDeleteStream,
       colors,
       events,
+      editingStreamTimes,
+      onEditStreamTimes,
+      selectedEditingStream,
     } = this.props;
     return (
       <div id="Sidebar" ref={this.sidebarRef}>
-        <div id="datePicker">
-          <DatePicker ref={datePickerRef} navigateToDate={navigateToDate} />
-        </div>
+        {!editingStreamTimes && (
+          <div id="datePicker">
+            <DatePicker ref={datePickerRef} navigateToDate={navigateToDate} />
+          </div>
+        )}
         <div id="streams">
           <div id="streamsHeader">
             <h2>Streams</h2>
@@ -132,6 +138,8 @@ class Sidebar extends Component {
           <StreamList
             streams={streams}
             onSelectStream={onSelectStream}
+            editingStreamTimes={editingStreamTimes}
+            selectedEditingStream={selectedEditingStream}
             onOptionsClick={(streamID) =>
               this.setState({
                 optionsStream: streamID,
@@ -151,6 +159,12 @@ class Sidebar extends Component {
               onClose={() => this.setState({ optionsStream: null })}
               onDeleteStream={onDeleteStream}
               onEditStream={onEditStream}
+              onEditStreamTimes={(streamID) => {
+                this.setState({
+                  selectedEditingStream: streamID,
+                });
+                onEditStreamTimes(streamID);
+              }}
               colors={colors}
               position={this.state.optionsPosition}
               streams={streams}

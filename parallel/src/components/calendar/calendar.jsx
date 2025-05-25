@@ -79,7 +79,6 @@ class Calendar extends Component {
       weekends: true,
       headerToolbar: false,
       firstDay: 1,
-      nowIndicator: true,
       selectable: true,
       contentHeight: "100%",
       datesSet: onDatesSet,
@@ -107,9 +106,11 @@ class Calendar extends Component {
       events,
       streams,
       splitView,
+      editingStreamTimes,
       mainCalendarRef,
       headerCalendarRef,
       getSplitCalendarRef,
+      onSelectTimes,
     } = this.props;
     return (
       <div id="Calendar">
@@ -121,6 +122,7 @@ class Calendar extends Component {
                 <div className="split-calendar main-calendar calendar-header">
                   <FullCalendar
                     ref={headerCalendarRef}
+                    nowIndicator={true}
                     events={events
                       .map((event) => ({ ...event }))
                       .filter((event) => event.allDay === true)}
@@ -159,6 +161,7 @@ class Calendar extends Component {
                   <h2 className="stream-header">{stream.name}</h2>
                   <FullCalendar
                     ref={getSplitCalendarRef(stream.id)}
+                    nowIndicator={true}
                     dayHeaders={false}
                     allDaySlot={false}
                     events={[
@@ -208,10 +211,56 @@ class Calendar extends Component {
                 </div>
               ))}
           </div>
+        ) : editingStreamTimes ? (
+          <div className="main-calendar editing-times-calendar">
+            <FullCalendar
+              allDaySlot={false}
+              dayHeaderFormat={{ weekday: "long" }}
+              events={[
+                ...streams.flatMap((s) =>
+                  (s.timePeriods || []).map((tp, idx) => ({
+                    groupId: `stream-${s.id}-tp-${idx}`,
+                    daysOfWeek: [tp.day],
+                    startTime: tp.startTime,
+                    endTime: tp.endTime,
+                    extendedProps: { stream: s.id, isTimePeriod: true },
+                    display: "background",
+                    color: s.color,
+                  }))
+                ),
+              ]}
+              selectable={true}
+              select={(info) => {
+                const periods = [];
+                let current = new Date(info.start);
+                const end = new Date(info.end);
+                const pad = (n) => n.toString().padStart(2, "0");
+                while (current < end) {
+                  const day = current.getDay();
+                  let startTime = "00:00";
+                  let endTime = "24:00";
+                  if (current.toDateString() === info.start.toDateString()) {
+                    startTime = `${pad(info.start.getHours())}:${pad(
+                      info.start.getMinutes()
+                    )}`;
+                  }
+                  if (current.toDateString() === info.end.toDateString()) {
+                    endTime = `${pad(end.getHours())}:${pad(end.getMinutes())}`;
+                  }
+                  periods.push({ day, startTime, endTime });
+                  current.setDate(current.getDate() + 1);
+                  current.setHours(0, 0, 0, 0);
+                }
+                onSelectTimes(periods);
+              }}
+              {...this.commonParams(onDatesSet)}
+            />
+          </div>
         ) : (
           <div className="main-calendar">
             <FullCalendar
               ref={mainCalendarRef}
+              nowIndicator={true}
               events={events.filter((event) =>
                 streams.find(
                   (stream) =>

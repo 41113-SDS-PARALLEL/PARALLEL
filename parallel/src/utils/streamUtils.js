@@ -12,7 +12,6 @@ import {
 // }
 
 function orderedTimePeriods(timePeriods) {
-    // Returns a new sorted array
     return [...timePeriods].sort((a, b) => {
         if (timePeriodLessThan(a, b)) return -1;
         if (timePeriodGreaterThan(a, b)) return 1;
@@ -20,7 +19,6 @@ function orderedTimePeriods(timePeriods) {
     });
 }
 
-// Merge overlapping/adjacent periods (on the same day)
 export function smoothedTimePeriods(timePeriods) {
     if (timePeriods.length === 0) return [];
     const ordered = orderedTimePeriods(timePeriods);
@@ -33,7 +31,6 @@ export function smoothedTimePeriods(timePeriods) {
             current.day === next.day &&
             timeStringToMinutes(next.startTime) <= timeStringToMinutes(current.endTime)
         ) {
-            // Merge
             current.endTime = maxTime(current.endTime, next.endTime);
         } else {
             smoothed.push({ ...current });
@@ -44,7 +41,6 @@ export function smoothedTimePeriods(timePeriods) {
     return smoothed;
 }
 
-// Helper for merging
 function maxTime(t1, t2) {
     return timeStringToMinutes(t1) > timeStringToMinutes(t2) ? t1 : t2;
 }
@@ -52,12 +48,10 @@ function minTime(t1, t2) {
     return timeStringToMinutes(t1) < timeStringToMinutes(t2) ? t1 : t2;
 }
 
-// Add a new period and smooth
 function addTimePeriod(timePeriods, newTimePeriod) {
     return smoothedTimePeriods([...timePeriods, newTimePeriod]);
 }
 
-// Remove a period (splitting if needed)
 function removeTimePeriod(timePeriods, removePeriod) {
     const result = [];
     for (const period of timePeriods) {
@@ -70,12 +64,10 @@ function removeTimePeriod(timePeriods, removePeriod) {
         const rStart = timeStringToMinutes(removePeriod.startTime);
         const rEnd = timeStringToMinutes(removePeriod.endTime);
 
-        // No overlap
         if (pEnd <= rStart || pStart >= rEnd) {
             result.push({ ...period });
             continue;
         }
-        // Overlap at the start
         if (pStart < rStart) {
             result.push({
                 day: period.day,
@@ -83,7 +75,6 @@ function removeTimePeriod(timePeriods, removePeriod) {
                 endTime: minutesToTimeString(rStart)
             });
         }
-        // Overlap at the end
         if (pEnd > rEnd) {
             result.push({
                 day: period.day,
@@ -91,7 +82,6 @@ function removeTimePeriod(timePeriods, removePeriod) {
                 endTime: period.endTime
             });
         }
-        // If removePeriod fully covers period, nothing is pushed
     }
     return result;
 }
@@ -162,16 +152,23 @@ export function getSelectedStreams(streams) {
 }
 
 export function addTimePeriodToStream(stream, timePeriod, streams) {
-    stream.timePeriods = addTimePeriod(stream.timePeriods, timePeriod);
-    for (const s of streams) {
+    const newStreamTimePeriods = addTimePeriod(stream.timePeriods, timePeriod);
+    const newStreams = streams.map((s) => {
+        if (s.id === stream.id) {
+            return { ...s, timePeriods: newStreamTimePeriods };
+        }
+        return s;
+    });
+    for (const s of newStreams) {
         if (s.id !== stream.id) {
             s.timePeriods = removeTimePeriod(s.timePeriods, timePeriod);
         }
     }
+    return newStreams;
 }
 
 export function removeTimePeriodFromStream(stream, timePeriod) {
-    stream.timePeriods = removeTimePeriod(stream.timePeriods, timePeriod);
+    return removeTimePeriod(stream.timePeriods, timePeriod);
 }
 
 export function getStreamByTime(streams, time) {

@@ -14,14 +14,13 @@
     --fc-now-indicator-color: var(--theme-color);
 }
 
-/* .slot-label-content {
-    width: 60px;
-    min-width: 60px;
-    max-width: 60px;
-} */
-
 #Calendar .fc-timegrid-slot-minor {
     border-top: 1px transparent solid;
+}
+
+.editing-times-calendar {
+    --fc-today-bg-color: none;
+    --fc-bg-event-opacity: 0.8;
 }
 
 #Calendar .fc-scrollgrid {

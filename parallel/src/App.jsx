@@ -2,7 +2,11 @@ import React, { Component, createRef } from "react";
 import Navbar from "./components/navbar/navbar";
 import Sidebar from "./components/sidebar/sidebar";
 import Calendar from "./components/calendar/calendar";
-import { selectStream, editStream } from "./utils/streamUtils";
+import {
+  selectStream,
+  editStream,
+  addTimePeriodToStream,
+} from "./utils/streamUtils";
 import "./App.css";
 
 class App extends Component {
@@ -20,6 +24,8 @@ class App extends Component {
       "#339970",
     ],
     splitView: false,
+    editingStreamTimes: false,
+    selectedEditingStream: null,
     streams: [
       {
         id: 1,
@@ -146,10 +152,19 @@ class App extends Component {
             this.setState({ splitView: !this.state.splitView });
           }}
           splitView={this.state.splitView}
+          editingStreamTimes={this.state.editingStreamTimes}
+          onDoneEditingStreamTimes={() => {
+            this.setState({
+              editingStreamTimes: false,
+              selectedEditingStream: null,
+            });
+          }}
         />
         <div className="content">
           <Sidebar
             datePickerRef={this.datePickerRef}
+            editingStreamTimes={this.state.editingStreamTimes}
+            selectedEditingStream={this.state.selectedEditingStream}
             navigateToDate={(date) => {
               this.allCurrentCalendarRefs().forEach((ref) => {
                 ref.getApi().gotoDate(date);
@@ -158,9 +173,15 @@ class App extends Component {
             streams={this.state.streams}
             colors={this.state.colors}
             events={this.state.events}
-            onSelectStream={(s) =>
-              this.setState({ streams: selectStream(s, this.state.streams) })
-            }
+            onSelectStream={(s) => {
+              if (this.state.editingStreamTimes) {
+                this.setState({
+                  selectedEditingStream: s.id,
+                });
+              } else {
+                this.setState({ streams: selectStream(s, this.state.streams) });
+              }
+            }}
             onAddStream={(s) =>
               this.setState({ streams: [...this.state.streams, s] })
             }
@@ -194,6 +215,12 @@ class App extends Component {
                 events: this.state.events.map((event) => ({ ...event })),
               });
             }}
+            onEditStreamTimes={(streamID) => {
+              this.setState({
+                editingStreamTimes: true,
+                selectedEditingStream: streamID,
+              });
+            }}
           />
           <Calendar
             mainCalendarRef={this.mainCalendarRef}
@@ -209,6 +236,23 @@ class App extends Component {
             events={this.state.events}
             streams={this.state.streams}
             splitView={this.state.splitView}
+            editingStreamTimes={this.state.editingStreamTimes}
+            onSelectTimes={(timePeriods) => {
+              if (!this.state.editingStreamTimes) return;
+              const stream = this.state.streams.find(
+                (stream) => stream.id === this.state.selectedEditingStream
+              );
+              const updatedStreams = timePeriods.reduce(
+                (streams, tp) =>
+                  addTimePeriodToStream(
+                    streams.find((s) => s.id === stream.id),
+                    tp,
+                    streams
+                  ),
+                this.state.streams
+              );
+              this.setState({ streams: updatedStreams });
+            }}
           />
         </div>
       </div>

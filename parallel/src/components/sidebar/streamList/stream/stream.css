@@ -8,7 +8,7 @@
     width: 100%;
 }
 
-.stream-list-checkbox {
+.stream-list-input {
     height: var(--list-element-height); 
     width: var(--list-element-height);
     margin-right: 10px;
