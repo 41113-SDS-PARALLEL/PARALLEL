@@ -64,7 +64,7 @@ export function CreateEvent({calendarRef, eventRef, streamRef, onClose}) {
   }
 
   return (
-        // <div className='popup-background'>
+        <div className='popup-background'>
             <div className='event-panel'>
                 <div className='event-panel-title'>
                     Create Event
@@ -103,7 +103,7 @@ export function CreateEvent({calendarRef, eventRef, streamRef, onClose}) {
                     </button>
                 </div>
             </div>
-        // </div>
+        </div>
   );
   
   // return (
