@@ -4,7 +4,6 @@ import Stream from './Stream';
 import Calendar from './Calendar';
 import Sidebar from './Sidebar';
 import StreamManager from './StreamManager';
-import { Test } from './Test';
 
 // hardcoded events
 const events = [
@@ -66,9 +65,6 @@ export function App() {
         events={events}
         selectedStreams={selectedStreams}
         streamManager={streamManager}
-      />
-      <Test 
-        calendarRef={calendarRef}
       />
     </div>
   );

@@ -3,14 +3,16 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interationPlugin from '@fullcalendar/interaction';
-import { Test } from './Test';
+import { CreateEvent } from './CreateEvent';
 import './Calendar.css'
 
 export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams, streamManager }) {
   function renderEventStyle(info) {
-    const eventColor = streamManager.getStreamByID(info.event.extendedProps.stream).getColor();
-    info.el.style.setProperty('--fc-event-bg-color', eventColor);
-    info.el.style.setProperty('--fc-event-border-color', eventColor);
+    if (streamManager.getStreamByID(info.event.extendedProps.stream) != null) {
+      const eventColor = streamManager.getStreamByID(info.event.extendedProps.stream).getColor();
+      info.el.style.setProperty('--fc-event-bg-color', eventColor);
+      info.el.style.setProperty('--fc-event-border-color', eventColor);
+    }
   }
 
   function navigateCalendarsToToday() {
@@ -25,14 +27,16 @@ export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams
   };
 
   const eventRef = React.useRef();
+  const [activeEvent, setActiveEvent] = React.useState(null);
 
   function selectModal(dateTime) {
-    eventRef.current.openModal(dateTime)
+    setActiveEvent(events)
+    // eventRef.current.openModal(dateTime)
   }
 
-  for (const event of events) {
-    console.log(event);
-  }
+  // for (const event of events) {
+  //   console.log(event);
+  // }
   // console.log(selectedStreams);
 
   const filteredEvents = events.filter((event) =>
@@ -46,7 +50,7 @@ export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams
         plugins={[dayGridPlugin, timeGridPlugin, interationPlugin]}
         initialView='timeGridWeek'
         weekends={true}
-        events={events}
+        events={filteredEvents}
         eventDidMount={renderEventStyle}
         selectable={true}
         select={selectModal}
@@ -71,12 +75,16 @@ export function Calendar({ calendarRef, miniCalendarRef, events, selectedStreams
           eventButton: {
             text: 'add event...',
             click: function() {
-              eventRef.current.openModal(null);
+              setActiveEvent(events)
+              // eventRef.current.openModal(null);
             }
           }
         }}
       />
-      <Test calendarRef={calendarRef} eventRef={eventRef}/>
+      {activeEvent && (
+                          <CreateEvent calendarRef={calendarRef} eventRef={eventRef} streamRef={streamManager} onClose={() => {setActiveEvent(null)}}/>
+                      )}
+      
     </div>
   );
 }
