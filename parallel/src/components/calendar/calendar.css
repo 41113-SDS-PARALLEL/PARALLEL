@@ -1,0 +1,131 @@
+#Calendar {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    
+    --fc-border-color: var(--gray);
+    --fc-today-bg-color: var(--faded-theme-color);
+    --fc-page-bg-color: transparent;
+    --fc-now-indicator-color: var(--theme-color);
+}
+
+#Calendar .fc-timegrid-slot-minor {
+    border-top: 1px transparent solid;
+}
+
+.editing-times-calendar {
+    --fc-today-bg-color: none;
+    --fc-bg-event-opacity: 0.8;
+}
+
+#Calendar .fc-scrollgrid {
+    background-color: light-dark(#f3f3f3, black);
+}
+
+#Calendar .fc-daygrid-day-number:hover {
+    color: inherit;
+}
+
+#Calendar .fc-timegrid-event {
+    font-weight: normal;
+    --fc-event-border-color: none;
+}
+
+#Calendar .fc-daygrid-event:hover {
+    background-color: var(--gray);
+    color: inherit;
+}
+
+#Calendar .fc-daygrid-event {
+    color: var(--content-color);
+}
+
+.main-calendar table {
+    border-top-left-radius: var(--radius);
+}
+
+.main-calendar {
+    border-top-left-radius: var(--radius);
+}
+
+.main-calendar {
+    overflow: hidden;
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+    /* border-top-left-radius: var(--radius); */
+}
+
+#Calendar .fc-timegrid-now-indicator-line {
+    border-width: 2px;
+    border-radius: var(--radius);
+}
+
+.split-calendar-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.split-calendar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    border-bottom: 3px solid var(--gray);
+}
+
+.split-calendar table {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.stream-header {
+    writing-mode: sideways-lr;
+    text-align: center;
+    min-width: 40px;
+    max-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0px;
+}
+
+.split-calendar > .fc {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+}
+
+.calendar-header-container {
+    height: 70px;
+    overflow: hidden;
+    /* padding-left: 60px; */
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-bottom: 3px solid var(--gray);
+    border-top: none !important;
+}
+
+.calendar-header {
+    border-bottom: none !important;
+}
+
+.header-placeholder {
+    min-width: 40px;
+    max-width: 40px;
+    /* Match .stream-header width */
+}
+
+/* .time-column {
+    width: 60px;
+} */
