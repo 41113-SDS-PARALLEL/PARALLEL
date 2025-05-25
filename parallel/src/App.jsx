@@ -1,112 +1,219 @@
-import React, { Component, createRef } from 'react';
-import Navbar from './components/navbar/navbar';
-import Sidebar from './components/sidebar/sidebar';
-import Calendar from './components/calendar/calendar';
-import { selectStream, editStream } from './utils/streamUtils';
-import './App.css';
+import React, { Component, createRef } from "react";
+import Navbar from "./components/navbar/navbar";
+import Sidebar from "./components/sidebar/sidebar";
+import Calendar from "./components/calendar/calendar";
+import { selectStream, editStream } from "./utils/streamUtils";
+import "./App.css";
 
 class App extends Component {
-  state = { 
-    calendarTitle: '',
+  state = {
+    calendarTitle: "",
     colors: [
-      '#B4415A', '#DB7C41', '#E9E985', '#A97AEC', '#418DB4', '#F69FE4', '#8CCF58', '#336699', '#339970'
+      "#B4415A",
+      "#DB7C41",
+      "#E9E985",
+      "#A97AEC",
+      "#418DB4",
+      "#F69FE4",
+      "#8CCF58",
+      "#336699",
+      "#339970",
     ],
+    splitView: false,
     streams: [
-      { id: 1, name: 'Work', color: '#B4415A', selected: true },
-      { id: 2, name: 'University', color: '#DB7C41', selected: true },
-      { id: 3, name: 'Personal', color: '#E9E985', selected: true }
-    ], 
+      {
+        id: 1,
+        name: "Work",
+        color: "#B4415A",
+        selected: true,
+        timePeriods: [
+          { day: 1, startTime: "09:00", endTime: "17:00" },
+          { day: 3, startTime: "13:00", endTime: "17:00" },
+        ],
+      },
+      {
+        id: 2,
+        name: "University",
+        color: "#DB7C41",
+        selected: true,
+        timePeriods: [
+          { day: 2, startTime: "10:00", endTime: "12:00" },
+          { day: 4, startTime: "14:00", endTime: "16:00" },
+        ],
+      },
+      {
+        id: 3,
+        name: "Personal",
+        color: "#E9E985",
+        selected: true,
+        timePeriods: [
+          { day: 0, startTime: "08:00", endTime: "10:00" },
+          { day: 5, startTime: "18:00", endTime: "20:00" },
+        ],
+      },
+    ],
     events: [
-      { title: 'Meeting', start: new Date(2025, 4, 23, 9, 0), extendedProps: { stream: 1 } },
-      { title: 'Conference', start: new Date(2025, 4, 25, 11, 0), extendedProps: { stream: 1 } },
-      { title: 'Lecture', start: new Date(2025, 4, 25, 23, 30), extendedProps: { stream: 2 } },
-      { title: 'Dinner', start: new Date(2025, 4, 22, 19, 0), extendedProps: { stream: 3 } }
-    ]
+      {
+        title: "Meeting",
+        start: new Date(2025, 4, 23, 9, 0),
+        extendedProps: { stream: 1 },
+      },
+      {
+        title: "Conference",
+        start: new Date(2025, 4, 25, 11, 0),
+        extendedProps: { stream: 1 },
+      },
+      {
+        title: "Lecture",
+        start: new Date(2025, 4, 25, 21, 30),
+        extendedProps: { stream: 2 },
+      },
+      {
+        title: "Dinner",
+        start: new Date(2025, 4, 22, 19, 0),
+        extendedProps: { stream: 3 },
+      },
+      {
+        title: "Canyoning",
+        start: new Date(2025, 4, 24),
+        allDay: true,
+        extendedProps: { stream: 3 },
+      },
+    ],
   };
-  calendarRef = createRef();
+  mainCalendarRef = createRef();
+  headerCalendarRef = createRef();
+  splitCalendarRefs = {};
   datePickerRef = createRef();
 
-  handlePrev = () => {
-    this.calendarRef.current.getApi().prev();
-  };
-
-  handleNext = () => {
-    this.calendarRef.current.getApi().next();
-  };
-
-  handleToday = () => {
-    this.calendarRef.current.getApi().today();
-
+  updateCalendarTitle = () => {
+    if (this.mainCalendarRef.current) {
+      const calendarApi = this.mainCalendarRef.current.getApi();
+      this.setState({ calendarTitle: calendarApi.view.title });
+      return;
+    }
+    if (this.headerCalendarRef.current) {
+      const calendarApi = this.headerCalendarRef.current.getApi();
+      this.setState({ calendarTitle: calendarApi.view.title });
+      return;
+    }
   };
 
   handleViewChange = (view) => {
-    this.calendarRef.current.getApi().changeView(view);
+    if (!this.mainCalendarRef.current) return;
+    this.mainCalendarRef.current.getApi().changeView(view);
     this.updateCalendarTitle();
-  };
-
-  handleDatePick = (date) => {
-    this.calendarRef.current.getApi().gotoDate(date);
-  };
-
-  updateCalendarTitle = () => {
-    if (!this.calendarRef.current) return;
-    const calendarApi = this.calendarRef.current.getApi();
-    this.setState({ calendarTitle: calendarApi.view.title });
   };
 
   componentDidMount() {
     setTimeout(this.updateCalendarTitle, 0);
+  }
+
+  allCurrentCalendarRefs = () => {
+    const refs = [
+      this.mainCalendarRef,
+      this.headerCalendarRef,
+      ...Object.values(this.splitCalendarRefs),
+    ];
+    return refs
+      .map((ref) => ref.current)
+      .filter((current) => current !== null && current !== undefined);
   };
 
-  render() { 
+  render() {
     return (
       <div id="App">
-        <Navbar 
-          onPrev={this.handlePrev} 
-          onNext={this.handleNext} 
-          onToday={this.handleToday} 
+        <Navbar
+          onPrev={() => {
+            this.allCurrentCalendarRefs().forEach((ref) => {
+              ref.getApi().prev();
+            });
+          }}
+          onNext={() => {
+            this.allCurrentCalendarRefs().forEach((ref) => {
+              ref.getApi().next();
+            });
+          }}
+          onToday={() => {
+            this.allCurrentCalendarRefs().forEach((ref) => {
+              ref.getApi().today();
+            });
+            this.datePickerRef.current.getApi().today();
+          }}
           onViewChange={this.handleViewChange}
           title={this.state.calendarTitle}
+          onSplit={() => {
+            this.setState({ splitView: !this.state.splitView });
+          }}
+          splitView={this.state.splitView}
         />
         <div className="content">
-          <Sidebar 
-            ref={this.datePickerRef}
-            navigateToDate={this.handleDatePick}
+          <Sidebar
+            datePickerRef={this.datePickerRef}
+            navigateToDate={(date) => {
+              this.allCurrentCalendarRefs().forEach((ref) => {
+                ref.getApi().gotoDate(date);
+              });
+            }}
             streams={this.state.streams}
             colors={this.state.colors}
             events={this.state.events}
-            onSelectStream={s => this.setState({ streams: selectStream(s, this.state.streams) })}
-            onAddStream={s => this.setState({ streams: [...this.state.streams, s] })}
+            onSelectStream={(s) =>
+              this.setState({ streams: selectStream(s, this.state.streams) })
+            }
+            onAddStream={(s) =>
+              this.setState({ streams: [...this.state.streams, s] })
+            }
             onDeleteStream={(streamID, eventTransferStreamID) => {
-              const events = eventTransferStreamID === null ? 
-                this.state.events.filter(event => event.extendedProps.stream !== streamID) :
-                this.state.events.map(event =>
-                  event.extendedProps.stream === streamID
-                  ? { ...event, extendedProps: { ...event.extendedProps, stream: eventTransferStreamID } }
-                  : event
-                );
+              const events =
+                eventTransferStreamID === null
+                  ? this.state.events.filter(
+                      (event) => event.extendedProps.stream !== streamID
+                    )
+                  : this.state.events.map((event) =>
+                      event.extendedProps.stream === streamID
+                        ? {
+                            ...event,
+                            extendedProps: {
+                              ...event.extendedProps,
+                              stream: eventTransferStreamID,
+                            },
+                          }
+                        : event
+                    );
               this.setState({ events });
-              this.setState({ streams: this.state.streams.filter(stream => stream.id !== streamID) });
+              this.setState({
+                streams: this.state.streams.filter(
+                  (stream) => stream.id !== streamID
+                ),
+              });
             }}
             onEditStream={(id, newName, newColor) => {
-              this.setState({ 
-                streams: editStream(this.state.streams, id, newName, newColor), 
-                events: this.state.events.map(event => ({ ...event })),
+              this.setState({
+                streams: editStream(this.state.streams, id, newName, newColor),
+                events: this.state.events.map((event) => ({ ...event })),
               });
             }}
           />
-          <Calendar 
-            ref={this.calendarRef}
+          <Calendar
+            mainCalendarRef={this.mainCalendarRef}
+            headerCalendarRef={this.headerCalendarRef}
+            splitCalendarRefs={this.splitCalendarRefs}
+            getSplitCalendarRef={(streamID) => {
+              if (!this.splitCalendarRefs[streamID]) {
+                this.splitCalendarRefs[streamID] = createRef();
+              }
+              return this.splitCalendarRefs[streamID];
+            }}
             onDatesSet={this.updateCalendarTitle}
-            events={this.state.events.filter(event => 
-              this.state.streams.find(stream => stream.id === event.extendedProps.stream && stream.selected)
-            )}
+            events={this.state.events}
             streams={this.state.streams}
+            splitView={this.state.splitView}
           />
         </div>
       </div>
     );
   }
 }
- 
+
 export default App;

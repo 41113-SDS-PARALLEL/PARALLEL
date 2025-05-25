@@ -61,10 +61,14 @@
   /* outline: none; */
 }
 
-.navButton:hover, #viewSelector:hover {
+.navButton:hover, #viewSelector:not(:disabled):hover {
   background: var(--theme-color);
   /* border: 1px solid transparent; */
   /* color: #fff; */
+}
+
+#viewSelector:disabled:hover {
+  cursor: default;
 }
 
 #viewSelectorContainer {

@@ -44,6 +44,10 @@ html, body {
     cursor: pointer;
 }
 
+.button:disabled:hover {
+  cursor: not-allowed;
+}
+
 @media (prefers-color-scheme: dark) {
     .icon {
         filter: invert(1);

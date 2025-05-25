@@ -14,6 +14,12 @@
     --fc-now-indicator-color: var(--theme-color);
 }
 
+/* .slot-label-content {
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+} */
+
 #Calendar .fc-timegrid-slot-minor {
     border-top: 1px transparent solid;
 }
@@ -40,11 +46,87 @@
     color: var(--content-color);
 }
 
-#Calendar .fc table {
+.main-calendar table {
     border-top-left-radius: var(--radius);
+}
+
+.main-calendar {
+    border-top-left-radius: var(--radius);
+}
+
+.main-calendar {
+    overflow: hidden;
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+    /* border-top-left-radius: var(--radius); */
 }
 
 #Calendar .fc-timegrid-now-indicator-line {
     border-width: 2px;
     border-radius: var(--radius);
 }
+
+.split-calendar-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.split-calendar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    border-bottom: 3px solid var(--gray);
+}
+
+.split-calendar table {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.stream-header {
+    writing-mode: sideways-lr;
+    text-align: center;
+    min-width: 40px;
+    max-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0px;
+}
+
+.split-calendar > .fc {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 100%;
+}
+
+.calendar-header-container {
+    height: 70px;
+    overflow: hidden;
+    /* padding-left: 60px; */
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-bottom: 3px solid var(--gray);
+    border-top: none !important;
+}
+
+.calendar-header {
+    border-bottom: none !important;
+}
+
+.header-placeholder {
+    min-width: 40px;
+    max-width: 40px;
+    /* Match .stream-header width */
+}
+
+/* .time-column {
+    width: 60px;
+} */
