@@ -1,41 +1,21 @@
 :root {
   --theme-color: #1771c2;
+  --faded-theme-color: rgba(23, 113, 194, 0.3);
   --gray: light-dark(#bababa, #4c4c4c);
-  --header-height: 60px;
   --padding: 10px;
   --radius: 20px;
   --content-color: light-dark(black, white);
+  --sidebar-width: 250px;
 
   color-scheme: light dark;
 }
 
-body, html {
+html, body {
   font-family: Arial, sans-serif;
   background-color: light-dark(white, #242424);
   margin: 0;
-  /* overflow: hidden; */
-}
-
-@font-face {
-  font-family: 'Futura Std';
-  src: url('./assets/futura/FuturaStd-Book.otf') format('otf');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Futura Std';
-  src: url('./assets/futura/FuturaStd-Bold.otf') format('otf');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Futura Std';
-  src: url('./assets/futura/FuturaStd-CondensedBold.otf') format('otf');
-  font-weight: bold;
-  font-style: normal;
-  font-stretch: condensed;
+  color: var(--content-color);
+  overflow: hidden;
 }
 
 #App {
@@ -44,29 +24,28 @@ body, html {
   padding: var(--padding);
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
-.fc-toolbar {
-  --fc-border-color: transparent;
-  --fc-today-bg-color: transparent;
-  --fc-button-bg-color: transparent;
-  --fc-button-border-color: transparent;
-  --fc-button-hover-bg-color: var(--theme-color);
-  --fc-button-hover-border-color: transparent;
-  --fc-button-active-bg-color: transparent;
-  --fc-button-active-border-color: var(--gray);
+.content {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 10px;
+  min-width: 0;
+  height: 100%;
 }
 
-.fc-daygrid-day-number {
-  color: var(--content-color);
+.fc {
+    height: 100%;
 }
 
-.fc-col-header-cell-cushion {
-  color: var(--content-color);
-  font-weight: bold;
+.button {
+    cursor: pointer;
 }
 
-.fc-button {
-  --fc-button-active-bg-color: light-dark(#AAAAAA, black);
+@media (prefers-color-scheme: dark) {
+    .icon {
+        filter: invert(1);
+    }
 }

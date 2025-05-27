@@ -1,0 +1,70 @@
+#outerSidebar {
+    width: var(--sidebar-width);
+    height: 100%;
+    flex-grow: 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-right: 16px;
+}
+
+#Sidebar {
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+    overflow-y: auto;
+}
+
+#streamsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.add-stream-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    height: 30px; 
+    background: transparent;
+    border: none;
+}
+
+.add-stream-button:hover {
+    background-color: var(--theme-color);
+    border-radius: var(--radius);
+}
+
+.plus-icon {
+    height: 20px;
+    width: 20px;
+    display: block;
+    justify-content: center;
+    align-self: center;
+}
+
+#streams {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#createButton {
+    border-radius: var(--radius);
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+    border: none;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 60px;
+}
+
+#createButton:hover {
+    background: var(--gray);
+}
