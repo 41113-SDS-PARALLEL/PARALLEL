@@ -24,6 +24,7 @@ class App extends Component {
       "#336699",
       "#339970",
     ],
+    currentDisplayedDate: new Date(),
     splitView: false,
     editingStreamTimes: false,
     erasingStreamTimes: false,
@@ -133,20 +134,32 @@ class App extends Component {
       <div id="App">
         <Navbar
           onPrev={() => {
-            this.allCurrentCalendarRefs().forEach((ref) => {
+            const refs = this.allCurrentCalendarRefs();
+            refs.forEach((ref) => {
               ref.getApi().prev();
+            });
+            this.setState({
+              currentDisplayedDate: refs[0].getApi().getDate(),
             });
           }}
           onNext={() => {
-            this.allCurrentCalendarRefs().forEach((ref) => {
+            const refs = this.allCurrentCalendarRefs();
+            refs.forEach((ref) => {
               ref.getApi().next();
+            });
+            this.setState({
+              currentDisplayedDate: refs[0].getApi().getDate(),
             });
           }}
           onToday={() => {
-            this.allCurrentCalendarRefs().forEach((ref) => {
+            const refs = this.allCurrentCalendarRefs();
+            refs.forEach((ref) => {
               ref.getApi().today();
             });
             this.datePickerRef.current.getApi().today();
+            this.setState({
+              currentDisplayedDate: refs[0].getApi().getDate(),
+            });
           }}
           onViewChange={this.handleViewChange}
           title={this.state.calendarTitle}
@@ -187,6 +200,9 @@ class App extends Component {
               this.allCurrentCalendarRefs().forEach((ref) => {
                 ref.getApi().gotoDate(date);
               });
+              this.setState({
+                currentDisplayedDate: date,
+              });
             }}
             streams={this.state.streams}
             colors={this.state.colors}
@@ -207,6 +223,8 @@ class App extends Component {
               this.setState({
                 streams: [...this.state.streams, s],
                 editingStreamTimes: true,
+                splitView: false,
+                erasingStreamTimes: false,
                 selectedEditingStream: s.id,
               })
             }
@@ -244,6 +262,8 @@ class App extends Component {
               this.setState({
                 editingStreamTimes: true,
                 selectedEditingStream: streamID,
+                splitView: false,
+                erasingStreamTimes: false,
               });
             }}
           />
@@ -257,6 +277,7 @@ class App extends Component {
               }
               return this.splitCalendarRefs[streamID];
             }}
+            currentDisplayedDate={this.state.currentDisplayedDate}
             onDatesSet={this.updateCalendarTitle}
             events={this.state.events}
             streams={this.state.streams}
