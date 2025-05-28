@@ -313,7 +313,6 @@ class Calendar extends Component {
                   eventColor
                 );
               }}
-              // eventContent={(arg) => this.renderEvent(arg)}
               {...this.commonParams(onDatesSet)}
             />
           </div>
