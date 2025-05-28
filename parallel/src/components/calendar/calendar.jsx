@@ -11,6 +11,7 @@ class Calendar extends Component {
   state = {
     selectedStartTime: null,
     selectedEndTime: null,
+    selectedStreamID: null,
   };
   splitScrollListeners = [];
   splitCalendarDomRefs = {};
@@ -200,6 +201,15 @@ class Calendar extends Component {
                       nowIndicator={true}
                       dayHeaders={false}
                       allDaySlot={false}
+                      selectable={true}
+                      select={(info) => {
+                        this.setState({
+                          selectedStartTime: new Date(info.start),
+                          selectedEndTime: new Date(info.end),
+                          selectedStreamID: stream.id,
+                        });
+                        onCreateEvent();
+                      }}
                       events={[
                         ...events,
                         ...streams.flatMap((s) =>
@@ -345,6 +355,7 @@ class Calendar extends Component {
             onSubmitEvent={onSubmitEvent}
             start={this.state.selectedStartTime}
             end={this.state.selectedEndTime}
+            stream={this.state.selectedStreamID}
           />
         )}
       </React.Fragment>

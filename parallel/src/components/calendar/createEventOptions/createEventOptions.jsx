@@ -18,7 +18,8 @@ class CreateEventOptions extends Component {
     };
 
     this.state = {
-      streamID: streams.length > 0 ? streams[0].id : null,
+      streamID:
+        this.props.stream || (streams.length > 0 ? streams[0].id : null),
       start: this.props.start ? formatDateTimeLocal(this.props.start) : null,
       end: this.props.end ? formatDateTimeLocal(this.props.end) : null,
     };
