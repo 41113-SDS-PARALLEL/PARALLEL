@@ -6,6 +6,7 @@ import {
   selectStream,
   editStream,
   addTimePeriodToStream,
+  removeTimePeriodFromStream,
 } from "./utils/streamUtils";
 import "./App.css";
 
@@ -23,8 +24,10 @@ class App extends Component {
       "#336699",
       "#339970",
     ],
+    currentDisplayedDate: new Date(),
     splitView: false,
     editingStreamTimes: false,
+    erasingStreamTimes: false,
     selectedEditingStream: null,
     streams: [
       {
@@ -131,20 +134,32 @@ class App extends Component {
       <div id="App">
         <Navbar
           onPrev={() => {
-            this.allCurrentCalendarRefs().forEach((ref) => {
+            const refs = this.allCurrentCalendarRefs();
+            refs.forEach((ref) => {
               ref.getApi().prev();
+            });
+            this.setState({
+              currentDisplayedDate: refs[0].getApi().getDate(),
             });
           }}
           onNext={() => {
-            this.allCurrentCalendarRefs().forEach((ref) => {
+            const refs = this.allCurrentCalendarRefs();
+            refs.forEach((ref) => {
               ref.getApi().next();
+            });
+            this.setState({
+              currentDisplayedDate: refs[0].getApi().getDate(),
             });
           }}
           onToday={() => {
-            this.allCurrentCalendarRefs().forEach((ref) => {
+            const refs = this.allCurrentCalendarRefs();
+            refs.forEach((ref) => {
               ref.getApi().today();
             });
             this.datePickerRef.current.getApi().today();
+            this.setState({
+              currentDisplayedDate: refs[0].getApi().getDate(),
+            });
           }}
           onViewChange={this.handleViewChange}
           title={this.state.calendarTitle}
@@ -157,17 +172,36 @@ class App extends Component {
             this.setState({
               editingStreamTimes: false,
               selectedEditingStream: null,
+              erasingStreamTimes: false,
             });
           }}
+          onEraseStreamTimes={() => {
+            this.setState({
+              erasingStreamTimes: !this.state.erasingStreamTimes,
+            });
+          }}
+          erasingStreamTimes={this.state.erasingStreamTimes}
+          onClearStreamTimes={() =>
+            this.setState({
+              streams: this.state.streams.map((s) => ({
+                ...s,
+                timePeriods: [],
+              })),
+            })
+          }
         />
         <div className="content">
           <Sidebar
             datePickerRef={this.datePickerRef}
             editingStreamTimes={this.state.editingStreamTimes}
             selectedEditingStream={this.state.selectedEditingStream}
+            erasingStreamTimes={this.state.erasingStreamTimes}
             navigateToDate={(date) => {
               this.allCurrentCalendarRefs().forEach((ref) => {
                 ref.getApi().gotoDate(date);
+              });
+              this.setState({
+                currentDisplayedDate: date,
               });
             }}
             streams={this.state.streams}
@@ -177,13 +211,22 @@ class App extends Component {
               if (this.state.editingStreamTimes) {
                 this.setState({
                   selectedEditingStream: s.id,
+                  erasingStreamTimes: false,
                 });
               } else {
-                this.setState({ streams: selectStream(s, this.state.streams) });
+                this.setState({
+                  streams: selectStream(s, this.state.streams),
+                });
               }
             }}
             onAddStream={(s) =>
-              this.setState({ streams: [...this.state.streams, s] })
+              this.setState({
+                streams: [...this.state.streams, s],
+                editingStreamTimes: true,
+                splitView: false,
+                erasingStreamTimes: false,
+                selectedEditingStream: s.id,
+              })
             }
             onDeleteStream={(streamID, eventTransferStreamID) => {
               const events =
@@ -219,6 +262,8 @@ class App extends Component {
               this.setState({
                 editingStreamTimes: true,
                 selectedEditingStream: streamID,
+                splitView: false,
+                erasingStreamTimes: false,
               });
             }}
           />
@@ -232,6 +277,7 @@ class App extends Component {
               }
               return this.splitCalendarRefs[streamID];
             }}
+            currentDisplayedDate={this.state.currentDisplayedDate}
             onDatesSet={this.updateCalendarTitle}
             events={this.state.events}
             streams={this.state.streams}
@@ -244,11 +290,13 @@ class App extends Component {
               );
               const updatedStreams = timePeriods.reduce(
                 (streams, tp) =>
-                  addTimePeriodToStream(
-                    streams.find((s) => s.id === stream.id),
-                    tp,
-                    streams
-                  ),
+                  this.state.erasingStreamTimes
+                    ? streams.map((s) => removeTimePeriodFromStream(s, tp))
+                    : addTimePeriodToStream(
+                        streams.find((s) => s.id === stream.id),
+                        tp,
+                        streams
+                      ),
                 this.state.streams
               );
               this.setState({ streams: updatedStreams });

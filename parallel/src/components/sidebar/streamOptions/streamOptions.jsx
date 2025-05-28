@@ -5,7 +5,7 @@ import "./streamOptions.css";
 
 class StreamOptions extends Component {
   state = {
-    editingName: false,
+    editingName: this.props.stream.name === "New Stream",
     deletingStream: false,
   };
   streamOptionsRef = createRef();
@@ -69,7 +69,7 @@ class StreamOptions extends Component {
               {stream.name}
               <button
                 className="button edit-button"
-                onClick={() => this.setState({ editingName: true })} //{(e) => {e.stopPropagation(); setEditingName(true)}}
+                onClick={() => this.setState({ editingName: true })}
               >
                 <img src={editIcon} alt="Edit" className="icon edit-icon" />
               </button>

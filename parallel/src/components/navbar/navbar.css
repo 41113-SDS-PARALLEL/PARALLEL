@@ -61,8 +61,13 @@
   /* outline: none; */
 }
 
-#doneButton {
-  border: 1px solid var(--content-color, #fff);
+#eraseButton {
+  border: 2px solid transparent;
+}
+
+.checked-button {
+  background: black;
+  border: 2px solid var(--gray) !important;
 }
 
 .navButton:hover, #viewSelector:not(:disabled):hover {

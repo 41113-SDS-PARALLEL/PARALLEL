@@ -3,6 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import auLocale from "@fullcalendar/core/locales/en-au";
 import "./calendar.css";
 
 class Calendar extends Component {
@@ -72,10 +73,31 @@ class Calendar extends Component {
     }
   }
 
+  eventTextColor = (arg, backgroundColor = null) => {
+    let color = "var(--gray)";
+    if (!backgroundColor) {
+      const streamId = arg.event.extendedProps?.stream;
+      if (streamId && Array.isArray(this.props.streams)) {
+        const stream = this.props.streams.find((s) => s.id === streamId);
+        if (stream && stream.color) color = stream.color;
+      }
+    } else {
+      color = backgroundColor;
+    }
+    const hex = color.replace(/^#/, "");
+    const r = parseInt(hex.substring(0, 2), 16) / 255;
+    const g = parseInt(hex.substring(2, 4), 16) / 255;
+    const b = parseInt(hex.substring(4, 6), 16) / 255;
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+    const textColor = luminance > 0.5 ? "black" : "white";
+    return textColor;
+  };
+
   commonParams = (onDatesSet) => {
     return {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
       initialView: "timeGridWeek",
+      initialDate: this.props.currentDisplayedDate,
       weekends: true,
       headerToolbar: false,
       firstDay: 1,
@@ -97,6 +119,7 @@ class Calendar extends Component {
         omitZeroMinute: false,
         meridiem: "short",
       },
+      locale: auLocale,
     };
   };
 
@@ -119,7 +142,7 @@ class Calendar extends Component {
             <div className="calendar-header-container">
               <h2 className="stream-header header-placeholder"></h2>
               {
-                <div className="split-calendar main-calendar calendar-header">
+                <div className="split-calendar main-calendar calendar-header date-calendar">
                   <FullCalendar
                     ref={headerCalendarRef}
                     nowIndicator={true}
@@ -130,10 +153,14 @@ class Calendar extends Component {
                       const stream = streams.find(
                         (s) => s.id === info.event.extendedProps.stream
                       );
-                      let eventColor = "gray";
+                      let eventColor = "var(--gray)";
                       if (stream.selected === true) {
                         eventColor = stream.color;
                       }
+                      info.el.style.setProperty(
+                        "--fc-event-text-color",
+                        this.eventTextColor(info, eventColor)
+                      );
                       info.el.style.setProperty(
                         "--fc-event-bg-color",
                         eventColor
@@ -174,7 +201,8 @@ class Calendar extends Component {
                           endTime: tp.endTime,
                           extendedProps: { stream: s.id, isTimePeriod: true },
                           display: "background",
-                          color: s.id === stream.id ? stream.color : "gray",
+                          color:
+                            s.id === stream.id ? stream.color : "var(--gray)",
                         }))
                       ),
                     ]}
@@ -188,15 +216,19 @@ class Calendar extends Component {
                         } else {
                           info.el.style.setProperty(
                             "--fc-bg-event-opacity",
-                            "0.3"
+                            "0.25"
                           );
                         }
                         return;
                       }
-                      let eventColor = "gray";
+                      let eventColor = "var(--gray)" || "gray";
                       if (info.event.extendedProps.stream === stream.id) {
                         eventColor = stream.color;
                       }
+                      info.el.style.setProperty(
+                        "--fc-event-text-color",
+                        this.eventTextColor(info, eventColor)
+                      );
                       info.el.style.setProperty(
                         "--fc-event-bg-color",
                         eventColor
@@ -257,7 +289,7 @@ class Calendar extends Component {
             />
           </div>
         ) : (
-          <div className="main-calendar">
+          <div className="main-calendar date-calendar">
             <FullCalendar
               ref={mainCalendarRef}
               nowIndicator={true}
@@ -271,6 +303,10 @@ class Calendar extends Component {
                 const stream = info.event.extendedProps.stream;
                 const streamObj = streams.find((s) => s.id === stream);
                 const eventColor = streamObj ? streamObj.color : "#3788d8";
+                info.el.style.setProperty(
+                  "--fc-event-text-color",
+                  this.eventTextColor(info, eventColor)
+                );
                 info.el.style.setProperty("--fc-event-bg-color", eventColor);
                 info.el.style.setProperty(
                   "--fc-event-border-color",
