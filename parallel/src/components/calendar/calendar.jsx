@@ -350,7 +350,14 @@ class Calendar extends Component {
         </div>
         {creatingEvent && (
           <CreateEventOptions
-            onClose={onCloseCreateEventOptions}
+            onClose={() => {
+              onCloseCreateEventOptions();
+              this.setState({
+                selectedStartTime: null,
+                selectedEndTime: null,
+                selectedStreamID: null,
+              });
+            }}
             streams={streams}
             onSubmitEvent={onSubmitEvent}
             start={this.state.selectedStartTime}
