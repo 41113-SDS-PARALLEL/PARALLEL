@@ -73,8 +73,8 @@ class Calendar extends Component {
     }
   }
 
-  renderEvent = (arg, backgroundColor = null) => {
-    let color = "#3788d8";
+  eventTextColor = (arg, backgroundColor = null) => {
+    let color = "var(--gray)";
     if (!backgroundColor) {
       const streamId = arg.event.extendedProps?.stream;
       if (streamId && Array.isArray(this.props.streams)) {
@@ -90,16 +90,7 @@ class Calendar extends Component {
     const b = parseInt(hex.substring(4, 6), 16) / 255;
     const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
     const textColor = luminance > 0.5 ? "black" : "var(--content-color)";
-    return (
-      <div style={{ color: textColor }}>
-        {arg.timeText && (
-          <b>
-            {arg.timeText} <br />
-          </b>
-        )}
-        {arg.event.title}
-      </div>
-    );
+    return textColor;
   };
 
   commonParams = (onDatesSet) => {
@@ -231,6 +222,10 @@ class Calendar extends Component {
                         eventColor = stream.color;
                       }
                       info.el.style.setProperty(
+                        "--fc-event-text-color",
+                        this.eventTextColor(info, eventColor)
+                      );
+                      info.el.style.setProperty(
                         "--fc-event-bg-color",
                         eventColor
                       );
@@ -239,14 +234,6 @@ class Calendar extends Component {
                         eventColor
                       );
                     }}
-                    eventContent={(arg) =>
-                      this.renderEvent(
-                        arg,
-                        arg.event.extendedProps.stream === stream.id
-                          ? stream.color
-                          : "var(--gray)"
-                      )
-                    }
                     {...this.commonParams(onDatesSet)}
                   />
                 </div>
@@ -312,13 +299,17 @@ class Calendar extends Component {
                 const stream = info.event.extendedProps.stream;
                 const streamObj = streams.find((s) => s.id === stream);
                 const eventColor = streamObj ? streamObj.color : "#3788d8";
+                info.el.style.setProperty(
+                  "--fc-event-text-color",
+                  this.eventTextColor(info, eventColor)
+                );
                 info.el.style.setProperty("--fc-event-bg-color", eventColor);
                 info.el.style.setProperty(
                   "--fc-event-border-color",
                   eventColor
                 );
               }}
-              eventContent={(arg) => this.renderEvent(arg)}
+              // eventContent={(arg) => this.renderEvent(arg)}
               {...this.commonParams(onDatesSet)}
             />
           </div>
