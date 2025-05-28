@@ -89,7 +89,7 @@ class Calendar extends Component {
     const g = parseInt(hex.substring(2, 4), 16) / 255;
     const b = parseInt(hex.substring(4, 6), 16) / 255;
     const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-    const textColor = luminance > 0.5 ? "black" : "var(--content-color)";
+    const textColor = luminance > 0.5 ? "black" : "white";
     return textColor;
   };
 
@@ -157,6 +157,10 @@ class Calendar extends Component {
                       if (stream.selected === true) {
                         eventColor = stream.color;
                       }
+                      info.el.style.setProperty(
+                        "--fc-event-text-color",
+                        this.eventTextColor(info, eventColor)
+                      );
                       info.el.style.setProperty(
                         "--fc-event-bg-color",
                         eventColor
