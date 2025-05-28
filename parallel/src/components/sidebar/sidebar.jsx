@@ -18,12 +18,21 @@ class Sidebar extends Component {
 
   handleAddStream = () => {
     const { onAddStream, streams, colors } = this.props;
-    onAddStream(createStream(streams, colors));
+    const newStream = createStream(streams, colors);
+    onAddStream(newStream);
     setTimeout(() => {
       if (this.sidebarRef.current) {
         this.sidebarRef.current.scrollTop =
           this.sidebarRef.current.scrollHeight;
       }
+      this.setState({
+        optionsStream: newStream.id,
+        optionsPosition: this.calculateStreamOptionsPosition(
+          this.sidebarRef.current.querySelector(
+            `button[name="stream-options-button-${newStream.id}"]`
+          )
+        ),
+      });
     }, 0);
   };
 
@@ -46,8 +55,8 @@ class Sidebar extends Component {
     return {
       top:
         spaceBelow >= panelHeight
-          ? rect.top + window.scrollY + rect.height
-          : rect.top + window.scrollY - panelHeight,
+          ? rect.top + window.scrollY
+          : rect.top + window.scrollY - panelHeight + rect.height,
       left: rect.left + window.scrollX,
     };
   }
@@ -119,6 +128,7 @@ class Sidebar extends Component {
       editingStreamTimes,
       onEditStreamTimes,
       selectedEditingStream,
+      erasingStreamTimes,
       onCreateEvent,
     } = this.props;
     return (
@@ -175,6 +185,7 @@ class Sidebar extends Component {
               streams={streams}
               onSelectStream={onSelectStream}
               editingStreamTimes={editingStreamTimes}
+              erasingStreamTimes={erasingStreamTimes}
               selectedEditingStream={selectedEditingStream}
               onOptionsClick={(streamID) =>
                 this.setState({

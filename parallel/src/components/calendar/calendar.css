@@ -9,13 +9,18 @@
     flex-direction: column;
     
     --fc-border-color: var(--gray);
-    --fc-today-bg-color: var(--faded-theme-color);
+    --fc-today-bg-color: transparent;
     --fc-page-bg-color: transparent;
     --fc-now-indicator-color: var(--theme-color);
 }
 
 #Calendar .fc-timegrid-slot-minor {
     border-top: 1px transparent solid;
+}
+
+.date-calendar .fc-col-header-cell.fc-day-today {
+    background: var(--theme-color); 
+    font-weight: bold;
 }
 
 .editing-times-calendar {
@@ -58,7 +63,6 @@
     flex: 1 1 0;
     min-height: 0;
     min-width: 0;
-    /* border-top-left-radius: var(--radius); */
 }
 
 #Calendar .fc-timegrid-now-indicator-line {
@@ -96,6 +100,7 @@
     align-items: center;
     justify-content: center;
     margin-right: 0px;
+    overflow: hidden;
 }
 
 .split-calendar > .fc {

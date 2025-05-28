@@ -9,6 +9,7 @@ class StreamList extends Component {
       onSelectStream,
       onOptionsClick,
       editingStreamTimes,
+      erasingStreamTimes,
       selectedEditingStream,
     } = this.props;
     return (
@@ -21,6 +22,7 @@ class StreamList extends Component {
             onSelectStream={onSelectStream}
             onOptionsClick={(streamID) => onOptionsClick(streamID)}
             selectedEditingStream={selectedEditingStream}
+            erasingStreamTimes={erasingStreamTimes}
           />
         ))}
       </div>

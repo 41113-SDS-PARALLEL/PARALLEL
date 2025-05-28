@@ -6,23 +6,33 @@ const Stream = ({
   onSelectStream,
   onOptionsClick,
   editingStreamTimes,
+  erasingStreamTimes,
   selectedEditingStream,
 }) => {
   return (
     <div className="stream-list-div">
       {editingStreamTimes ? (
-        <input
-          style={{ accentColor: stream.color }}
-          className="stream-list-input"
-          type="radio"
-          onChange={() => onSelectStream(stream)}
-          name={`stream-radio-${stream.id}`}
-          checked={stream.id === selectedEditingStream}
-        />
+        <div
+          className="stream-list-radio"
+          style={{
+            border: `2px solid ${stream.color}`,
+          }}
+        >
+          <input
+            style={{
+              accentColor: stream.color,
+            }}
+            className="stream-list-input"
+            type="radio"
+            onChange={() => onSelectStream(stream)}
+            name={`stream-radio-${stream.id}`}
+            checked={stream.id === selectedEditingStream && !erasingStreamTimes}
+          />
+        </div>
       ) : (
         <input
           style={{ accentColor: stream.color }}
-          className="stream-list-input"
+          className="stream-list-checkbox"
           type="checkbox"
           onChange={() => onSelectStream(stream)}
           name={`stream-checkbox-${stream.id}`}
