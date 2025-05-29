@@ -11,84 +11,97 @@ import {
 import "./App.css";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      streams: JSON.parse(localStorage.getItem("streams")) || [
+        {
+          id: 1,
+          name: "Work",
+          color: "#B4415A",
+          selected: true,
+          timePeriods: [
+            { day: 1, startTime: "09:00", endTime: "17:00" },
+            { day: 3, startTime: "13:00", endTime: "17:00" },
+          ],
+        },
+        {
+          id: 2,
+          name: "University",
+          color: "#DB7C41",
+          selected: true,
+          timePeriods: [
+            { day: 2, startTime: "10:00", endTime: "12:00" },
+            { day: 4, startTime: "14:00", endTime: "16:00" },
+          ],
+        },
+        {
+          id: 3,
+          name: "Personal",
+          color: "#E9E985",
+          selected: true,
+          timePeriods: [
+            { day: 0, startTime: "08:00", endTime: "10:00" },
+            { day: 5, startTime: "18:00", endTime: "20:00" },
+          ],
+        },
+      ],
+      events: JSON.parse(localStorage.getItem("events")) || [
+        {
+          title: "Meeting",
+          start: new Date(2025, 4, 23, 9, 0),
+          extendedProps: { stream: 1 },
+        },
+        {
+          title: "Conference",
+          start: new Date(2025, 4, 25, 11, 0),
+          extendedProps: { stream: 1 },
+        },
+        {
+          title: "Lecture",
+          start: new Date(2025, 4, 25, 21, 30),
+          extendedProps: { stream: 2 },
+        },
+        {
+          title: "Dinner",
+          start: new Date(2025, 4, 22, 19, 0),
+          extendedProps: { stream: 3 },
+        },
+        {
+          title: "Canyoning",
+          start: new Date(2025, 4, 24),
+          allDay: true,
+          extendedProps: { stream: 3 },
+        },
+      ],
+      calendarTitle: "",
+      colors: [
+        "#B4415A",
+        "#DB7C41",
+        "#E9E985",
+        "#A97AEC",
+        "#418DB4",
+        "#F69FE4",
+        "#8CCF58",
+        "#336699",
+        "#339970",
+      ],
+      splitView: false,
+      editingStreamTimes: false,
+      selectedEditingStream: null,
+      erasingStreamTimes: false,
+    };
+  }
+
   state = {
-    calendarTitle: "",
-    colors: [
-      "#B4415A",
-      "#DB7C41",
-      "#E9E985",
-      "#A97AEC",
-      "#418DB4",
-      "#F69FE4",
-      "#8CCF58",
-      "#336699",
-      "#339970",
-    ],
-    currentDisplayedDate: new Date(),
+    calendarTitle: null,
+    colors: null,
     splitView: false,
     editingStreamTimes: false,
-    erasingStreamTimes: false,
     selectedEditingStream: null,
-    streams: [
-      {
-        id: 1,
-        name: "Work",
-        color: "#B4415A",
-        selected: true,
-        timePeriods: [
-          { day: 1, startTime: "09:00", endTime: "17:00" },
-          { day: 3, startTime: "13:00", endTime: "17:00" },
-        ],
-      },
-      {
-        id: 2,
-        name: "University",
-        color: "#DB7C41",
-        selected: true,
-        timePeriods: [
-          { day: 2, startTime: "10:00", endTime: "12:00" },
-          { day: 4, startTime: "14:00", endTime: "16:00" },
-        ],
-      },
-      {
-        id: 3,
-        name: "Personal",
-        color: "#E9E985",
-        selected: true,
-        timePeriods: [
-          { day: 0, startTime: "08:00", endTime: "10:00" },
-          { day: 5, startTime: "18:00", endTime: "20:00" },
-        ],
-      },
-    ],
-    events: [
-      {
-        title: "Meeting",
-        start: new Date(2025, 4, 23, 9, 0),
-        extendedProps: { stream: 1 },
-      },
-      {
-        title: "Conference",
-        start: new Date(2025, 4, 25, 11, 0),
-        extendedProps: { stream: 1 },
-      },
-      {
-        title: "Lecture",
-        start: new Date(2025, 4, 25, 21, 30),
-        extendedProps: { stream: 2 },
-      },
-      {
-        title: "Dinner",
-        start: new Date(2025, 4, 22, 19, 0),
-        extendedProps: { stream: 3 },
-      },
-      {
-        title: "Canyoning",
-        start: new Date(2025, 4, 24),
-        allDay: true,
-        extendedProps: { stream: 3 },
-      },
-    ],
+    erasingStreamTimes: false,
+    streams: null,
+    events: null,
   };
   mainCalendarRef = createRef();
   headerCalendarRef = createRef();
@@ -128,6 +141,15 @@ class App extends Component {
       .map((ref) => ref.current)
       .filter((current) => current !== null && current !== undefined);
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.streams !== this.state.streams) {
+      localStorage.setItem("streams", JSON.stringify(this.state.streams));
+    }
+    if (prevState.events !== this.state.events) {
+      localStorage.setItem("events", JSON.stringify(this.state.events));
+    }
+  }
 
   render() {
     return (
