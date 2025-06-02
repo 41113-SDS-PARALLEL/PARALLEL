@@ -40,7 +40,7 @@ const Stream = ({
         />
       )}
 
-      {stream.name}
+      <div className="stream-name">{stream.name}</div>
       <button
         className="button stream-list-options-button"
         onClick={() => onOptionsClick(stream.id)}

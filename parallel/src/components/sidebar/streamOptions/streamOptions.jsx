@@ -53,6 +53,7 @@ class StreamOptions extends Component {
               value={stream.name}
               onChange={(e) => {
                 onEditStream(stream.id, e.target.value, stream.color);
+                console.log(e.target.value);
               }}
               onBlur={() => {
                 this.setState({ editingName: false });
@@ -66,7 +67,7 @@ class StreamOptions extends Component {
             />
           ) : (
             <>
-              {stream.name}
+              <div className="stream-name">{stream.name}</div>
               <button
                 className="button edit-button"
                 onClick={() => this.setState({ editingName: true })}

@@ -99,6 +99,12 @@ class Sidebar extends Component {
   };
 
   preventKeyScroll = (e) => {
+    const tag = e.target.tagName;
+    const isEditable =
+      tag === "INPUT" || tag === "TEXTAREA" || e.target.isContentEditable;
+
+    if (isEditable) return;
+
     const keys = [
       "ArrowUp",
       "ArrowDown",

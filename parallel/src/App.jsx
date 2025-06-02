@@ -86,6 +86,7 @@ class App extends Component {
         "#336699",
         "#339970",
       ],
+      view: "timeGridWeek",
       splitView: false,
       editingStreamTimes: false,
       selectedEditingStream: null,
@@ -125,6 +126,7 @@ class App extends Component {
     if (!this.mainCalendarRef.current) return;
     this.mainCalendarRef.current.getApi().changeView(view);
     this.updateCalendarTitle();
+    this.setState({ view: view });
   };
 
   componentDidMount() {
@@ -183,6 +185,7 @@ class App extends Component {
               currentDisplayedDate: refs[0].getApi().getDate(),
             });
           }}
+          view={this.state.view}
           onViewChange={this.handleViewChange}
           title={this.state.calendarTitle}
           onSplit={() => {
@@ -303,6 +306,7 @@ class App extends Component {
             onDatesSet={this.updateCalendarTitle}
             events={this.state.events}
             streams={this.state.streams}
+            view={this.state.view}
             splitView={this.state.splitView}
             editingStreamTimes={this.state.editingStreamTimes}
             onSelectTimes={(timePeriods) => {

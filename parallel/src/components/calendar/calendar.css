@@ -131,6 +131,8 @@
     /* Match .stream-header width */
 }
 
-/* .time-column {
-    width: 60px;
-} */
+#Calendar.month-view .fc-daygrid-day.fc-day-today {
+    background: var(--faded-theme-color);
+    /* color: #fff; */
+    /* border-radius: var(--radius, 6px); */
+}
