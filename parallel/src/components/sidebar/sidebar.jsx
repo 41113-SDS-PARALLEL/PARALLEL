@@ -130,6 +130,7 @@ class Sidebar extends Component {
       selectedEditingStream,
       erasingStreamTimes,
       onCreateEvent,
+      onCreateTask,
     } = this.props;
     return (
       <div id="outerSidebar">
@@ -156,6 +157,7 @@ class Sidebar extends Component {
               <CreateOptions
                 onClose={() => this.setState({ choosingCreateOption: false })}
                 onCreateEvent={onCreateEvent}
+                onCreateTask={onCreateTask}
               />
             )}
           </React.Fragment>

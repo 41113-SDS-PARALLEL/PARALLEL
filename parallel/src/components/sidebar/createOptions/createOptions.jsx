@@ -23,7 +23,7 @@ class CreateOptions extends Component {
   };
 
   render() {
-    const { onClose, onCreateEvent } = this.props;
+    const { onClose, onCreateEvent, onCreateTask } = this.props;
     return (
       <div id="createOptions" ref={this.createOptionsRef}>
         <button
@@ -39,7 +39,10 @@ class CreateOptions extends Component {
         <button
           id="taskButton"
           className="button createButton"
-          onClick={() => this.setState({ creatingTask: true })}
+          onClick={() => {
+            onCreateTask();
+            onClose();
+          }}
         >
           Task
         </button>

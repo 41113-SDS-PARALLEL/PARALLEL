@@ -91,6 +91,14 @@ class App extends Component {
         extendedProps: { stream: 3 },
       },
     ],
+    tasks: [
+      {
+        title: "Assignment 3",
+        endDate: new Date(2025, 6, 5),
+        hours: 12,
+        stream: 2,
+      }
+    ]
   };
   mainCalendarRef = createRef();
   headerCalendarRef = createRef();
@@ -212,6 +220,9 @@ class App extends Component {
             onCreateEvent={() => {
               this.setState({ creatingEvent: true });
             }}
+            onCreateTask={() => {
+              this.setState({ creatingTask: true });
+            }}
             onSelectStream={(s) => {
               if (this.state.editingStreamTimes) {
                 this.setState({
@@ -309,15 +320,26 @@ class App extends Component {
             onCreateEvent={() => {
               this.setState({ creatingEvent: true });
             }}
+            onCreateTask={() => {
+              this.setState({ creatingTask: true });
+            }}
             creatingEvent={this.state.creatingEvent}
             creatingTask={this.state.creatingTask}
             onCloseCreateEventOptions={() => {
               this.setState({ creatingEvent: false });
             }}
+            onCloseCreateTaskOptions={() => {
+              this.setState({ creatingTask: false });
+            }}
             onSubmitEvent={(newEvent) => {
               this.setState({
                 events: [...this.state.events, newEvent],
               });
+            }}
+            onSubmitTask={(newTask) => {
+              this.setState({
+                tasks: [...this.state.tasks, newTask],
+              }); console.log(this.state.tasks);
             }}
           />
         </div>

@@ -4,6 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import CreateEventOptions from "./createEventOptions/createEventOptions";
+import CreateTaskOptions from "./createTaskOptions/createTaskOptions";
 import auLocale from "@fullcalendar/core/locales/en-au";
 import "./calendar.css";
 
@@ -140,9 +141,13 @@ class Calendar extends Component {
       getSplitCalendarRef,
       onSelectTimes,
       onCreateEvent,
+      onCreateTask,
       creatingEvent,
+      creatingTask,
       onCloseCreateEventOptions,
+      onCloseCreateTaskOptions,
       onSubmitEvent,
+      onSubmitTask,
     } = this.props;
     return (
       <React.Fragment>
@@ -360,6 +365,23 @@ class Calendar extends Component {
             }}
             streams={streams}
             onSubmitEvent={onSubmitEvent}
+            start={this.state.selectedStartTime}
+            end={this.state.selectedEndTime}
+            stream={this.state.selectedStreamID}
+          />
+        )}
+        {creatingTask && (
+          <CreateTaskOptions
+            onClose={() => {
+              onCloseCreateTaskOptions();
+              this.setState({
+                selectedStartTime: null,
+                selectedEndTime: null,
+                selectedStreamID: null,
+              });
+            }}
+            streams={streams}
+            onSubmitTask={onSubmitTask}
             start={this.state.selectedStartTime}
             end={this.state.selectedEndTime}
             stream={this.state.selectedStreamID}
