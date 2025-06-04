@@ -8,6 +8,8 @@ import CreateTaskOptions from "./createTaskOptions/createTaskOptions";
 import auLocale from "@fullcalendar/core/locales/en-au";
 import "./calendar.css";
 
+import { retrieveScheduledTasks } from "../../utils/timeblockUtils";
+
 class Calendar extends Component {
   state = {
     selectedStartTime: null,
@@ -102,6 +104,20 @@ class Calendar extends Component {
     return textColor;
   };
 
+  styleTask = (info, eventColor) => {
+    if (info.event.extendedProps.task) {
+      info.el.classList.add("task-event");
+      info.el.style.border = "0";
+      info.el.style.borderLeft = `0.5rem solid ${eventColor}`;
+      info.el.style.backgroundColor = "var(--gray)";
+      info.el.style.setProperty(
+        "--fc-event-text-color",
+        "var(--content-color)"
+      );
+      info.el.style.paddingLeft = "0.2rem";
+    }
+  };
+
   commonParams = (onDatesSet) => {
     return {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -136,7 +152,9 @@ class Calendar extends Component {
     const {
       onDatesSet,
       events,
+      tasks,
       streams,
+      view,
       splitView,
       editingStreamTimes,
       mainCalendarRef,
@@ -154,15 +172,20 @@ class Calendar extends Component {
       onSubmitEvent,
       onSubmitTask,
     } = this.props;
+
     return (
       <React.Fragment>
-        <div id="Calendar">
+        <div
+          className={`calendar-container ${
+            view === "dayGridMonth" ? "month-view" : ""
+          }`}
+        >
           {splitView ? (
             <div className="split-calendar-container">
               <div className="calendar-header-container">
-                <h2 className="stream-header header-placeholder"></h2>
+                <h2 className="stream-header"></h2>
                 {
-                  <div className="split-calendar main-calendar calendar-header date-calendar">
+                  <div className="main-calendar date-calendar">
                     <FullCalendar
                       ref={headerCalendarRef}
                       nowIndicator={true}
@@ -227,7 +250,6 @@ class Calendar extends Component {
                           selectedEvent: info.event,
                           popupType: "Edit",
                         });
-                        // console.log(this.state.selectedEvent);
                         onCreateEvent("Edit");
                       }}
                       events={[
@@ -244,6 +266,7 @@ class Calendar extends Component {
                               s.id === stream.id ? stream.color : "var(--gray)",
                           }))
                         ),
+                        ...tasks,
                       ]}
                       eventDidMount={(info) => {
                         if (info.event.display === "background") {
@@ -260,7 +283,7 @@ class Calendar extends Component {
                           }
                           return;
                         }
-                        let eventColor = "var(--gray)" || "gray";
+                        let eventColor = "var(--gray)";
                         if (info.event.extendedProps.stream === stream.id) {
                           eventColor = stream.color;
                         }
@@ -276,6 +299,7 @@ class Calendar extends Component {
                           "--fc-event-border-color",
                           eventColor
                         );
+                        this.styleTask(info, eventColor);
                       }}
                       {...this.commonParams(onDatesSet)}
                     />
@@ -286,7 +310,7 @@ class Calendar extends Component {
             <div className="main-calendar editing-times-calendar">
               <FullCalendar
                 allDaySlot={false}
-                dayHeaderFormat={{ weekday: "long" }}
+                dayHeaderFormat={{ weekday: "short" }}
                 events={[
                   ...streams.flatMap((s) =>
                     (s.timePeriods || []).map((tp, idx) => ({
@@ -334,13 +358,16 @@ class Calendar extends Component {
               <FullCalendar
                 ref={mainCalendarRef}
                 nowIndicator={true}
-                events={events.filter((event) =>
-                  streams.find(
-                    (stream) =>
-                      stream.id === event.extendedProps.stream &&
-                      stream.selected
-                  )
-                )}
+                events={[
+                  ...events.filter((event) =>
+                    streams.find(
+                      (stream) =>
+                        stream.id === event.extendedProps.stream &&
+                        stream.selected
+                    )
+                  ),
+                  ...tasks,
+                ]}
                 selectable={true}
                 select={(info) => {
                   this.setState({
@@ -356,7 +383,6 @@ class Calendar extends Component {
                     selectedEvent: info.event,
                     popupType: "Edit",
                   });
-                  // console.log(this.state.selectedEvent);
                   onCreateEvent("Edit");
                 }}
                 eventDidMount={(info) => {
@@ -372,6 +398,7 @@ class Calendar extends Component {
                     "--fc-event-border-color",
                     eventColor
                   );
+                  this.styleTask(info, eventColor);
                 }}
                 {...this.commonParams(onDatesSet)}
               />

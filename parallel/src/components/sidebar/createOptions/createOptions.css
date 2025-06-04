@@ -1,10 +1,9 @@
-#createOptions {
+/* #createOptions {
     z-index: 100;
     position: absolute;
     top: 150px;
     background-color: var(--gray);
     width: calc(var(--sidebar-width) - 40px);
-    /* height: 20px; */
     border-radius: var(--radius);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     padding: var(--stream-options-padding);
@@ -31,4 +30,8 @@
 #eventButton {
   margin-bottom: 5px;
   padding-bottom: 5px;
+} */
+
+.create-options-popup {
+top: 3rem;
 }

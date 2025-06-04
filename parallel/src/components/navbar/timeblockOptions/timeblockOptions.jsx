@@ -1,9 +1,8 @@
 import React, { Component, createRef } from "react";
-import "./createOptions.css";
+import "./timeblockOptions.css";
 
-class CreateOptions extends Component {
-  state = {};
-  createOptionsRef = createRef();
+class TimeblockOptions extends Component {
+  panelRef = createRef();
 
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
@@ -15,46 +14,44 @@ class CreateOptions extends Component {
 
   handleClickOutside = (event) => {
     if (
-      this.createOptionsRef.current &&
-      !this.createOptionsRef.current.contains(event.target)
+      this.panelRef.current &&
+      !this.panelRef.current.contains(event.target)
     ) {
       this.props.onClose();
     }
   };
 
   render() {
-    const { onClose, onCreateEvent, onCreateTask, position } = this.props;
+    const { onTimeblock, onClose, position } = this.props;
     return (
       <div
-        className="panel popup simple-options-popup create-options-popup"
-        ref={this.createOptionsRef}
-        style={{
-          top: position.top,
-          left: position.left,
-          width: position.width,
-        }}
+        className="panel popup simple-options-popup"
+        ref={this.panelRef}
+        style={{ top: position.top, left: position.left }}
       >
         <button
           className="clickable simple-options-popup-option"
+          name="day"
           onClick={() => {
-            onCreateEvent("Create");
+            onTimeblock("day");
             onClose();
           }}
         >
-          Event
+          for today
         </button>
         <button
           className="clickable simple-options-popup-option"
+          name="week"
           onClick={() => {
-            onCreateTask();
+            onTimeblock("week");
             onClose();
           }}
         >
-          Task
+          for this week
         </button>
       </div>
     );
   }
 }
 
-export default CreateOptions;
+export default TimeblockOptions;

@@ -1,56 +1,36 @@
 :root {
-    --list-element-height: 20px;
+    --list-element-height: 1.3rem;
 }
 
-.stream-list-div {
+.stream-list-item {
     display: flex;
     align-items: center;
-    width: 100%;
-}
-
-.stream-list-radio {
-    height: var(--list-element-height);
-    width: var(--list-element-height);
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    box-sizing: border-box;
-    padding: 0;
+    justify-content: space-between;
+    gap: 0.5rem;
 }
 
 .stream-list-input {
-    width: 100%;
-    height: 100%;
-    margin: 0;
+    height: var(--list-element-height);
+    width: var(--list-element-height);
+    display: flex;
     padding: 0;
-    box-sizing: border-box;
+    margin: 0;
 }
 
-.stream-list-checkbox {
-    height: var(--list-element-height); 
-    width: var(--list-element-height);
-    margin-right: 10px;
+.stream-list-radio-border {
+    border-radius: 50%;
+    border: 2px solid transparent;
+}
+
+.stream-name {
+    overflow-x: hidden;
+    flex-grow: 1;
 }
 
 .stream-list-options-button {
-    display: flex; 
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
-    background-color: transparent;
-    border: none;
-    height: calc(var(--list-element-height) * 1.5);
-    width: calc(var(--list-element-height) * 1.5);
-}
-
-.stream-list-options-button:hover {
-    background-color: var(--theme-color);
-    border-radius: var(--radius);
+    height: 140%;
 }
 
 .stream-list-options-icon {
-    height: calc(var(--list-element-height) * 0.8);
+    height: calc(var(--list-element-height) - 0.2rem);
 }

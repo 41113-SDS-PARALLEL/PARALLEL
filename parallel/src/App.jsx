@@ -8,99 +8,129 @@ import {
   addTimePeriodToStream,
   removeTimePeriodFromStream,
 } from "./utils/streamUtils";
+import { retrieveScheduledTasks } from "./utils/timeblockUtils";
 import "./App.css";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      streams: JSON.parse(localStorage.getItem("streams")) || [
+        {
+          id: 1,
+          name: "Work",
+          color: "#B4415A",
+          selected: true,
+          timePeriods: [
+            { day: 1, startTime: "09:00", endTime: "17:00" },
+            { day: 3, startTime: "13:00", endTime: "17:00" },
+          ],
+        },
+        {
+          id: 2,
+          name: "University",
+          color: "#DB7C41",
+          selected: true,
+          timePeriods: [
+            { day: 2, startTime: "10:00", endTime: "12:00" },
+            { day: 4, startTime: "14:00", endTime: "16:00" },
+          ],
+        },
+        {
+          id: 3,
+          name: "Personal",
+          color: "#E9E985",
+          selected: true,
+          timePeriods: [
+            { day: 0, startTime: "08:00", endTime: "10:00" },
+            { day: 5, startTime: "18:00", endTime: "20:00" },
+          ],
+        },
+      ],
+      events: JSON.parse(localStorage.getItem("events")) || [
+        {
+          title: "Meeting",
+          start: new Date(2025, 5, 5, 0, 30),
+          end: new Date(2025, 5, 5, 11, 30),
+          extendedProps: { stream: 1 },
+        },
+        {
+          title: "Conference",
+          start: new Date(2025, 5, 4, 11, 0),
+          end: new Date(2025, 5, 4, 11, 30),
+          extendedProps: { stream: 1 },
+        },
+        {
+          title: "Lecture",
+          start: new Date(2025, 5, 5, 17, 30),
+          end: new Date(2025, 5, 5, 19, 30),
+          extendedProps: { stream: 2 },
+        },
+        {
+          title: "Dinner",
+          start: new Date(2025, 5, 6, 19, 0),
+          end: new Date(2025, 5, 6, 20, 30),
+          extendedProps: { stream: 3 },
+        },
+        {
+          title: "Canyoning",
+          start: new Date(2025, 4, 24),
+          allDay: true,
+          extendedProps: { stream: 3 },
+        },
+      ],
+      tasks: JSON.parse(localStorage.getItem("tasks")) || [
+        {
+          title: "Gym",
+          duration: 60,
+          stream: 3,
+        },
+        {
+          title: "Assignment",
+          duration: 180,
+          stream: 2,
+        },
+      ],
+      taskEvents: [],
+      calendarTitle: "",
+      colors: [
+        "#B4415A",
+        "#DB7C41",
+        "#E9E985",
+        "#A97AEC",
+        "#418DB4",
+        "#F69FE4",
+        "#8CCF58",
+        "#336699",
+        "#339970",
+      ],
+      view: "timeGridWeek",
+      splitView: false,
+      editingStreamTimes: false,
+      selectedEditingStream: null,
+      erasingStreamTimes: false,
+      creatingEvent: false,
+      eventOptionType: null,
+      creatingTask: false,
+    };
+  }
+
   state = {
-    calendarTitle: "",
-    colors: [
-      "#B4415A",
-      "#DB7C41",
-      "#E9E985",
-      "#A97AEC",
-      "#418DB4",
-      "#F69FE4",
-      "#8CCF58",
-      "#336699",
-      "#339970",
-    ],
-    currentDisplayedDate: new Date(),
+    calendarTitle: null,
+    colors: null,
     splitView: false,
     editingStreamTimes: false,
-    erasingStreamTimes: false,
     selectedEditingStream: null,
+    erasingStreamTimes: false,
+    streams: null,
+    events: null,
+    tasks: null,
+    taskEvents: [],
     creatingEvent: false,
     eventOptionType: null,
     creatingTask: false,
-    streams: [
-      {
-        id: 1,
-        name: "Work",
-        color: "#B4415A",
-        selected: true,
-        timePeriods: [
-          { day: 1, startTime: "09:00", endTime: "17:00" },
-          { day: 3, startTime: "13:00", endTime: "17:00" },
-        ],
-      },
-      {
-        id: 2,
-        name: "University",
-        color: "#DB7C41",
-        selected: true,
-        timePeriods: [
-          { day: 2, startTime: "10:00", endTime: "12:00" },
-          { day: 4, startTime: "14:00", endTime: "16:00" },
-        ],
-      },
-      {
-        id: 3,
-        name: "Personal",
-        color: "#E9E985",
-        selected: true,
-        timePeriods: [
-          { day: 0, startTime: "08:00", endTime: "10:00" },
-          { day: 5, startTime: "18:00", endTime: "20:00" },
-        ],
-      },
-    ],
-    events: [
-      {
-        title: "Meeting",
-        start: new Date(2025, 4, 23, 9, 0),
-        extendedProps: { stream: 1 },
-      },
-      {
-        title: "Conference",
-        start: new Date(2025, 4, 25, 11, 0),
-        extendedProps: { stream: 1 },
-      },
-      {
-        title: "Lecture",
-        start: new Date(2025, 4, 25, 21, 30),
-        extendedProps: { stream: 2 },
-      },
-      {
-        title: "Dinner",
-        start: new Date(2025, 4, 22, 19, 0),
-        extendedProps: { stream: 3 },
-      },
-      {
-        title: "Canyoning",
-        start: new Date(2025, 4, 24),
-        allDay: true,
-        extendedProps: { stream: 3 },
-      },
-    ],
-    tasks: [
-      {
-        title: "Assignment 3",
-        endDate: new Date(2025, 6, 5),
-        hours: 12,
-        stream: 2,
-      }
-    ]
   };
+
   mainCalendarRef = createRef();
   headerCalendarRef = createRef();
   splitCalendarRefs = {};
@@ -123,6 +153,7 @@ class App extends Component {
     if (!this.mainCalendarRef.current) return;
     this.mainCalendarRef.current.getApi().changeView(view);
     this.updateCalendarTitle();
+    this.setState({ view: view });
   };
 
   componentDidMount() {
@@ -140,9 +171,18 @@ class App extends Component {
       .filter((current) => current !== null && current !== undefined);
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.streams !== this.state.streams) {
+      localStorage.setItem("streams", JSON.stringify(this.state.streams));
+    }
+    if (prevState.events !== this.state.events) {
+      localStorage.setItem("events", JSON.stringify(this.state.events));
+    }
+  }
+
   render() {
     return (
-      <div id="App">
+      <div className="app">
         <Navbar
           onPrev={() => {
             const refs = this.allCurrentCalendarRefs();
@@ -172,6 +212,7 @@ class App extends Component {
               currentDisplayedDate: refs[0].getApi().getDate(),
             });
           }}
+          view={this.state.view}
           onViewChange={this.handleViewChange}
           title={this.state.calendarTitle}
           onSplit={() => {
@@ -200,6 +241,19 @@ class App extends Component {
               })),
             })
           }
+          onTimeblock={(period) => {
+            const { streams, events, tasks } = this.state;
+            const dateStart = new Date().getDay();
+            const dateEnd = period === "day" ? dateStart : 6;
+            const scheduledTasks = retrieveScheduledTasks(
+              streams,
+              events,
+              tasks,
+              dateStart,
+              dateEnd
+            );
+            this.setState({ taskEvents: scheduledTasks });
+          }}
         />
         <div className="content">
           <Sidebar
@@ -277,6 +331,7 @@ class App extends Component {
               });
             }}
             onEditStreamTimes={(streamID) => {
+              this.handleViewChange("timeGridWeek");
               this.setState({
                 editingStreamTimes: true,
                 selectedEditingStream: streamID,
@@ -297,9 +352,12 @@ class App extends Component {
             }}
             currentDisplayedDate={this.state.currentDisplayedDate}
             onDatesSet={this.updateCalendarTitle}
+            tasks={this.state.taskEvents}
             events={this.state.events}
             eventOptionType={this.state.eventOptionType}
             streams={this.state.streams}
+            view={this.state.view}
+            scheduledTasks={this.state.scheduledTasks}
             splitView={this.state.splitView}
             editingStreamTimes={this.state.editingStreamTimes}
             onSelectTimes={(timePeriods) => {
@@ -332,22 +390,20 @@ class App extends Component {
             creatingTask={this.state.creatingTask}
             onCloseCreateEventOptions={() => {
               this.setState({ creatingEvent: false });
-              console.log(this.state.events);
             }}
             onCloseCreateTaskOptions={() => {
               this.setState({ creatingTask: false });
             }}
             onSubmitEvent={(newEvent, oldEvent, remove) => {
               if (oldEvent == null) {
-              this.setState({
-                events: [...this.state.events, newEvent],
-              });
-              }
-              else {
+                this.setState({
+                  events: [...this.state.events, newEvent],
+                });
+              } else {
                 let matches = [];
                 for (var i = 0; i < this.state.events.length; i++) {
                   if (this.state.events[i].title == oldEvent.title) {
-                      matches.push(i);
+                    matches.push(i);
                   }
                 }
                 for (var i = 0; i < matches.length; i++) {
@@ -360,7 +416,10 @@ class App extends Component {
                     }
                     break;
                   }
-                  if (this.state.events[matches[i]].start.toString() != oldEvent.start) {
+                  if (
+                    this.state.events[matches[i]].start.toString() !=
+                    oldEvent.start
+                  ) {
                     matches.splice(i, 1);
                   }
                 }
@@ -375,7 +434,8 @@ class App extends Component {
             onSubmitTask={(newTask) => {
               this.setState({
                 tasks: [...this.state.tasks, newTask],
-              }); console.log(this.state.tasks);
+              });
+              console.log(this.state.tasks);
             }}
           />
         </div>

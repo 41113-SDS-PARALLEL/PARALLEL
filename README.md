@@ -22,12 +22,20 @@ In addition to typical calendar functionality, PARALLEL has the following featur
    ```
    cd PARALLEL/parallel
    ```
-3. Install dependencies:
+3. (optional) If you want the latest experimental features, switch to the `dev` branch:
+   ```
+   git checkout dev
+   ```
+4. Install dependencies:
    ```
    npm install
    ```
 
 ## Usage
+
+The application is hosted at [https://41113-sds-parallel.github.io/PARALLEL/](https://41113-sds-parallel.github.io/PARALLEL/). Note that data is stored locally in the browser's cache (using `localStorage`) rather than being hosted on a server.
+
+To host the application locally:
 
 1. Run the application:
    ```
