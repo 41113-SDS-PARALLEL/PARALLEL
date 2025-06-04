@@ -92,6 +92,17 @@ class Calendar extends Component {
     return textColor;
   };
 
+  styleTask = (info) => {
+    if (info.event.extendedProps.task) {
+      info.el.style.setProperty("--fc-event-bg-color", "var(--gray)");
+      info.el.style.borderWidth = "0.25rem";
+      info.el.style.setProperty(
+        "--fc-event-text-color",
+        "var(--content-color)"
+      );
+    }
+  };
+
   commonParams = (onDatesSet) => {
     return {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -141,7 +152,7 @@ class Calendar extends Component {
         title: "Gym",
         start: new Date(2025, 4, 25, 10, 0),
         end: new Date(2025, 4, 25, 10, 0),
-        stream: 3,
+        extendedProps: { stream: 3, task: true },
       },
     ];
 
@@ -219,6 +230,7 @@ class Calendar extends Component {
                             s.id === stream.id ? stream.color : "var(--gray)",
                         }))
                       ),
+                      ...tasks,
                     ]}
                     eventDidMount={(info) => {
                       if (info.event.display === "background") {
@@ -251,6 +263,7 @@ class Calendar extends Component {
                         "--fc-event-border-color",
                         eventColor
                       );
+                      this.styleTask(info);
                     }}
                     {...this.commonParams(onDatesSet)}
                   />
@@ -315,12 +328,7 @@ class Calendar extends Component {
                       stream.selected
                   )
                 ),
-                ...tasks.map((task, idx) => ({
-                  title: task.title,
-                  start: task.start,
-                  end: task.end,
-                  extendedProps: { stream: task.stream, task: true },
-                })),
+                ...tasks,
               ]}
               eventDidMount={(info) => {
                 const stream = info.event.extendedProps.stream;
@@ -335,18 +343,7 @@ class Calendar extends Component {
                   "--fc-event-border-color",
                   eventColor
                 );
-                if (info.event.extendedProps.task) {
-                  console.log(info.event);
-                  info.el.style.setProperty(
-                    "--fc-event-bg-color",
-                    "var(--gray)"
-                  );
-                  info.el.style.borderWidth = "0.25rem";
-                  info.el.style.setProperty(
-                    "--fc-event-text-color",
-                    "var(--content-color)"
-                  );
-                }
+                this.styleTask(info);
               }}
               {...this.commonParams(onDatesSet)}
             />
