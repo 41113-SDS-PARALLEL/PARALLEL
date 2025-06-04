@@ -100,3 +100,7 @@
     --fc-today-bg-color: none;
     --fc-bg-event-opacity: 0.8;
 }
+
+.fc-event.task-event .fc-daygrid-event-dot {
+  display: none !important;
+}

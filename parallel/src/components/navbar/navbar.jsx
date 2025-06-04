@@ -28,6 +28,7 @@ class Navbar extends Component {
       onClearStreamTimes,
       onEraseStreamTimes,
       erasingStreamTimes,
+      onTimeblock,
     } = this.props;
 
     const selectOptions = [
@@ -123,7 +124,7 @@ class Navbar extends Component {
               </button>
               {this.state.timeblocking && (
                 <TimeblockOptions
-                  onTimeblock={(d) => console.log("timeblock", d)}
+                  onTimeblock={onTimeblock}
                   onClose={() => this.setState({ timeblocking: false })}
                   position={this.state.timeblockPosition}
                 />

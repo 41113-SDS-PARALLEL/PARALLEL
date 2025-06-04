@@ -2,13 +2,13 @@ import React, { Component, createRef } from "react";
 import Navbar from "./components/navbar/navbar";
 import Sidebar from "./components/sidebar/sidebar";
 import Calendar from "./components/calendar/calendar";
-
 import {
   selectStream,
   editStream,
   addTimePeriodToStream,
   removeTimePeriodFromStream,
 } from "./utils/streamUtils";
+import { retrieveScheduledTasks } from "./utils/timeblockUtils";
 import "./App.css";
 
 class App extends Component {
@@ -50,22 +50,26 @@ class App extends Component {
       events: JSON.parse(localStorage.getItem("events")) || [
         {
           title: "Meeting",
-          start: new Date(2025, 4, 23, 9, 0),
+          start: new Date(2025, 5, 5, 0, 30),
+          end: new Date(2025, 5, 5, 11, 30),
           extendedProps: { stream: 1 },
         },
         {
           title: "Conference",
-          start: new Date(2025, 4, 25, 11, 0),
+          start: new Date(2025, 5, 4, 11, 0),
+          end: new Date(2025, 5, 4, 11, 30),
           extendedProps: { stream: 1 },
         },
         {
           title: "Lecture",
-          start: new Date(2025, 4, 25, 21, 30),
+          start: new Date(2025, 5, 5, 17, 30),
+          end: new Date(2025, 5, 5, 19, 30),
           extendedProps: { stream: 2 },
         },
         {
           title: "Dinner",
-          start: new Date(2025, 4, 22, 19, 0),
+          start: new Date(2025, 5, 6, 19, 0),
+          end: new Date(2025, 5, 6, 20, 30),
           extendedProps: { stream: 3 },
         },
         {
@@ -75,7 +79,7 @@ class App extends Component {
           extendedProps: { stream: 3 },
         },
       ],
-      tasks: JSON.parse(localStorage.getItem("events")) || [
+      tasks: JSON.parse(localStorage.getItem("tasks")) || [
         {
           title: "Gym",
           duration: 60,
@@ -87,6 +91,7 @@ class App extends Component {
           stream: 2,
         },
       ],
+      taskEvents: [],
       calendarTitle: "",
       colors: [
         "#B4415A",
@@ -117,6 +122,7 @@ class App extends Component {
     streams: null,
     events: null,
     tasks: null,
+    taskEvents: [],
   };
 
   mainCalendarRef = createRef();
@@ -229,6 +235,19 @@ class App extends Component {
               })),
             })
           }
+          onTimeblock={(period) => {
+            const { streams, events, tasks } = this.state;
+            const dateStart = new Date().getDay();
+            const dateEnd = period === "day" ? dateStart : 6;
+            const scheduledTasks = retrieveScheduledTasks(
+              streams,
+              events,
+              tasks,
+              dateStart,
+              dateEnd
+            );
+            this.setState({ taskEvents: scheduledTasks });
+          }}
         />
         <div className="content">
           <Sidebar
@@ -320,7 +339,7 @@ class App extends Component {
             }}
             currentDisplayedDate={this.state.currentDisplayedDate}
             onDatesSet={this.updateCalendarTitle}
-            tasks={this.state.tasks}
+            tasks={this.state.taskEvents}
             events={this.state.events}
             streams={this.state.streams}
             view={this.state.view}
