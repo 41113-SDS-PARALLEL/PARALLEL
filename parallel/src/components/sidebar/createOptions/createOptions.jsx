@@ -30,7 +30,7 @@ class CreateOptions extends Component {
           id="eventButton"
           className="button createButton"
           onClick={() => {
-            onCreateEvent();
+            onCreateEvent("Create");
             onClose();
           }}
         >

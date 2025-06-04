@@ -148,6 +148,7 @@ class Calendar extends Component {
       creatingEvent,
       creatingTask,
       editingEvent,
+      eventOptionType,
       onCloseCreateEventOptions,
       onCloseCreateTaskOptions,
       onSubmitEvent,
@@ -219,7 +220,7 @@ class Calendar extends Component {
                           selectedStreamID: stream.id,
                           popupType: "Create",
                         });
-                        onCreateEvent();
+                        onCreateEvent("Create");
                       }}
                       eventClick={(info) => {
                         this.setState({
@@ -227,7 +228,7 @@ class Calendar extends Component {
                           popupType: "Edit",
                         });
                         // console.log(this.state.selectedEvent);
-                        onCreateEvent();
+                        onCreateEvent("Edit");
                       }}
                       events={[
                         ...events,
@@ -348,7 +349,7 @@ class Calendar extends Component {
                     selectedAllDay: info.allDay,
                     popupType: "Create",
                   });
-                  onCreateEvent();
+                  onCreateEvent("Create");
                 }}
                 eventClick={(info) => {
                   this.setState({
@@ -356,7 +357,7 @@ class Calendar extends Component {
                     popupType: "Edit",
                   });
                   // console.log(this.state.selectedEvent);
-                  onCreateEvent();
+                  onCreateEvent("Edit");
                 }}
                 eventDidMount={(info) => {
                   const stream = info.event.extendedProps.stream;
@@ -397,7 +398,7 @@ class Calendar extends Component {
             allDay={this.state.selectedAllDay}
             stream={this.state.selectedStreamID}
             event={this.state.selectedEvent}
-            type={this.state.popupType}
+            eventOptionType={eventOptionType}
           />
         )}
         {editingEvent && (
@@ -420,7 +421,7 @@ class Calendar extends Component {
             allDay={this.state.selectedAllDay}
             stream={this.state.selectedStreamID}
             event={this.state.selectedEvent}
-            type={this.state.popupType}
+            type={eventOptionType}
           />
         )}
         {creatingTask && (

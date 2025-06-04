@@ -17,7 +17,7 @@ class CreateEventOptions extends Component {
       const mm = pad(date.getMinutes());
       return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
     };
-    if (this.props.type == "Create") {
+    if (this.props.eventOptionType == "Create") {
       this.state = {
         streamID: this.props.stream || (streams.length > 0 ? streams[0].id : null),
         startDate: this.props.start ? formatDateTimeLocal(this.props.start).substring(0, 10) : null,
@@ -26,8 +26,10 @@ class CreateEventOptions extends Component {
         endTime: this.props.end ? formatDateTimeLocal(this.props.end).substring(11) : null,
         allDay: this.props.allDay ? this.props.allDay : false,
         type: false,
+        badInput: false,
       };
-      console.log(this.props.event);
+      this.checkInput()
+      // console.log(this.props.event);
     }
     else {
       this.state = {
@@ -39,7 +41,9 @@ class CreateEventOptions extends Component {
         endTime: this.props.event.end ? formatDateTimeLocal(this.props.event.end).substring(11) : null,
         allDay: this.props.event.allDay,
         type: true,
+        badInput: false,
       };
+      this.checkInput();
     }
 
   }
@@ -55,16 +59,29 @@ class CreateEventOptions extends Component {
     recurring: false,
     days: null,
     type: false,
+    badInput: true,
   };
 
+  checkInput() {
+    // setTimeout(() => {
+    if (this.state.startDate | this.state.endDate | this.state.startTime | this.state.endTime === null) this.setState({badInput: true});
+    else if (new Date(this.state.startDate + "T" + this.state.startTime) >= new Date(this.state.endDate + "T" + this.state.endTime)) this.setState({badInput: true});
+    else this.setState({badInput: false});
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (new Date(this.state.startDate + "T" + this.state.startTime).toString() !== new Date(prevState.startDate + "T" + prevState.startTime).toString()) this.checkInput();
+    if (new Date(this.state.endDate + "T" + this.state.endTime).toString() !== new Date(prevState.endDate + "T" + prevState.endTime).toString()) this.checkInput();
+  }
+
   render() {
-    const { onClose, onSubmitEvent, streams } = this.props;
-    const { title, startDate, endDate, startTime, endTime, allDay, streamID, recurring, days, type } = this.state;
+    const { onClose, onSubmitEvent, streams, eventOptionType } = this.props;
+    const { title, startDate, endDate, startTime, endTime, allDay, streamID, recurring, days, type, badInput } = this.state;
     return (
       <div className="popup-background">
         <div className="event-panel">
           <div className="event-panel-title">
-            {this.props.type} Event
+            {eventOptionType} Event
             <button className="cancel-button" onClick={onClose}>
               <img
                   id="close"
@@ -93,7 +110,7 @@ class CreateEventOptions extends Component {
                 type="date"
                 name="startDate"
                 value={startDate || ""}
-                onChange={(e) => this.setState({ startDate: e.target.value })}
+                onChange={(e) => {this.setState({ startDate: e.target.value })}}
               />
             </label>
             <br />
@@ -219,6 +236,7 @@ class CreateEventOptions extends Component {
             <button
               id="submit"
               type="submit"
+              disabled={this.state.badInput}
               // you should probably just disable this button if any of the fields are empty
               onClick={() => {
                 // console.log(this.state);

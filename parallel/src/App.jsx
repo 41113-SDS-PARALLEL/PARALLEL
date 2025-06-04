@@ -30,6 +30,7 @@ class App extends Component {
     erasingStreamTimes: false,
     selectedEditingStream: null,
     creatingEvent: false,
+    eventOptionType: null,
     creatingTask: false,
     streams: [
       {
@@ -217,8 +218,9 @@ class App extends Component {
             streams={this.state.streams}
             colors={this.state.colors}
             events={this.state.events}
-            onCreateEvent={() => {
+            onCreateEvent={(type) => {
               this.setState({ creatingEvent: true });
+              this.setState({ eventOptionType: type });
             }}
             onCreateTask={() => {
               this.setState({ creatingTask: true });
@@ -296,6 +298,7 @@ class App extends Component {
             currentDisplayedDate={this.state.currentDisplayedDate}
             onDatesSet={this.updateCalendarTitle}
             events={this.state.events}
+            eventOptionType={this.state.eventOptionType}
             streams={this.state.streams}
             splitView={this.state.splitView}
             editingStreamTimes={this.state.editingStreamTimes}
@@ -317,7 +320,9 @@ class App extends Component {
               );
               this.setState({ streams: updatedStreams });
             }}
-            onCreateEvent={() => {
+            onCreateEvent={(type) => {
+              this.setState({ eventOptionType: type });
+              console.log(this.state.eventOptionType);
               this.setState({ creatingEvent: true });
             }}
             onCreateTask={() => {
