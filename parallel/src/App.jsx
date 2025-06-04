@@ -332,6 +332,7 @@ class App extends Component {
             creatingTask={this.state.creatingTask}
             onCloseCreateEventOptions={() => {
               this.setState({ creatingEvent: false });
+              console.log(this.state.events);
             }}
             onCloseCreateTaskOptions={() => {
               this.setState({ creatingTask: false });

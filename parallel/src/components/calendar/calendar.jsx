@@ -399,6 +399,7 @@ class Calendar extends Component {
             stream={this.state.selectedStreamID}
             event={this.state.selectedEvent}
             eventOptionType={eventOptionType}
+            events={events}
           />
         )}
         {editingEvent && (
@@ -421,7 +422,8 @@ class Calendar extends Component {
             allDay={this.state.selectedAllDay}
             stream={this.state.selectedStreamID}
             event={this.state.selectedEvent}
-            type={eventOptionType}
+            eventOptionType={eventOptionType}
+            events={events}
           />
         )}
         {creatingTask && (
