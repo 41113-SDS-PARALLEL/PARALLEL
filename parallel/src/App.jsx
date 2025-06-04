@@ -155,7 +155,7 @@ class App extends Component {
 
   render() {
     return (
-      <div id="App">
+      <div className="app">
         <Navbar
           onPrev={() => {
             const refs = this.allCurrentCalendarRefs();
@@ -284,6 +284,7 @@ class App extends Component {
               });
             }}
             onEditStreamTimes={(streamID) => {
+              this.handleViewChange("timeGridWeek");
               this.setState({
                 editingStreamTimes: true,
                 selectedEditingStream: streamID,

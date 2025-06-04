@@ -1,76 +1,71 @@
-/* DatePicker (DatePicker) Styles */
-#DatePicker {
+.date-picker {
   --fc-border-color: transparent;
   --fc-today-bg-color: transparent;
   --fc-button-text-color: var(--content-color);
+  padding-top: 1.2rem;
 }
 
-/* Day grid and header cell alignment */
-#DatePicker .fc-daygrid-day-frame,
-#DatePicker .fc-daygrid-day-number,
-#DatePicker .fc-col-header-cell-cushion,
-#DatePicker .fc-button {
+.date-picker .fc-scrollgrid {
+  overflow: hidden;
+}
+
+.date-picker .fc-daygrid-day-events {
+  width: 0;
+}
+
+.date-picker .fc-daygrid-day-frame,
+.date-picker .fc-daygrid-day-number,
+.date-picker .fc-col-header-cell-cushion,
+.date-picker .fc-button {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Remove day cell borders */
-#DatePicker .fc-daygrid-day {
-  border: none;
+.date-picker .fc-daygrid-day-frame {
+  height: 1rem;
 }
 
-/* Day number styling */
-#DatePicker .fc-daygrid-day-number {
+.date-picker .fc-daygrid-day-number {
   border-radius: 50%;
-  width: 2em;
-  height: 2em;
+  width: 1.8em;
+  height: 1.8em;
   cursor: pointer;
 }
 
-/* Day number hover effect */
-#DatePicker .fc-daygrid-day-number:hover {
+.date-picker .fc-daygrid-day-number:hover, 
+.date-picker .fc-day-today .fc-daygrid-day-number:hover {
     background-color: var(--theme-color);
 }
 
-/* Today cell hover effect */
-#DatePicker .fc-day-today .fc-daygrid-day-number:hover {
-    background-color: var(--theme-color);
-}
-
-/* Today cell number styling */
-#DatePicker .fc-day-today .fc-daygrid-day-number {
+.date-picker .fc-day-today .fc-daygrid-day-number {
     background-color: var(--faded-theme-color);
 }
 
-/* Header cell styling */
-#DatePicker .fc-col-header-cell-cushion {
-  width: 2em;
-  height: 2em;
+.date-picker .fc-col-header-cell-cushion {
   font-weight: normal;
   font-stretch: condensed;
 }
 
-/* DatePicker navigation button styling */
-#DatePicker .fc-button {
+.date-picker .fc-direction-ltr .fc-button-group > .fc-button:not(:first-child),
+.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child) {
   border-radius: 50%;
-  width: 2em;
-  height: 2em;
+  width: 2rem;
+  height: 2rem;
 }
 
-/* DatePicker header toolbar spacing */
-#DatePicker .fc-header-toolbar {
-  padding-top: 20px;
-  padding-right: 5px;
+.date-picker .fc .fc-toolbar-title {
+  font-size: var(--h2-font-size);
+  font-weight: var(--h2-font-weight);
+}
+
+.date-picker .fc-header-toolbar {
   --fc-button-bg-color: transparent;
   --fc-button-border-color: transparent;
   --fc-button-hover-bg-color: var(--theme-color);
   --fc-button-hover-border-color: transparent;
 }
 
-/* DatePicker title styling */
-#DatePicker .fc-toolbar-title {
-  font-weight: var(--sidebar-header-font-weight); 
-  font-stretch: var(--sidebar-header-font-stretch);
-  font-size: var(--sidebar-header-font-size);
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0.5rem;
 }

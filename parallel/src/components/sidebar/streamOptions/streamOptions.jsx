@@ -1,4 +1,4 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import editIcon from "../../../assets/edit_icon.svg";
 import DeleteStreamOptions from "./deleteStreamOptions/deleteStreamOptions";
 import "./streamOptions.css";
@@ -8,7 +8,6 @@ class StreamOptions extends Component {
     editingName: this.props.stream.name === "New Stream",
     deletingStream: false,
   };
-  streamOptionsRef = createRef();
 
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
@@ -20,8 +19,8 @@ class StreamOptions extends Component {
 
   handleClickOutside = (event) => {
     if (
-      this.streamOptionsRef.current &&
-      !this.streamOptionsRef.current.contains(event.target)
+      this.props.panelRef.current &&
+      !this.props.panelRef.current.contains(event.target)
     ) {
       this.props.onClose();
     }
@@ -38,18 +37,20 @@ class StreamOptions extends Component {
       position,
       streams,
       events,
+      panelRef,
     } = this.props;
     return (
       <div
-        className="stream-options"
-        ref={this.streamOptionsRef}
+        className="panel popup stream-options-popup"
+        ref={panelRef}
         style={{ top: position.top, left: position.left }}
       >
-        <div className="stream-options-name">
+        <div className="stream-options-header">
           {this.state.editingName ? (
             <input
               type="text"
-              className="name-input"
+              id="stream-name-input"
+              className="stream-name-input"
               value={stream.name}
               onChange={(e) => {
                 onEditStream(stream.id, e.target.value, stream.color);
@@ -66,22 +67,22 @@ class StreamOptions extends Component {
               autoFocus
             />
           ) : (
-            <>
-              <div className="stream-name">{stream.name}</div>
+            <React.Fragment>
+              <p className="stream-name">{stream.name}</p>
               <button
-                className="button edit-button"
+                className="clickable home-page-clickable round-button edit-stream-name-button"
                 onClick={() => this.setState({ editingName: true })}
               >
                 <img src={editIcon} alt="Edit" className="icon edit-icon" />
               </button>
-            </>
+            </React.Fragment>
           )}
         </div>
-        <div className="color-grid">
+        <div className="stream-color-grid">
           {colors.map((color, index) => (
             <button
               key={index}
-              className="button color-button"
+              className="clickable stream-color-button"
               onClick={() => {
                 onEditStream(stream.id, stream.name, color);
               }}
@@ -94,7 +95,7 @@ class StreamOptions extends Component {
         </div>
         <div className="stream-options-actions">
           <button
-            className="button edit-times-button"
+            className="clickable edit-times-button"
             onClick={() => {
               onEditStreamTimes(stream.id);
               onClose();
@@ -103,7 +104,7 @@ class StreamOptions extends Component {
             Edit Times
           </button>
           <button
-            className="button delete-button"
+            className="clickable delete-button"
             onClick={() => {
               const hasEvents =
                 events &&

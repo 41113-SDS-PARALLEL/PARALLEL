@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Stream from "./stream/stream";
+import "./streamList.css";
 
 class StreamList extends Component {
   state = {};
