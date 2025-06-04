@@ -91,7 +91,7 @@ class CreateTaskOptions extends Component {
                 id="definite"
                 type="radio"
                 name="definite"
-                // checked
+                checked={definite === true}
                 value="value1"
                 onChange={(e) => this.setState({ definite: !this.state.definite })}
               />
@@ -104,6 +104,7 @@ class CreateTaskOptions extends Component {
                 type="radio"
                 name="definite"
                 value="value2"
+                checked={definite === false}
                 onChange={(e) => this.setState({ definite: !this.state.definite })}
               />
             </label>

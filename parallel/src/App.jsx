@@ -331,10 +331,31 @@ class App extends Component {
             onCloseCreateTaskOptions={() => {
               this.setState({ creatingTask: false });
             }}
-            onSubmitEvent={(newEvent) => {
+            onSubmitEvent={(newEvent, oldEvent, remove) => {
+              if (oldEvent == null) {
               this.setState({
                 events: [...this.state.events, newEvent],
               });
+              }
+              else {
+                let matches = [];
+                for (var i = 0; i < this.state.events.length; i++) {
+                  if (this.state.events[i].title == oldEvent.title) {
+                      matches.push(i);
+                  }
+                }
+                for (var i = 0; i < matches.length; i++) {
+                  if (this.state.events[matches[i]].start.toString() != oldEvent.start) {
+                    matches.splice(i, 1);
+                  }
+                }
+                this.state.events.splice(matches[0], 1);
+                if (!remove) {
+                  this.setState({
+                    events: [...this.state.events, newEvent],
+                  });
+                }
+              }
             }}
             onSubmitTask={(newTask) => {
               this.setState({

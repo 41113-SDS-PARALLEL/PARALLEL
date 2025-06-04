@@ -13,6 +13,9 @@ class Calendar extends Component {
     selectedStartTime: null,
     selectedEndTime: null,
     selectedStreamID: null,
+    selectedAllDay: null,
+    selectedEvent: null,
+    popupType: null,
   };
   splitScrollListeners = [];
   splitCalendarDomRefs = {};
@@ -144,6 +147,7 @@ class Calendar extends Component {
       onCreateTask,
       creatingEvent,
       creatingTask,
+      editingEvent,
       onCloseCreateEventOptions,
       onCloseCreateTaskOptions,
       onSubmitEvent,
@@ -211,8 +215,18 @@ class Calendar extends Component {
                         this.setState({
                           selectedStartTime: new Date(info.start),
                           selectedEndTime: new Date(info.end),
+                          selectedAllDay: info.allDay,
                           selectedStreamID: stream.id,
+                          popupType: "Create",
                         });
+                        onCreateEvent();
+                      }}
+                      eventClick={(info) => {
+                        this.setState({
+                          selectedEvent: info.event,
+                          popupType: "Edit",
+                        });
+                        // console.log(this.state.selectedEvent);
                         onCreateEvent();
                       }}
                       events={[
@@ -331,7 +345,17 @@ class Calendar extends Component {
                   this.setState({
                     selectedStartTime: new Date(info.start),
                     selectedEndTime: new Date(info.end),
+                    selectedAllDay: info.allDay,
+                    popupType: "Create",
                   });
+                  onCreateEvent();
+                }}
+                eventClick={(info) => {
+                  this.setState({
+                    selectedEvent: info.event,
+                    popupType: "Edit",
+                  });
+                  // console.log(this.state.selectedEvent);
                   onCreateEvent();
                 }}
                 eventDidMount={(info) => {
@@ -361,13 +385,42 @@ class Calendar extends Component {
                 selectedStartTime: null,
                 selectedEndTime: null,
                 selectedStreamID: null,
+                selectedAllDay: null,
+                selectedEvent: null,
+                popupType: null,
               });
             }}
             streams={streams}
             onSubmitEvent={onSubmitEvent}
             start={this.state.selectedStartTime}
             end={this.state.selectedEndTime}
+            allDay={this.state.selectedAllDay}
             stream={this.state.selectedStreamID}
+            event={this.state.selectedEvent}
+            type={this.state.popupType}
+          />
+        )}
+        {editingEvent && (
+          <CreateEventOptions
+            onClose={() => {
+              onCloseCreateEventOptions();
+              this.setState({
+                selectedStartTime: null,
+                selectedEndTime: null,
+                selectedStreamID: null,
+                selectedAllDay: null,
+                selectedEvent: null,
+                popupType: null,
+              });
+            }}
+            streams={streams}
+            onSubmitEvent={onSubmitEvent}
+            start={this.state.selectedStartTime}
+            end={this.state.selectedEndTime}
+            allDay={this.state.selectedAllDay}
+            stream={this.state.selectedStreamID}
+            event={this.state.selectedEvent}
+            type={this.state.popupType}
           />
         )}
         {creatingTask && (
@@ -378,6 +431,8 @@ class Calendar extends Component {
                 selectedStartTime: null,
                 selectedEndTime: null,
                 selectedStreamID: null,
+                selectedAllDay: null,
+                selectedEvent: null,
               });
             }}
             streams={streams}

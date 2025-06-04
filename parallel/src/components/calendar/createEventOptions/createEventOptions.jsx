@@ -17,15 +17,31 @@ class CreateEventOptions extends Component {
       const mm = pad(date.getMinutes());
       return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
     };
+    if (this.props.type == "Create") {
+      this.state = {
+        streamID: this.props.stream || (streams.length > 0 ? streams[0].id : null),
+        startDate: this.props.start ? formatDateTimeLocal(this.props.start).substring(0, 10) : null,
+        endDate: this.props.end ? formatDateTimeLocal(this.props.end).substring(0, 10) : null,
+        startTime: this.props.start ? formatDateTimeLocal(this.props.start).substring(11) : null,
+        endTime: this.props.end ? formatDateTimeLocal(this.props.end).substring(11) : null,
+        allDay: this.props.allDay ? this.props.allDay : false,
+        type: false,
+      };
+      console.log(this.props.event);
+    }
+    else {
+      this.state = {
+        title: this.props.event.title,
+        streamID: this.props.event.extendedProps.stream,
+        startDate: this.props.event.start ? formatDateTimeLocal(this.props.event.start).substring(0, 10) : null,
+        endDate: this.props.event.end ? formatDateTimeLocal(this.props.event.end).substring(0, 10) : null,
+        startTime: this.props.event.start ? formatDateTimeLocal(this.props.event.start).substring(11) : null,
+        endTime: this.props.event.end ? formatDateTimeLocal(this.props.event.end).substring(11) : null,
+        allDay: this.props.event.allDay,
+        type: true,
+      };
+    }
 
-    this.state = {
-      streamID:
-        this.props.stream || (streams.length > 0 ? streams[0].id : null),
-      startDate: this.props.start ? formatDateTimeLocal(this.props.start).substring(0, 10) : null,
-      endDate: this.props.end ? formatDateTimeLocal(this.props.end).substring(0, 10) : null,
-      startTime: this.props.start ? formatDateTimeLocal(this.props.start).substring(11) : null,
-      endTime: this.props.end ? formatDateTimeLocal(this.props.end).substring(11) : null,
-    };
   }
 
   state = {
@@ -38,16 +54,17 @@ class CreateEventOptions extends Component {
     streamID: null,
     recurring: false,
     days: null,
+    type: false,
   };
 
   render() {
     const { onClose, onSubmitEvent, streams } = this.props;
-    const { title, startDate, endDate, startTime, endTime, allDay, streamID, recurring, days } = this.state;
+    const { title, startDate, endDate, startTime, endTime, allDay, streamID, recurring, days, type } = this.state;
     return (
       <div className="popup-background">
         <div className="event-panel">
           <div className="event-panel-title">
-            Create Event
+            {this.props.type} Event
             <button className="cancel-button" onClick={onClose}>
               <img
                   id="close"
@@ -120,6 +137,7 @@ class CreateEventOptions extends Component {
                 type="checkbox"
                 name="allDay"
                 value={allDay}
+                checked={allDay}
                 onChange={(e) => this.setState({ allDay: !this.state.allDay })}
               />
             </label>
@@ -203,44 +221,128 @@ class CreateEventOptions extends Component {
               type="submit"
               // you should probably just disable this button if any of the fields are empty
               onClick={() => {
-                console.log(this.state);
-                if (days == null) {
-                  onSubmitEvent(
-                    {
-                      title: title || "New Event",
-                      start: new Date(startDate + "T" + startTime) || new Date(),
-                      end: new Date(endDate + "T" + endTime) || new Date(),
-                      allDay: allDay || false,
-                      extendedProps: {
-                        stream: parseInt(streamID, 10) || 1,
+                // console.log(this.state);
+                if (this.props.event == null) {
+                  if (days == null) {
+                    onSubmitEvent(
+                      {
+                        title: title || "New Event",
+                        start: new Date(startDate + "T" + startTime) || new Date(),
+                        end: new Date(endDate + "T" + endTime) || new Date(),
+                        allDay: allDay || false,
+                        extendedProps: {
+                          stream: parseInt(streamID, 10) || 1,
+                        },
+                      }
+                    );
+                  }
+                  else {
+                    let daysArray = days.substring(9).split("");
+                    onSubmitEvent(
+                      {
+                        title: title || "New Event",
+                        startTime: (startTime + ":00") || null,
+                        endTime: (endTime + ":00") || null,
+                        startRecur: new Date(startDate + "T" + startTime) || new Date(),
+                        endRecur: new Date(endDate + "T" + endTime) || new Date(),
+                        allDay: allDay || false,
+                        daysOfWeek: daysArray,
+                        extendedProps: {
+                          stream: parseInt(streamID, 10) || 1,
+                        },
                       },
-                    },
-                    streamID
-                  );
+                      this.props.event
+                    );
+                  }
                 }
                 else {
-                  let daysArray = days.substring(9).split("");
-                  onSubmitEvent(
-                    {
-                      title: title || "New Event",
-                      startTime: (startTime + ":00") || null,
-                      endTime: (endTime + ":00") || null,
-                      startRecur: new Date(startDate + "T" + startTime) || new Date(),
-                      endRecur: new Date(endDate + "T" + endTime) || new Date(),
-                      allDay: allDay || false,
-                      daysOfWeek: daysArray,
-                      extendedProps: {
-                        stream: parseInt(streamID, 10) || 1,
+                  if (days == null) {
+                    onSubmitEvent(
+                      {
+                        title: title || "New Event",
+                        start: new Date(startDate + "T" + startTime) || new Date(),
+                        end: new Date(endDate + "T" + endTime) || new Date(),
+                        allDay: allDay || false,
+                        extendedProps: {
+                          stream: parseInt(streamID, 10) || 1,
+                        },
                       },
-                    },
-                    streamID
-                  );
+                      {
+                        title: this.props.event.title,
+                        start: this.props.event.start,
+                        end: this.props.event.end,
+                        allDay: this.props.event.allDay,
+                        extendedProps: {
+                          stream: this.props.event.extendedProps.stream,
+                        },
+                      }
+                    );
+                  }
+                  else {
+                    let daysArray = days.substring(9).split("");
+                    onSubmitEvent(
+                      {
+                        title: title || "New Event",
+                        startTime: (startTime + ":00") || null,
+                        endTime: (endTime + ":00") || null,
+                        startRecur: new Date(startDate + "T" + startTime) || new Date(),
+                        endRecur: new Date(endDate + "T" + endTime) || new Date(),
+                        allDay: allDay || false,
+                        daysOfWeek: daysArray,
+                        extendedProps: {
+                          stream: parseInt(streamID, 10) || 1,
+                        },
+                      },
+                      {
+                        title: this.props.event.title,
+                        start: this.props.event.start,
+                        end: this.props.event.end,
+                        allDay: this.props.event.allDay,
+                        extendedProps: {
+                          stream: this.props.event.extendedProps.stream,
+                        },
+                      }
+                    );
+                  }
                 }
                 onClose();
               }}
             >
               Submit
             </button>
+            {type && (<div>
+              <button
+                id="submit"
+                type="submit"
+                // you should probably just disable this button if any of the fields are empty
+                onClick={() => {
+                  onSubmitEvent(
+                      {
+                        title: title || "New Event",
+                        start: new Date(startDate + "T" + startTime) || new Date(),
+                        end: new Date(endDate + "T" + endTime) || new Date(),
+                        allDay: allDay || false,
+                        extendedProps: {
+                          stream: parseInt(streamID, 10) || 1,
+                        },
+                      },
+                      {
+                        title: this.props.event.title,
+                        start: this.props.event.start,
+                        end: this.props.event.end,
+                        allDay: this.props.event.allDay,
+                        extendedProps: {
+                          stream: this.props.event.extendedProps.stream,
+                        },
+                      },
+                      true
+                    );
+                  onClose();
+                }}
+              >
+                Delete Event
+              </button>
+            </div>)}
           </div>
         </div>
       </div>
