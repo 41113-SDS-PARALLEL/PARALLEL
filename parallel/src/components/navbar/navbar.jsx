@@ -6,9 +6,7 @@ import splitIcon from "../../assets/parallel_icon_black.png";
 import "./navbar.css";
 
 class Navbar extends Component {
-  state = {
-    view: "timeGridWeek",
-  };
+  state = {};
 
   render() {
     const {
@@ -18,6 +16,7 @@ class Navbar extends Component {
       onSplit,
       onViewChange,
       title,
+      view,
       splitView,
       editingStreamTimes,
       onDoneEditingStreamTimes,
@@ -90,7 +89,7 @@ class Navbar extends Component {
                 className="navButton"
                 onClick={() => {
                   onSplit();
-                  this.setState({ view: "timeGridWeek" });
+                  onViewChange("timeGridWeek");
                 }}
               >
                 <img
@@ -112,7 +111,7 @@ class Navbar extends Component {
                     onViewChange(e.target.value);
                     this.setState({ view: e.target.value });
                   }}
-                  value={this.state.view}
+                  value={view}
                   disabled={splitView}
                 >
                   <option value="dayGridMonth">Month</option>

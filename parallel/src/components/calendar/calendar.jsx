@@ -128,6 +128,7 @@ class Calendar extends Component {
       onDatesSet,
       events,
       streams,
+      view,
       splitView,
       editingStreamTimes,
       mainCalendarRef,
@@ -136,7 +137,10 @@ class Calendar extends Component {
       onSelectTimes,
     } = this.props;
     return (
-      <div id="Calendar">
+      <div
+        id="Calendar"
+        className={view === "dayGridMonth" ? "month-view" : ""}
+      >
         {splitView ? (
           <div className="split-calendar-container">
             <div className="calendar-header-container">

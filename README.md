@@ -22,7 +22,11 @@ In addition to typical calendar functionality, PARALLEL has the following featur
    ```
    cd PARALLEL/parallel
    ```
-3. Install dependencies:
+3. (optional) If you want the latest experimental features, switch to the `dev` branch:
+   ```
+   git checkout dev
+   ```
+4. Install dependencies:
    ```
    npm install
    ```

@@ -29,6 +29,11 @@
     box-sizing: border-box;
 }
 
+.stream-name {
+    overflow-x: hidden;
+    width: 70%;
+}
+
 .stream-list-checkbox {
     height: var(--list-element-height); 
     width: var(--list-element-height);
