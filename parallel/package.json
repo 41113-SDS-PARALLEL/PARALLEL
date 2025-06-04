@@ -2,7 +2,7 @@
   "name": "parallel",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://Zen-TM.github.io/PARALLEL",
+  "homepage": "https://41113-sds-parallel.github.io/PARALLEL",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
