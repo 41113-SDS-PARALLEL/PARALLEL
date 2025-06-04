@@ -2,6 +2,7 @@ import React, { Component, createRef } from "react";
 import Navbar from "./components/navbar/navbar";
 import Sidebar from "./components/sidebar/sidebar";
 import Calendar from "./components/calendar/calendar";
+
 import {
   selectStream,
   editStream,
@@ -77,7 +78,7 @@ class App extends Component {
       tasks: JSON.parse(localStorage.getItem("events")) || [
         {
           title: "Gym",
-          duration: 90,
+          duration: 60,
           stream: 3,
         },
         {
@@ -117,6 +118,7 @@ class App extends Component {
     events: null,
     tasks: null,
   };
+
   mainCalendarRef = createRef();
   headerCalendarRef = createRef();
   splitCalendarRefs = {};
@@ -318,9 +320,11 @@ class App extends Component {
             }}
             currentDisplayedDate={this.state.currentDisplayedDate}
             onDatesSet={this.updateCalendarTitle}
+            tasks={this.state.tasks}
             events={this.state.events}
             streams={this.state.streams}
             view={this.state.view}
+            scheduledTasks={this.state.scheduledTasks}
             splitView={this.state.splitView}
             editingStreamTimes={this.state.editingStreamTimes}
             onSelectTimes={(timePeriods) => {
