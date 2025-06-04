@@ -493,10 +493,8 @@ class CreateEventOptions extends Component {
               >
                 Submit
               </button>
-            </div>
 
-            {type && (
-              <div>
+              {type && (
                 <button
                   id="submit"
                   type="submit"
@@ -528,8 +526,8 @@ class CreateEventOptions extends Component {
                 >
                   Delete Event
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
