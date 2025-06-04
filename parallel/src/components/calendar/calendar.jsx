@@ -6,8 +6,9 @@ import interactionPlugin from "@fullcalendar/interaction";
 import auLocale from "@fullcalendar/core/locales/en-au";
 import "./calendar.css";
 
+import { retrieveScheduledTasks } from "../../utils/timeblockUtils";
+
 class Calendar extends Component {
-  state = {};
   splitScrollListeners = [];
   splitCalendarDomRefs = {};
 
@@ -93,6 +94,20 @@ class Calendar extends Component {
     return textColor;
   };
 
+  styleTask = (info, eventColor) => {
+    if (info.event.extendedProps.task) {
+      info.el.classList.add("task-event");
+      info.el.style.border = "0";
+      info.el.style.borderLeft = `0.5rem solid ${eventColor}`;
+      info.el.style.backgroundColor = "var(--gray)";
+      info.el.style.setProperty(
+        "--fc-event-text-color",
+        "var(--content-color)"
+      );
+      info.el.style.paddingLeft = "0.2rem";
+    }
+  };
+
   commonParams = (onDatesSet) => {
     return {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -127,6 +142,7 @@ class Calendar extends Component {
     const {
       onDatesSet,
       events,
+      tasks,
       streams,
       view,
       splitView,
@@ -136,6 +152,7 @@ class Calendar extends Component {
       getSplitCalendarRef,
       onSelectTimes,
     } = this.props;
+
     return (
       <div
         className={`calendar-container ${
@@ -210,6 +227,7 @@ class Calendar extends Component {
                             s.id === stream.id ? stream.color : "var(--gray)",
                         }))
                       ),
+                      ...tasks,
                     ]}
                     eventDidMount={(info) => {
                       if (info.event.display === "background") {
@@ -226,7 +244,7 @@ class Calendar extends Component {
                         }
                         return;
                       }
-                      let eventColor = "var(--gray)" || "gray";
+                      let eventColor = "var(--gray)";
                       if (info.event.extendedProps.stream === stream.id) {
                         eventColor = stream.color;
                       }
@@ -242,6 +260,7 @@ class Calendar extends Component {
                         "--fc-event-border-color",
                         eventColor
                       );
+                      this.styleTask(info, eventColor);
                     }}
                     {...this.commonParams(onDatesSet)}
                   />
@@ -298,12 +317,16 @@ class Calendar extends Component {
             <FullCalendar
               ref={mainCalendarRef}
               nowIndicator={true}
-              events={events.filter((event) =>
-                streams.find(
-                  (stream) =>
-                    stream.id === event.extendedProps.stream && stream.selected
-                )
-              )}
+              events={[
+                ...events.filter((event) =>
+                  streams.find(
+                    (stream) =>
+                      stream.id === event.extendedProps.stream &&
+                      stream.selected
+                  )
+                ),
+                ...tasks,
+              ]}
               eventDidMount={(info) => {
                 const stream = info.event.extendedProps.stream;
                 const streamObj = streams.find((s) => s.id === stream);
@@ -317,6 +340,7 @@ class Calendar extends Component {
                   "--fc-event-border-color",
                   eventColor
                 );
+                this.styleTask(info, eventColor);
               }}
               {...this.commonParams(onDatesSet)}
             />

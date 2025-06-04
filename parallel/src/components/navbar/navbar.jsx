@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import TimeblockOptions from "./timeblockOptions/timeblockOptions";
 import Select from "react-select";
 import logo from "../../assets/parallel_logo.svg";
 import arrowIcon from "../../assets/arrow_icon.svg";
@@ -7,7 +8,10 @@ import splitIcon from "../../assets/parallel_icon_black.png";
 import "./navbar.css";
 
 class Navbar extends Component {
-  state = {};
+  state = {
+    timeblocking: false,
+    timeblockPosition: { top: 0, left: 0 },
+  };
 
   render() {
     const {
@@ -24,6 +28,7 @@ class Navbar extends Component {
       onClearStreamTimes,
       onEraseStreamTimes,
       erasingStreamTimes,
+      onTimeblock,
     } = this.props;
 
     const selectOptions = [
@@ -104,6 +109,26 @@ class Navbar extends Component {
               >
                 <img src={splitIcon} alt="Split" className="icon navbar-icon" />
               </button>
+              <button
+                className="clickable home-page-clickable"
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const position = { top: rect.bottom, left: rect.left };
+                  this.setState({
+                    timeblocking: true,
+                    timeblockPosition: position,
+                  });
+                }}
+              >
+                Timeblock
+              </button>
+              {this.state.timeblocking && (
+                <TimeblockOptions
+                  onTimeblock={onTimeblock}
+                  onClose={() => this.setState({ timeblocking: false })}
+                  position={this.state.timeblockPosition}
+                />
+              )}
               <Select
                 isSearchable={false}
                 isClearable={false}
