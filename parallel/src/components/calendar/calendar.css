@@ -104,3 +104,7 @@
 .fc-event.task-event .fc-daygrid-event-dot {
   display: none !important;
 }
+
+.fc-event:hover {
+  cursor: pointer;
+}

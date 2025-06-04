@@ -9,3 +9,16 @@
 .submit-button:disabled {
   pointer-events: none;
 }
+
+.recurring-day-select-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.recurring-day-select {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}

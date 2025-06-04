@@ -68,7 +68,7 @@ class CreateTaskOptions extends Component {
                 ))}
               </select>
             </label>
-            <label>
+            {/* <label>
               Definite:&nbsp;
               <input
                 id="definite"
@@ -93,7 +93,7 @@ class CreateTaskOptions extends Component {
                   this.setState({ definite: !this.state.definite })
                 }
               />
-            </label>
+            </label> */}
             {definite && (
               <React.Fragment>
                 <label className="modal-input-row">
@@ -121,10 +121,11 @@ class CreateTaskOptions extends Component {
             )}
             {!definite && (
               <div>
-                <label>
+                <label className="modal-input-row">
                   Hours/Week:&nbsp;
                   <input
                     id="hours-week"
+                    style={{ width: "100%" }}
                     type="number"
                     name="hoursPerWeek"
                     value={hoursPerWeek || 0}
@@ -143,7 +144,7 @@ class CreateTaskOptions extends Component {
                   onSubmitTask({
                     title: title || "New Task",
                     endDate: new Date(endDate + "T00:00:00") || new Date(),
-                    hours: hours || 0,
+                    duration: hours * 60 || 0,
                     stream: parseInt(streamID, 10) || 1,
                   });
                   onClose();

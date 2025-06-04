@@ -435,7 +435,6 @@ class App extends Component {
               this.setState({
                 tasks: [...this.state.tasks, newTask],
               });
-              console.log(this.state.tasks);
             }}
           />
         </div>

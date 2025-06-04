@@ -273,63 +273,85 @@ class CreateEventOptions extends Component {
               />
             </label>
             {recurring && (
-              <div>
-                <input
-                  type="checkbox"
-                  id="Mon"
-                  name="Day"
-                  value={mon}
-                  checked={mon}
-                  onChange={(e) => this.setState({ mon: !this.state.mon })}
-                />
-                <input
-                  type="checkbox"
-                  id="Tue"
-                  name="Day"
-                  value={tue}
-                  checked={tue}
-                  onChange={(e) => this.setState({ tue: !this.state.tue })}
-                />
-                <input
-                  type="checkbox"
-                  id="Wed"
-                  name="Day"
-                  value={wed}
-                  checked={wed}
-                  onChange={(e) => this.setState({ wed: !this.state.wed })}
-                />
-                <input
-                  type="checkbox"
-                  id="Thu"
-                  name="Day"
-                  value={thu}
-                  checked={thu}
-                  onChange={(e) => this.setState({ thu: !this.state.thu })}
-                />
-                <input
-                  type="checkbox"
-                  id="Fri"
-                  name="Day"
-                  value={fri}
-                  checked={fri}
-                  onChange={(e) => this.setState({ fri: !this.state.fri })}
-                />
-                <input
-                  type="checkbox"
-                  id="Sat"
-                  name="Day"
-                  value={sat}
-                  checked={sat}
-                  onChange={(e) => this.setState({ sat: !this.state.sat })}
-                />
-                <input
-                  type="checkbox"
-                  id="Sun"
-                  name="Day"
-                  value={sun}
-                  checked={sun}
-                  onChange={(e) => this.setState({ sun: !this.state.sun })}
-                />
+              <div className="recurring-day-select-container">
+                <label className="recurring-day-select">
+                  Mon
+                  <input
+                    type="checkbox"
+                    id="Mon"
+                    name="Day"
+                    value={mon}
+                    checked={mon}
+                    onChange={(e) => this.setState({ mon: !this.state.mon })}
+                  />
+                </label>
+                <label className="recurring-day-select">
+                  Tue
+                  <input
+                    type="checkbox"
+                    id="Tue"
+                    name="Day"
+                    value={tue}
+                    checked={tue}
+                    onChange={(e) => this.setState({ tue: !this.state.tue })}
+                  />
+                </label>
+                <label className="recurring-day-select">
+                  Wed
+                  <input
+                    type="checkbox"
+                    id="Wed"
+                    name="Day"
+                    value={wed}
+                    checked={wed}
+                    onChange={(e) => this.setState({ wed: !this.state.wed })}
+                  />
+                </label>
+
+                <label className="recurring-day-select">
+                  Thu
+                  <input
+                    type="checkbox"
+                    id="Thu"
+                    name="Day"
+                    value={thu}
+                    checked={thu}
+                    onChange={(e) => this.setState({ thu: !this.state.thu })}
+                  />
+                </label>
+                <label className="recurring-day-select">
+                  Fri
+                  <input
+                    type="checkbox"
+                    id="Fri"
+                    name="Day"
+                    value={fri}
+                    checked={fri}
+                    onChange={(e) => this.setState({ fri: !this.state.fri })}
+                  />
+                </label>
+                <label className="recurring-day-select">
+                  Sat
+                  <input
+                    type="checkbox"
+                    id="Sat"
+                    name="Day"
+                    value={sat}
+                    checked={sat}
+                    onChange={(e) => this.setState({ sat: !this.state.sat })}
+                  />
+                </label>
+                <label className="recurring-day-select">
+                  Sun
+                  <input
+                    type="checkbox"
+                    id="Sun"
+                    name="Day"
+                    value={sun}
+                    checked={sun}
+                    onChange={(e) => this.setState({ sun: !this.state.sun })}
+                  />
+                </label>
               </div>
             )}
             <div className="modal-actions">
