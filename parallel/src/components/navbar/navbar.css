@@ -2,6 +2,7 @@
   height: 4rem;
   display: flex;
   flex-direction: row;
+  gap: var(--spacing);
 }
 
 .sidebar-nav {
