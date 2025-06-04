@@ -33,7 +33,7 @@ In addition to typical calendar functionality, PARALLEL has the following featur
 
 ## Usage
 
-The application is hosted at [text](https://41113-sds-parallel.github.io/PARALLEL/). Note that data is stored locally in the browser's cache (using `localStorage`) rather than being hosted on a server.
+The application is hosted at [https://41113-sds-parallel.github.io/PARALLEL/](https://41113-sds-parallel.github.io/PARALLEL/). Note that data is stored locally in the browser's cache (using `localStorage`) rather than being hosted on a server.
 
 To host the application locally:
 
