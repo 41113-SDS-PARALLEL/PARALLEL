@@ -178,6 +178,9 @@ class App extends Component {
     if (prevState.events !== this.state.events) {
       localStorage.setItem("events", JSON.stringify(this.state.events));
     }
+    if (prevState.tasks !== this.state.tasks) {
+      localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+    }
   }
 
   render() {
