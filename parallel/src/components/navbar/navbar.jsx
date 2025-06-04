@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import logo from "../../assets/parallel_logo.png";
+import Select from "react-select";
+import logo from "../../assets/parallel_logo.svg";
 import arrowIcon from "../../assets/arrow_icon.svg";
 import eraserIcon from "../../assets/eraser_icon.svg";
 import splitIcon from "../../assets/parallel_icon_black.png";
@@ -24,39 +25,42 @@ class Navbar extends Component {
       onEraseStreamTimes,
       erasingStreamTimes,
     } = this.props;
+
+    const selectOptions = [
+      { value: "dayGridMonth", label: "Month" },
+      { value: "timeGridWeek", label: "Week" },
+      { value: "timeGridDay", label: "Day" },
+    ];
+
     return (
-      <div id="Navbar">
-        <div id="sidebarNav">
-          <img src={logo} alt="Parallel Logo" id="Logo" />
+      <div className="navbar">
+        <div className="sidebar-nav sidebar-width">
+          <img src={logo} alt="Parallel Logo" className="icon logo" />
         </div>
-        <div id="calendarNav">
+        <div className="calendar-nav">
           {editingStreamTimes ? (
             <React.Fragment>
-              <h1 id="title">Edit Stream Times</h1>
+              <h1 className="title">Edit Stream Times</h1>
               <button
-                id="eraseButton"
-                className={`navButton ${
-                  erasingStreamTimes && "checked-button"
+                className={`home-page-clickable clickable home-page-selectable round-button ${
+                  erasingStreamTimes && "home-page-selectable-selected"
                 }`}
                 onClick={onEraseStreamTimes}
               >
                 <img
-                  id="erase"
                   src={eraserIcon}
-                  alt="erase"
-                  className="icon nav-arrow"
+                  alt="Erase"
+                  className="icon navbar-icon"
                 />
               </button>
               <button
-                id="clearButton"
-                className="navButton"
+                className="home-page-clickable clickable"
                 onClick={onClearStreamTimes}
               >
                 Clear
               </button>
               <button
-                id="doneButton"
-                className="navButton"
+                className="home-page-clickable clickable"
                 onClick={onDoneEditingStreamTimes}
               >
                 Done
@@ -64,61 +68,110 @@ class Navbar extends Component {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <button id="prevButton" className="navButton" onClick={onPrev}>
+              <button
+                className="home-page-clickable clickable round-button"
+                onClick={onPrev}
+              >
                 <img
-                  id="prev"
                   src={arrowIcon}
-                  alt="previous"
-                  className="icon nav-arrow"
+                  alt="Previous"
+                  className="icon navbar-icon prev"
                 />
               </button>
-              <button id="nextButton" className="navButton" onClick={onNext}>
+              <button
+                className="home-page-clickable clickable round-button"
+                onClick={onNext}
+              >
                 <img
-                  id="next"
                   src={arrowIcon}
-                  alt="next"
-                  className="icon nav-arrow"
+                  alt="Next"
+                  className="icon navbar-icon next"
                 />
               </button>
-              <button id="todayButton" className="navButton" onClick={onToday}>
+              <button
+                className="home-page-clickable clickable"
+                onClick={onToday}
+              >
                 Today
               </button>
-              <h1 id="title">{title}</h1>
+              <h1 className="title">{title}</h1>
               <button
-                id="splitButton"
-                className="navButton"
+                className="home-page-clickable clickable round-button"
                 onClick={() => {
                   onSplit();
                   onViewChange("timeGridWeek");
                 }}
               >
-                <img
-                  id="split"
-                  src={splitIcon}
-                  alt="previous"
-                  className="icon nav-arrow"
-                />
+                <img src={splitIcon} alt="Split" className="icon navbar-icon" />
               </button>
-              <div id="viewSelectorContainer">
-                <img
-                  src={arrowIcon}
-                  alt="dropdown arrow"
-                  className="icon select-arrow"
-                />
-                <select
-                  id="viewSelector"
-                  onChange={(e) => {
-                    onViewChange(e.target.value);
-                    this.setState({ view: e.target.value });
-                  }}
-                  value={view}
-                  disabled={splitView}
-                >
-                  <option value="dayGridMonth">Month</option>
-                  <option value="timeGridWeek">Week</option>
-                  <option value="timeGridDay">Day</option>
-                </select>
-              </div>
+              <Select
+                isSearchable={false}
+                isClearable={false}
+                isDisabled={splitView}
+                value={selectOptions.find((option) => option.value === view)}
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
+                    borderRadius: "var(--radius)",
+                    background: "transparent",
+                    width: "7rem",
+                    accentColor: "var(--theme-color)",
+                    boxShadow: "none",
+                    cursor: !state.isDisabled ? "pointer" : "auto",
+                    "&:hover": {
+                      borderColor: "var(--content-color)",
+                      background: "var(--theme-color)",
+                    },
+                  }),
+                  singleValue: (baseStyles, state) => ({
+                    ...baseStyles,
+                    color: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
+                  }),
+                  menu: (baseStyles, state) => ({
+                    ...baseStyles,
+                    background: "var(--gray)",
+                    zIndex: "10",
+                  }),
+                  option: (baseStyles, state) => ({
+                    ...baseStyles,
+                    background: state.isSelected
+                      ? "var(--theme-color)"
+                      : state.isFocused
+                      ? "var(--faded-theme-color)"
+                      : "var(--gray)",
+                    color: "var(--content-color)",
+                    cursor: "pointer",
+                    "&:active": {
+                      background: "var(--theme-color)",
+                    },
+                  }),
+                  dropdownIndicator: (baseStyles, state) => ({
+                    ...baseStyles,
+                    color: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
+                    "&:hover": {
+                      color: "var(--content-color)",
+                    },
+                  }),
+                  indicatorSeparator: (baseStyles, state) => ({
+                    ...baseStyles,
+                    background: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
+                  }),
+                }}
+                onChange={(e) => {
+                  onViewChange(e.value);
+                  this.setState({ view: e.value });
+                }}
+                options={selectOptions}
+              />
             </React.Fragment>
           )}
         </div>

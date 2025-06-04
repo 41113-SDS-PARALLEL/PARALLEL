@@ -138,15 +138,16 @@ class Calendar extends Component {
     } = this.props;
     return (
       <div
-        id="Calendar"
-        className={view === "dayGridMonth" ? "month-view" : ""}
+        className={`calendar-container ${
+          view === "dayGridMonth" ? "month-view" : ""
+        }`}
       >
         {splitView ? (
           <div className="split-calendar-container">
             <div className="calendar-header-container">
-              <h2 className="stream-header header-placeholder"></h2>
+              <h2 className="stream-header"></h2>
               {
-                <div className="split-calendar main-calendar calendar-header date-calendar">
+                <div className="main-calendar date-calendar">
                   <FullCalendar
                     ref={headerCalendarRef}
                     nowIndicator={true}
@@ -251,7 +252,7 @@ class Calendar extends Component {
           <div className="main-calendar editing-times-calendar">
             <FullCalendar
               allDaySlot={false}
-              dayHeaderFormat={{ weekday: "long" }}
+              dayHeaderFormat={{ weekday: "short" }}
               events={[
                 ...streams.flatMap((s) =>
                   (s.timePeriods || []).map((tp, idx) => ({
