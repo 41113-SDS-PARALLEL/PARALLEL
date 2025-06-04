@@ -74,6 +74,18 @@ class App extends Component {
           extendedProps: { stream: 3 },
         },
       ],
+      tasks: JSON.parse(localStorage.getItem("events")) || [
+        {
+          title: "Gym",
+          duration: 90,
+          stream: 3,
+        },
+        {
+          title: "Assignment",
+          duration: 180,
+          stream: 2,
+        },
+      ],
       calendarTitle: "",
       colors: [
         "#B4415A",
@@ -103,6 +115,7 @@ class App extends Component {
     erasingStreamTimes: false,
     streams: null,
     events: null,
+    tasks: null,
   };
   mainCalendarRef = createRef();
   headerCalendarRef = createRef();

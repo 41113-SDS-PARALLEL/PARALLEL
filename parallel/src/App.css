@@ -183,6 +183,26 @@ h2 {
   gap: 0.5rem;
 }
 
+.simple-options-popup {
+  border-radius: 0.3rem;
+  padding: 0; 
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  gap: 0;
+}
+
+.simple-options-popup-option {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  padding: 0.4rem;
+  font-size: 1rem;
+}
+
+.simple-options-popup-option:hover {
+  background: var(--faded-theme-color);
+}
+
 @media (prefers-color-scheme: dark) {
     .icon {
         filter: invert(1);

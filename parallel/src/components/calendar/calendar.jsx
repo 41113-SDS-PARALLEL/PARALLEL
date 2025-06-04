@@ -7,7 +7,6 @@ import auLocale from "@fullcalendar/core/locales/en-au";
 import "./calendar.css";
 
 class Calendar extends Component {
-  state = {};
   splitScrollListeners = [];
   splitCalendarDomRefs = {};
 
@@ -136,6 +135,16 @@ class Calendar extends Component {
       getSplitCalendarRef,
       onSelectTimes,
     } = this.props;
+
+    const tasks = [
+      {
+        title: "Gym",
+        start: new Date(2025, 4, 25, 10, 0),
+        end: new Date(2025, 4, 25, 10, 0),
+        stream: 3,
+      },
+    ];
+
     return (
       <div
         className={`calendar-container ${
@@ -298,12 +307,21 @@ class Calendar extends Component {
             <FullCalendar
               ref={mainCalendarRef}
               nowIndicator={true}
-              events={events.filter((event) =>
-                streams.find(
-                  (stream) =>
-                    stream.id === event.extendedProps.stream && stream.selected
-                )
-              )}
+              events={[
+                ...events.filter((event) =>
+                  streams.find(
+                    (stream) =>
+                      stream.id === event.extendedProps.stream &&
+                      stream.selected
+                  )
+                ),
+                ...tasks.map((task, idx) => ({
+                  title: task.title,
+                  start: task.start,
+                  end: task.end,
+                  extendedProps: { stream: task.stream, task: true },
+                })),
+              ]}
               eventDidMount={(info) => {
                 const stream = info.event.extendedProps.stream;
                 const streamObj = streams.find((s) => s.id === stream);
@@ -317,6 +335,18 @@ class Calendar extends Component {
                   "--fc-event-border-color",
                   eventColor
                 );
+                if (info.event.extendedProps.task) {
+                  console.log(info.event);
+                  info.el.style.setProperty(
+                    "--fc-event-bg-color",
+                    "var(--gray)"
+                  );
+                  info.el.style.borderWidth = "0.25rem";
+                  info.el.style.setProperty(
+                    "--fc-event-text-color",
+                    "var(--content-color)"
+                  );
+                }
               }}
               {...this.commonParams(onDatesSet)}
             />
