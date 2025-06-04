@@ -246,6 +246,7 @@ class Calendar extends Component {
                         onCreateEvent("Create");
                       }}
                       eventClick={(info) => {
+                        if (info.event.extendedProps.task) return;
                         this.setState({
                           selectedEvent: info.event,
                           popupType: "Edit",
@@ -379,6 +380,7 @@ class Calendar extends Component {
                   onCreateEvent("Create");
                 }}
                 eventClick={(info) => {
+                  if (info.event.extendedProps.task) return;
                   this.setState({
                     selectedEvent: info.event,
                     popupType: "Edit",

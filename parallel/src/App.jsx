@@ -322,6 +322,12 @@ class App extends Component {
                 streams: this.state.streams.filter(
                   (stream) => stream.id !== streamID
                 ),
+                taskEvents: this.state.streams.filter(
+                  (taskEvents) => taskEvents.id !== streamID
+                ),
+                tasks: this.state.streams.filter(
+                  (tasks) => tasks.id !== streamID
+                ),
               });
             }}
             onEditStream={(id, newName, newColor) => {
