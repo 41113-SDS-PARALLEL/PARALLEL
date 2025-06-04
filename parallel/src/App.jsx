@@ -345,6 +345,15 @@ class App extends Component {
                   }
                 }
                 for (var i = 0; i < matches.length; i++) {
+                  if (this.state.events[matches[i]].start == null) {
+                    this.state.events.splice(matches[i], 1);
+                    if (!remove) {
+                      this.setState({
+                        events: [...this.state.events, newEvent],
+                      });
+                    }
+                    break;
+                  }
                   if (this.state.events[matches[i]].start.toString() != oldEvent.start) {
                     matches.splice(i, 1);
                   }
