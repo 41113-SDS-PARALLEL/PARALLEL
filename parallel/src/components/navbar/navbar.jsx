@@ -112,10 +112,11 @@ class Navbar extends Component {
                 styles={{
                   control: (baseStyles, state) => ({
                     ...baseStyles,
-                    borderColor: "var(--content-color)",
+                    borderColor: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
                     borderRadius: "var(--radius)",
                     background: "transparent",
-                    color: "var(--content-color)",
                     width: "7rem",
                     accentColor: "var(--theme-color)",
                     boxShadow: "none",
@@ -127,7 +128,9 @@ class Navbar extends Component {
                   }),
                   singleValue: (baseStyles, state) => ({
                     ...baseStyles,
-                    color: "var(--content-color)",
+                    color: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
                   }),
                   menu: (baseStyles, state) => ({
                     ...baseStyles,
@@ -147,12 +150,20 @@ class Navbar extends Component {
                       background: "var(--theme-color)",
                     },
                   }),
-                  dropdownIndicator: (baseStyles) => ({
+                  dropdownIndicator: (baseStyles, state) => ({
                     ...baseStyles,
-                    color: "var(--content-color)",
+                    color: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
                     "&:hover": {
                       color: "var(--content-color)",
                     },
+                  }),
+                  indicatorSeparator: (baseStyles, state) => ({
+                    ...baseStyles,
+                    background: state.isDisabled
+                      ? "var(--gray)"
+                      : "var(--content-color)",
                   }),
                 }}
                 onChange={(e) => {
