@@ -2,7 +2,7 @@
   --fc-border-color: transparent;
   --fc-today-bg-color: transparent;
   --fc-button-text-color: var(--content-color);
-  padding-top: 1.2rem;
+  margin-top: 1.2rem;
 }
 
 .date-picker .fc-scrollgrid {

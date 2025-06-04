@@ -3,6 +3,7 @@ import DatePicker from "./datePicker/datePicker";
 import addIcon from "../..//assets/add_icon.svg";
 import StreamList from "./streamList/streamList";
 import StreamOptions from "./streamOptions/streamOptions";
+import CreateOptions from "./createOptions/createOptions";
 import { createStream } from "../../utils/streamUtils";
 import "./sidebar.css";
 
@@ -11,6 +12,8 @@ class Sidebar extends Component {
     optionsStream: null,
     optionsPosition: { top: 0, left: 0 },
     selectedEditingStream: null,
+    choosingCreateOption: false,
+    createOptionPosition: { top: 0, left: 0 },
   };
   sidebarRef = createRef();
   streamOptionsPanelRef = createRef();
@@ -144,11 +147,41 @@ class Sidebar extends Component {
       onEditStreamTimes,
       selectedEditingStream,
       erasingStreamTimes,
+      onCreateEvent,
+      onCreateTask,
     } = this.props;
     return (
       <div className="sidebar sidebar-width" ref={this.sidebarRef}>
         {!editingStreamTimes && (
-          <DatePicker ref={datePickerRef} navigateToDate={navigateToDate} />
+          <React.Fragment>
+            <button
+              className="clickable create-button"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const position = {
+                  top: rect.bottom,
+                  left: rect.left,
+                  width: rect.width,
+                };
+                this.setState({
+                  createOptionPosition: position,
+                  choosingCreateOption: true,
+                });
+              }}
+            >
+              <h2>Create</h2>
+              <img src={addIcon} alt="Create" className="icon add-icon" />
+            </button>
+            {this.state.choosingCreateOption && (
+              <CreateOptions
+                onClose={() => this.setState({ choosingCreateOption: false })}
+                onCreateEvent={onCreateEvent}
+                onCreateTask={onCreateTask}
+                position={this.state.createOptionPosition}
+              />
+            )}
+            <DatePicker ref={datePickerRef} navigateToDate={navigateToDate} />
+          </React.Fragment>
         )}
         <div className="streams-toolbar">
           <h2>Streams</h2>
@@ -156,7 +189,7 @@ class Sidebar extends Component {
             className="clickable home-page-clickable round-button"
             onClick={this.handleAddStream}
           >
-            <img src={addIcon} alt="Add" className="icon add-stream-icon" />
+            <img src={addIcon} alt="Add" className="icon add-icon" />
           </button>
         </div>
         <StreamList

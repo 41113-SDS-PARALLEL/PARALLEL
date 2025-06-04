@@ -1,0 +1,11 @@
+.cancel-button {
+    height: 100%;
+}
+
+.submit-button {
+  cursor: pointer;
+}
+
+.submit-button:disabled {
+  pointer-events: none;
+}

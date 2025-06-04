@@ -40,6 +40,7 @@ h1 {
 }
 
 h2 {
+  margin: 0;
   font-size: var(--h2-font-size);
   font-weight: var(--h2-font-weight);
 }
@@ -145,7 +146,10 @@ h2 {
 }
 
 .modal-header {
+  display: flex;
+  justify-content: space-between;
   margin: 0;
+  align-items: center;
   border-bottom: 1px solid var(--content-color);
 }
 
@@ -174,6 +178,19 @@ h2 {
   display: flex;
   justify-content: flex-end;
   gap: 0.6rem;
+}
+
+.modal-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modal-input-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .popup {

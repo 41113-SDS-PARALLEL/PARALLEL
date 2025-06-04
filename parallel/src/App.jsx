@@ -109,6 +109,9 @@ class App extends Component {
       editingStreamTimes: false,
       selectedEditingStream: null,
       erasingStreamTimes: false,
+      creatingEvent: false,
+      eventOptionType: null,
+      creatingTask: false,
     };
   }
 
@@ -123,6 +126,9 @@ class App extends Component {
     events: null,
     tasks: null,
     taskEvents: [],
+    creatingEvent: false,
+    eventOptionType: null,
+    creatingTask: false,
   };
 
   mainCalendarRef = createRef();
@@ -266,6 +272,13 @@ class App extends Component {
             streams={this.state.streams}
             colors={this.state.colors}
             events={this.state.events}
+            onCreateEvent={(type) => {
+              this.setState({ creatingEvent: true });
+              this.setState({ eventOptionType: type });
+            }}
+            onCreateTask={() => {
+              this.setState({ creatingTask: true });
+            }}
             onSelectStream={(s) => {
               if (this.state.editingStreamTimes) {
                 this.setState({
@@ -341,6 +354,7 @@ class App extends Component {
             onDatesSet={this.updateCalendarTitle}
             tasks={this.state.taskEvents}
             events={this.state.events}
+            eventOptionType={this.state.eventOptionType}
             streams={this.state.streams}
             view={this.state.view}
             scheduledTasks={this.state.scheduledTasks}
@@ -363,6 +377,65 @@ class App extends Component {
                 this.state.streams
               );
               this.setState({ streams: updatedStreams });
+            }}
+            onCreateEvent={(type) => {
+              this.setState({ eventOptionType: type });
+              console.log(this.state.eventOptionType);
+              this.setState({ creatingEvent: true });
+            }}
+            onCreateTask={() => {
+              this.setState({ creatingTask: true });
+            }}
+            creatingEvent={this.state.creatingEvent}
+            creatingTask={this.state.creatingTask}
+            onCloseCreateEventOptions={() => {
+              this.setState({ creatingEvent: false });
+            }}
+            onCloseCreateTaskOptions={() => {
+              this.setState({ creatingTask: false });
+            }}
+            onSubmitEvent={(newEvent, oldEvent, remove) => {
+              if (oldEvent == null) {
+                this.setState({
+                  events: [...this.state.events, newEvent],
+                });
+              } else {
+                let matches = [];
+                for (var i = 0; i < this.state.events.length; i++) {
+                  if (this.state.events[i].title == oldEvent.title) {
+                    matches.push(i);
+                  }
+                }
+                for (var i = 0; i < matches.length; i++) {
+                  if (this.state.events[matches[i]].start == null) {
+                    this.state.events.splice(matches[i], 1);
+                    if (!remove) {
+                      this.setState({
+                        events: [...this.state.events, newEvent],
+                      });
+                    }
+                    break;
+                  }
+                  if (
+                    this.state.events[matches[i]].start.toString() !=
+                    oldEvent.start
+                  ) {
+                    matches.splice(i, 1);
+                  }
+                }
+                this.state.events.splice(matches[0], 1);
+                if (!remove) {
+                  this.setState({
+                    events: [...this.state.events, newEvent],
+                  });
+                }
+              }
+            }}
+            onSubmitTask={(newTask) => {
+              this.setState({
+                tasks: [...this.state.tasks, newTask],
+              });
+              console.log(this.state.tasks);
             }}
           />
         </div>

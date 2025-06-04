@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import closeIcon from "../../../../assets/x_icon.svg";
 import "./deleteStreamOptions.css";
 
 class DeleteStreamOptions extends Component {
@@ -23,7 +24,20 @@ class DeleteStreamOptions extends Component {
     return (
       <div className="modal-background">
         <div className="modal panel">
-          <h2 className="modal-header">Delete {stream.name} Stream</h2>
+          <div className="modal-header">
+            <h2>Delete {stream.name} Stream</h2>
+            <button
+              className="clickable home-page-clickable round-button"
+              onClick={onClose}
+            >
+              <img
+                id="close"
+                src={closeIcon}
+                alt="Cancel"
+                className="icon x-icon"
+              />
+            </button>
+          </div>
           <p className="modal-text">
             How would you like to handle the events and tasks in this stream?
           </p>
@@ -89,9 +103,6 @@ class DeleteStreamOptions extends Component {
               }}
             >
               Delete Stream
-            </button>
-            <button className="clickable" onClick={onClose}>
-              Cancel
             </button>
           </div>
         </div>
