@@ -2,6 +2,7 @@ import React, { Component, createRef } from "react";
 import Navbar from "./components/navbar/navbar";
 import Sidebar from "./components/sidebar/sidebar";
 import Calendar from "./components/calendar/calendar";
+
 import {
   selectStream,
   editStream,
@@ -37,7 +38,6 @@ class App extends Component {
         selected: true,
         timePeriods: [
           { day: 1, startTime: "09:00", endTime: "17:00" },
-          { day: 3, startTime: "13:00", endTime: "17:00" },
         ],
       },
       {
@@ -47,49 +47,60 @@ class App extends Component {
         selected: true,
         timePeriods: [
           { day: 2, startTime: "10:00", endTime: "12:00" },
-          { day: 4, startTime: "14:00", endTime: "16:00" },
         ],
       },
       {
         id: 3,
-        name: "Personal",
+        name: "Gym",
         color: "#E9E985",
         selected: true,
         timePeriods: [
-          { day: 0, startTime: "08:00", endTime: "10:00" },
-          { day: 5, startTime: "18:00", endTime: "20:00" },
+          { day: 2, startTime: "10:00", endTime: "12:00" },
+          { day: 4, startTime: "11:00", endTime: "15:00" },
         ],
       },
     ],
+
+    // Events time-blocking must 'respect'
     events: [
       {
         title: "Meeting",
-        start: new Date(2025, 4, 23, 9, 0),
+        start: new Date(2025, 5, 5, 9, 0),
         extendedProps: { stream: 1 },
       },
       {
         title: "Conference",
-        start: new Date(2025, 4, 25, 11, 0),
+        start: new Date(2025, 5, 5, 11, 0),
         extendedProps: { stream: 1 },
       },
       {
         title: "Lecture",
-        start: new Date(2025, 4, 25, 21, 30),
+        start: new Date(2025, 5, 4, 21, 30),
         extendedProps: { stream: 2 },
       },
       {
         title: "Dinner",
-        start: new Date(2025, 4, 22, 19, 0),
+        start: new Date(2025, 5, 4, 19, 0),
         extendedProps: { stream: 3 },
       },
       {
         title: "Canyoning",
-        start: new Date(2025, 4, 24),
+        start: new Date(2025, 5, 24),
         allDay: true,
         extendedProps: { stream: 3 },
       },
     ],
+
+    tasks: [
+      {
+        title:"Gym",
+        endDate: new Date(2025, 5, 3, 19, 0),
+        duration: 60,
+        stream: 3
+      },
+    ],
   };
+
   mainCalendarRef = createRef();
   headerCalendarRef = createRef();
   splitCalendarRefs = {};
@@ -279,8 +290,12 @@ class App extends Component {
             }}
             currentDisplayedDate={this.state.currentDisplayedDate}
             onDatesSet={this.updateCalendarTitle}
+            
+            tasks={this.state.tasks}  
             events={this.state.events}
             streams={this.state.streams}
+            scheduledTasks={this.state.scheduledTasks}
+          
             splitView={this.state.splitView}
             editingStreamTimes={this.state.editingStreamTimes}
             onSelectTimes={(timePeriods) => {

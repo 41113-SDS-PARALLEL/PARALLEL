@@ -6,6 +6,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 import auLocale from "@fullcalendar/core/locales/en-au";
 import "./calendar.css";
 
+import { retrieveScheduledTasks } from "../../utils/timeBlocking";
+
 class Calendar extends Component {
   state = {};
   splitScrollListeners = [];
@@ -21,6 +23,62 @@ class Calendar extends Component {
 
   componentDidMount() {
     this.attachSplitCalendarScrollSync();
+
+    /*
+
+    // Retrieve Relevant Attributes ...
+    const { streams, events, tasks, currentDisplayedDate} = this.props;
+    
+    // Start Time Blocking From Where The Calendar Is Currently Displaying (Change this Later ...)
+    const dayStart = new Date(currentDisplayedDate);
+
+    // Set dayStart timeblocking hours (for example only start time blocking after 9:00 AM)
+    dayStart.setHours(0, 0, 0);
+
+    // End Time Blocking From Where The Calendar Is Currenttly Displaying (Change this later ...)
+    const dayEnd = new Date(currentDisplayedDate);
+    dayEnd.setDate(dayEnd.getDate() + 6);
+
+    console.log(dayEnd);
+
+    // Set endDay timeblocking hours (for example time block until 9:00 PM)
+    dayEnd.setHours(23, 0, 0);
+
+    // Run Time Blocking Algorithm and Retrieve Scheduled Tasks
+    const scheduledTasks = allocateTasksToTimeSlots(streams, events, tasks, dayStart, dayEnd);
+
+    console.log("Scheduled Tasks: ", scheduledTasks);
+
+    // For Later ...
+    //this.setState({ scheduledTasks });
+    
+
+    const { streams, events, tasks, currentDisplayedDate} = this.props;
+
+    const dayStart = new Date(currentDisplayedDate);
+    dayStart.setHours(0, 0, 0);
+
+    const dayEnd = new Date(currentDisplayedDate);
+    const dayEndValue = dayEnd.getDate();
+    const daysTilSunday = (7 - dayEndValue) % 7;
+    dayEnd.setDate(dayEnd.getDate() + daysTilSunday + 1);
+    dayEnd.setHours(23, 59, 59);
+
+    const exclusionHourStart = 0;
+    const exclusionHourEnd = 9;
+
+    const scheduledTasks = allocateTasksToTimeSlotsv2(streams, events, tasks, dayStart, dayEnd, exclusionHourStart, exclusionHourEnd);
+    */
+   
+    const { streams, events, tasks, currentDisplayedDate} = this.props;
+
+    const currentDate = new Date(currentDisplayedDate);
+    const dateStart = 4; // Thursday
+    const dateEnd = 4; // Thursday
+    const scheduledTasks = retrieveScheduledTasks(streams, events, tasks, dateStart, dateEnd, currentDisplayedDate);
+  
+    console.log("Scheduled Tasks: ", scheduledTasks);
+
   }
 
   componentDidUpdate(prevProps) {
