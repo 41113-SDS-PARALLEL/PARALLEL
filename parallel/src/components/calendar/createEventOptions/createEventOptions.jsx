@@ -38,7 +38,6 @@ class CreateEventOptions extends Component {
         badInput: false,
       };
     } else {
-      console.log(this.props.event);
       if (this.props.event.groupId) {
         for (let i = 0; i < this.props.events.length; i++) {
           if (this.props.events[i].groupId == this.props.event.groupId) {
