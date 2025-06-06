@@ -6,10 +6,6 @@
   cursor: pointer;
 }
 
-.submit-button:disabled {
-  pointer-events: none;
-}
-
 .recurring-day-select-container {
 	display: flex;
 	justify-content: space-between;

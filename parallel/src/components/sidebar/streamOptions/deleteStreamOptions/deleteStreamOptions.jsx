@@ -95,7 +95,8 @@ class DeleteStreamOptions extends Component {
               className="clickable delete-stream-button"
               disabled={
                 deletingEvents === null ||
-                (deletingEvents === false && toStreamID === null)
+                (deletingEvents === false && toStreamID === null) ||
+                streams.length === 1
               }
               onClick={() => {
                 onDeleteStream(stream.id, deletingEvents ? null : toStreamID);

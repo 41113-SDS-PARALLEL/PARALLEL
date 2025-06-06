@@ -105,6 +105,6 @@
   display: none !important;
 }
 
-.fc-event:hover {
+.fc-event:not(.task-event):hover {
   cursor: pointer;
 }
