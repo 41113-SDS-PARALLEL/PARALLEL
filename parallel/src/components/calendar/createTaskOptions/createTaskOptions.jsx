@@ -13,15 +13,12 @@ class CreateTaskOptions extends Component {
     title: "New Task",
     endDate: null,
     hours: 0,
-    hoursPerWeek: 0,
     streamID: null,
-    definite: true,
   };
 
   render() {
     const { onClose, onSubmitTask, streams } = this.props;
-    const { title, endDate, hours, hoursPerWeek, streamID, definite } =
-      this.state;
+    const { title, endDate, hours, streamID } = this.state;
     return (
       <div className="modal-background">
         <div className="modal panel">
@@ -68,74 +65,27 @@ class CreateTaskOptions extends Component {
                 ))}
               </select>
             </label>
-            {/* <label>
-              Definite:&nbsp;
+            <label className="modal-input-row">
+              Hours:&nbsp;
               <input
-                id="definite"
-                type="radio"
-                name="definite"
-                checked={definite === true}
-                value="value1"
-                onChange={(e) =>
-                  this.setState({ definite: !this.state.definite })
-                }
+                id="hours"
+                style={{ width: "100%" }}
+                type="number"
+                name="hours"
+                value={hours || 0}
+                onChange={(e) => this.setState({ hours: e.target.value })}
               />
             </label>
             <label>
-              Indefinite:&nbsp;
+              End Date:&nbsp;
               <input
-                id="indefinite"
-                type="radio"
-                name="definite"
-                value="value2"
-                checked={definite === false}
-                onChange={(e) =>
-                  this.setState({ definite: !this.state.definite })
-                }
+                id="task-end-date"
+                type="date"
+                name="endDate"
+                value={endDate || ""}
+                onChange={(e) => this.setState({ endDate: e.target.value })}
               />
-            </label> */}
-            {definite && (
-              <React.Fragment>
-                <label className="modal-input-row">
-                  Hours:&nbsp;
-                  <input
-                    id="hours"
-                    style={{ width: "100%" }}
-                    type="number"
-                    name="hours"
-                    value={hours || 0}
-                    onChange={(e) => this.setState({ hours: e.target.value })}
-                  />
-                </label>
-                <label>
-                  End Date:&nbsp;
-                  <input
-                    id="task-end-date"
-                    type="date"
-                    name="endDate"
-                    value={endDate || ""}
-                    onChange={(e) => this.setState({ endDate: e.target.value })}
-                  />
-                </label>
-              </React.Fragment>
-            )}
-            {!definite && (
-              <div>
-                <label className="modal-input-row">
-                  Hours/Week:&nbsp;
-                  <input
-                    id="hours-week"
-                    style={{ width: "100%" }}
-                    type="number"
-                    name="hoursPerWeek"
-                    value={hoursPerWeek || 0}
-                    onChange={(e) =>
-                      this.setState({ hoursPerWeek: e.target.value })
-                    }
-                  />
-                </label>
-              </div>
-            )}
+            </label>
             <div className="modal-actions">
               <button
                 id="submit"

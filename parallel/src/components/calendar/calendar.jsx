@@ -17,7 +17,6 @@ class Calendar extends Component {
     selectedStreamID: null,
     selectedAllDay: null,
     selectedEvent: null,
-    popupType: null,
   };
   splitScrollListeners = [];
   splitCalendarDomRefs = {};
@@ -162,10 +161,8 @@ class Calendar extends Component {
       getSplitCalendarRef,
       onSelectTimes,
       onCreateEvent,
-      onCreateTask,
       creatingEvent,
       creatingTask,
-      editingEvent,
       eventOptionType,
       onCloseCreateEventOptions,
       onCloseCreateTaskOptions,
@@ -241,14 +238,12 @@ class Calendar extends Component {
                           selectedEndTime: new Date(info.end),
                           selectedAllDay: info.allDay,
                           selectedStreamID: stream.id,
-                          popupType: "Create",
                         });
                         onCreateEvent("Create");
                       }}
                       eventClick={(info) => {
                         this.setState({
                           selectedEvent: info.event,
-                          popupType: "Edit",
                         });
                         onCreateEvent("Edit");
                       }}
@@ -374,14 +369,12 @@ class Calendar extends Component {
                     selectedStartTime: new Date(info.start),
                     selectedEndTime: new Date(info.end),
                     selectedAllDay: info.allDay,
-                    popupType: "Create",
                   });
                   onCreateEvent("Create");
                 }}
                 eventClick={(info) => {
                   this.setState({
                     selectedEvent: info.event,
-                    popupType: "Edit",
                   });
                   onCreateEvent("Edit");
                 }}
@@ -415,31 +408,6 @@ class Calendar extends Component {
                 selectedStreamID: null,
                 selectedAllDay: null,
                 selectedEvent: null,
-                popupType: null,
-              });
-            }}
-            streams={streams}
-            onSubmitEvent={onSubmitEvent}
-            start={this.state.selectedStartTime}
-            end={this.state.selectedEndTime}
-            allDay={this.state.selectedAllDay}
-            stream={this.state.selectedStreamID}
-            event={this.state.selectedEvent}
-            eventOptionType={eventOptionType}
-            events={events}
-          />
-        )}
-        {editingEvent && (
-          <CreateEventOptions
-            onClose={() => {
-              onCloseCreateEventOptions();
-              this.setState({
-                selectedStartTime: null,
-                selectedEndTime: null,
-                selectedStreamID: null,
-                selectedAllDay: null,
-                selectedEvent: null,
-                popupType: null,
               });
             }}
             streams={streams}
@@ -457,19 +425,9 @@ class Calendar extends Component {
           <CreateTaskOptions
             onClose={() => {
               onCloseCreateTaskOptions();
-              this.setState({
-                selectedStartTime: null,
-                selectedEndTime: null,
-                selectedStreamID: null,
-                selectedAllDay: null,
-                selectedEvent: null,
-              });
             }}
             streams={streams}
             onSubmitTask={onSubmitTask}
-            start={this.state.selectedStartTime}
-            end={this.state.selectedEndTime}
-            stream={this.state.selectedStreamID}
           />
         )}
       </React.Fragment>

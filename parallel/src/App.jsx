@@ -414,6 +414,7 @@ class App extends Component {
                         events: [...this.state.events, newEvent],
                       });
                     }
+                    matches = null;
                     break;
                   }
                   if (
@@ -423,11 +424,14 @@ class App extends Component {
                     matches.splice(i, 1);
                   }
                 }
-                this.state.events.splice(matches[0], 1);
-                if (!remove) {
-                  this.setState({
-                    events: [...this.state.events, newEvent],
-                  });
+                if (matches) {
+                  console.log("fuirfre")
+                  this.state.events.splice(matches[0], 1);
+                  if (!remove) {
+                    this.setState({
+                      events: [...this.state.events, newEvent],
+                    });
+                  }
                 }
               }
             }}

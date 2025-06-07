@@ -17,7 +17,8 @@ class CreateEventOptions extends Component {
       const mm = pad(date.getMinutes());
       return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
     };
-    if (this.props.eventOptionType == "Create") {
+
+    if (this.props.eventOptionType == "Create") { //Create event
       this.state = {
         streamID:
           this.props.stream || (streams.length > 0 ? streams[0].id : null),
@@ -35,13 +36,23 @@ class CreateEventOptions extends Component {
           : null,
         allDay: this.props.allDay ? this.props.allDay : false,
         type: false,
-        badInput: false,
+        days: {
+          mon: false,
+          tue: false,
+          wed: false,
+          thu: false,
+          fri: false,
+          sat: false,
+          sun: false,
+        },
+        test: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
       };
-    } else {
+    } else { //Edit event
       console.log(this.props.event);
-      if (this.props.event.groupId) {
+      if (this.props.event.groupId) { //Editing a recurring event
         for (let i = 0; i < this.props.events.length; i++) {
           if (this.props.events[i].groupId == this.props.event.groupId) {
+            // console.lo
             this.state = {
               title: this.props.event.title,
               streamID: this.props.event.extendedProps.stream,
@@ -51,25 +62,26 @@ class CreateEventOptions extends Component {
               endDate: formatDateTimeLocal(
                 this.props.events[i].endRecur
               ).substring(0, 10),
-              startTime: this.props.events[i].startTime,
-              endTime: this.props.events[i].endTime,
+              startTime: this.props.events[i].startTime ? this.props.events[i].startTime : "00:00:00",
+              endTime: this.props.events[i].endTime ? this.props.events[i].endTime : "00:00:00",
               allDay: this.props.event.allDay,
               recurring: true,
               type: true,
-              badInput: false,
-              days: this.props.events[i].daysOfWeek,
-              mon: this.props.events[i].daysOfWeek.includes(1),
-              tue: this.props.events[i].daysOfWeek.includes(2),
-              wed: this.props.events[i].daysOfWeek.includes(3),
-              thu: this.props.events[i].daysOfWeek.includes(4),
-              fri: this.props.events[i].daysOfWeek.includes(5),
-              sat: this.props.events[i].daysOfWeek.includes(6),
-              sun: this.props.events[i].daysOfWeek.includes(0),
+              days: {
+                mon: this.props.events[i].daysOfWeek.includes(1),
+                tue: this.props.events[i].daysOfWeek.includes(2),
+                wed: this.props.events[i].daysOfWeek.includes(3),
+                thu: this.props.events[i].daysOfWeek.includes(4),
+                fri: this.props.events[i].daysOfWeek.includes(5),
+                sat: this.props.events[i].daysOfWeek.includes(6),
+                sun: this.props.events[i].daysOfWeek.includes(0),
+              },
+              test: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
             };
             break;
           }
         }
-      } else {
+      } else { //Editing a non-recurring event
         this.state = {
           title: this.props.event.title,
           streamID: this.props.event.extendedProps.stream,
@@ -87,7 +99,16 @@ class CreateEventOptions extends Component {
             : null,
           allDay: this.props.event.allDay,
           type: true,
-          badInput: false,
+          days: {
+            mon: false,
+            tue: false,
+            wed: false,
+            thu: false,
+            fri: false,
+            sat: false,
+            sun: false,
+          },
+          test: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
         };
       }
     }
@@ -102,16 +123,10 @@ class CreateEventOptions extends Component {
     allDay: false,
     streamID: null,
     recurring: false,
-    days: null,
     type: false,
     badInput: true,
-    mon: false,
-    tue: false,
-    wed: false,
-    thu: false,
-    fri: false,
-    sat: false,
-    sun: false,
+    days: {},
+    test: [],
   };
 
   componentDidMount() {
@@ -131,6 +146,9 @@ class CreateEventOptions extends Component {
       new Date(this.state.endDate + "T" + this.state.endTime)
     )
       this.setState({ badInput: true });
+    // else if (
+    //   recurring == true && (!mon && !tue && !wed && !thu && !fri && !sat && !sun)
+    // ) this.setState({ badInput: true });
     else this.setState({ badInput: false });
   }
 
@@ -145,6 +163,75 @@ class CreateEventOptions extends Component {
       new Date(prevState.endDate + "T" + prevState.endTime).toString()
     )
       this.checkInput();
+    //Add checking for change in recurring variables after a better way of storing them is developed
+  }
+
+  newEvent() {
+    const {
+      title,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      allDay,
+      streamID,
+      recurring,
+      days,
+      test,
+    } = this.state;
+    if (!recurring) { // Non-Recurring Event
+      return {
+        title: title || "New Event",
+        start:
+          new Date(startDate + "T" + startTime) || new Date(),
+        end: new Date(endDate + "T" + endTime) || new Date(),
+        allDay: allDay || false,
+        extendedProps: {
+          stream: parseInt(streamID, 10) || 1,
+        },
+      };
+    } else {
+      let daysArray = [];
+      for (let i = 0; i < test.length-1; i++) {
+        if (days[test[i]]) 
+          daysArray.push(i+1);
+      }
+      if (days["sun"])
+        daysArray.push(0);
+      console.log(daysArray)
+      if (!allDay) { // Non All Day Recurring Event
+        return {
+          title: title || "New Event",
+          startTime: startTime + ":00" || null,
+          endTime: endTime + ":00" || null,
+          startRecur:
+            new Date(startDate + "T" + startTime) ||
+            new Date(),
+          endRecur:
+            new Date(endDate + "T" + endTime) || new Date(),
+          allDay: allDay || false,
+          daysOfWeek: daysArray,
+          groupId: Math.floor(Math.random() * 100),
+          extendedProps: {
+            stream: parseInt(streamID, 10) || 1,
+          }
+        };
+      } else { // All Day Recurring Event
+        return {
+          title: title || "New Event",
+          startRecur:
+            new Date(startDate + "T" + startTime) || new Date(),
+          endRecur:
+            new Date(endDate + "T" + endTime) || new Date(),
+          allDay: allDay,
+          daysOfWeek: daysArray,
+          groupId: Math.floor(Math.random() * 100),
+          extendedProps: {
+            stream: parseInt(streamID, 10) || 1,
+          },
+        }
+      }
+    }
   }
 
   render() {
@@ -159,13 +246,9 @@ class CreateEventOptions extends Component {
       streamID,
       recurring,
       type,
-      mon,
-      tue,
-      wed,
-      thu,
-      fri,
-      sat,
-      sun,
+      badInput,
+      days,
+      test,
     } = this.state;
     return (
       <div className="modal-background">
@@ -214,7 +297,7 @@ class CreateEventOptions extends Component {
             </div>
             <div className="modal-input-row">
               <label>
-                End:&nbsp;
+                End:&nbsp;&nbsp;
                 <input
                   id="event-end-date"
                   type="date"
@@ -256,7 +339,7 @@ class CreateEventOptions extends Component {
                 name="allDay"
                 value={allDay}
                 checked={allDay}
-                onChange={(e) => this.setState({ allDay: !this.state.allDay })}
+                onChange={(e) => this.setState({ allDay: !allDay })}
               />
             </label>
             <label>
@@ -268,247 +351,52 @@ class CreateEventOptions extends Component {
                 value={recurring}
                 checked={recurring}
                 onChange={(e) =>
-                  this.setState({ recurring: !this.state.recurring })
+                  this.setState({ recurring: !recurring })
                 }
               />
             </label>
             {recurring && (
               <div className="recurring-day-select-container">
-                <label className="recurring-day-select">
-                  Mon
-                  <input
-                    type="checkbox"
-                    id="Mon"
-                    name="Day"
-                    value={mon}
-                    checked={mon}
-                    onChange={(e) => this.setState({ mon: !this.state.mon })}
-                  />
-                </label>
-                <label className="recurring-day-select">
-                  Tue
-                  <input
-                    type="checkbox"
-                    id="Tue"
-                    name="Day"
-                    value={tue}
-                    checked={tue}
-                    onChange={(e) => this.setState({ tue: !this.state.tue })}
-                  />
-                </label>
-                <label className="recurring-day-select">
-                  Wed
-                  <input
-                    type="checkbox"
-                    id="Wed"
-                    name="Day"
-                    value={wed}
-                    checked={wed}
-                    onChange={(e) => this.setState({ wed: !this.state.wed })}
-                  />
-                </label>
-
-                <label className="recurring-day-select">
-                  Thu
-                  <input
-                    type="checkbox"
-                    id="Thu"
-                    name="Day"
-                    value={thu}
-                    checked={thu}
-                    onChange={(e) => this.setState({ thu: !this.state.thu })}
-                  />
-                </label>
-                <label className="recurring-day-select">
-                  Fri
-                  <input
-                    type="checkbox"
-                    id="Fri"
-                    name="Day"
-                    value={fri}
-                    checked={fri}
-                    onChange={(e) => this.setState({ fri: !this.state.fri })}
-                  />
-                </label>
-                <label className="recurring-day-select">
-                  Sat
-                  <input
-                    type="checkbox"
-                    id="Sat"
-                    name="Day"
-                    value={sat}
-                    checked={sat}
-                    onChange={(e) => this.setState({ sat: !this.state.sat })}
-                  />
-                </label>
-                <label className="recurring-day-select">
-                  Sun
-                  <input
-                    type="checkbox"
-                    id="Sun"
-                    name="Day"
-                    value={sun}
-                    checked={sun}
-                    onChange={(e) => this.setState({ sun: !this.state.sun })}
-                  />
-                </label>
+                {
+                test.map((day) => (
+                  <div>
+                    <label className="recurring-day-select">
+                    {day.replace(/\b\w/, (c) => c.toUpperCase())}
+                      <input
+                          type="checkbox"
+                          id={day}
+                          name="Day"
+                          checked={days[day]}
+                          onChange={(e) => {days[day] = !days[day]; this.forceUpdate()}}
+                      />
+                    </label>
+                  </div>
+                ))}
               </div>
             )}
             <div className="modal-actions">
               <button
                 className="clickable submit-button"
                 type="submit"
-                disabled={this.state.badInput}
+                disabled={badInput}
                 onClick={() => {
-                  if (this.props.event == null) {
-                    if (!recurring) {
-                      onSubmitEvent({
-                        title: title || "New Event",
-                        start:
-                          new Date(startDate + "T" + startTime) || new Date(),
-                        end: new Date(endDate + "T" + endTime) || new Date(),
-                        allDay: allDay || false,
+                  console.log(days)
+                  if (!type) { //Create event
+                    console.log(this.state);
+                    onSubmitEvent(this.newEvent())
+                  } else { // Edit event
+                    onSubmitEvent(
+                      this.newEvent(),
+                      {
+                        title: this.props.event.title,
+                        start: this.props.event.start,
+                        end: this.props.event.end,
+                        allDay: this.props.event.allDay,
                         extendedProps: {
-                          stream: parseInt(streamID, 10) || 1,
+                          stream: this.props.event.extendedProps.stream,
                         },
-                      });
-                    } else {
-                      let daysArray = [];
-                      if (sun == true) daysArray.push(0);
-                      if (mon == true) daysArray.push(1);
-                      if (tue == true) daysArray.push(2);
-                      if (wed == true) daysArray.push(3);
-                      if (thu == true) daysArray.push(4);
-                      if (fri == true) daysArray.push(5);
-                      if (sat == true) daysArray.push(6);
-                      if (!allDay) {
-                        onSubmitEvent(
-                          {
-                            title: title || "New Event",
-                            startTime: startTime + ":00" || null,
-                            endTime: endTime + ":00" || null,
-                            startRecur:
-                              new Date(startDate + "T" + startTime) ||
-                              new Date(),
-                            endRecur:
-                              new Date(endDate + "T" + endTime) || new Date(),
-                            allDay: allDay || false,
-                            daysOfWeek: daysArray,
-                            groupId: Math.floor(Math.random() * 100),
-                            extendedProps: {
-                              stream: parseInt(streamID, 10) || 1,
-                            },
-                          },
-                          this.props.event
-                        );
-                      } else {
-                        onSubmitEvent(
-                          {
-                            title: title || "New Event",
-                            startRecur:
-                              new Date(startDate + "T" + startTime) ||
-                              new Date(),
-                            endRecur:
-                              new Date(endDate + "T" + endTime) || new Date(),
-                            allDay: allDay,
-                            daysOfWeek: daysArray,
-                            groupId: Math.floor(Math.random() * 100),
-                            extendedProps: {
-                              stream: parseInt(streamID, 10) || 1,
-                            },
-                          },
-                          this.props.event
-                        );
                       }
-                    }
-                  } else {
-                    if (!recurring) {
-                      onSubmitEvent(
-                        {
-                          title: title || "New Event",
-                          start:
-                            new Date(startDate + "T" + startTime) || new Date(),
-                          end: new Date(endDate + "T" + endTime) || new Date(),
-                          allDay: allDay || false,
-                          extendedProps: {
-                            stream: parseInt(streamID, 10) || 1,
-                          },
-                        },
-                        {
-                          title: this.props.event.title,
-                          start: this.props.event.start,
-                          end: this.props.event.end,
-                          allDay: this.props.event.allDay,
-                          extendedProps: {
-                            stream: this.props.event.extendedProps.stream,
-                          },
-                        }
-                      );
-                    } else {
-                      let daysArray = [];
-                      if (mon == true) daysArray.push(1);
-                      if (tue == true) daysArray.push(2);
-                      if (wed == true) daysArray.push(3);
-                      if (thu == true) daysArray.push(4);
-                      if (fri == true) daysArray.push(5);
-                      if (sat == true) daysArray.push(6);
-                      if (sun == true) daysArray.push(0);
-                      if (!allDay) {
-                        onSubmitEvent(
-                          {
-                            title: title || "New Event",
-                            startTime: startTime + ":00" || null,
-                            endTime: endTime + ":00" || null,
-                            startRecur:
-                              new Date(startDate + "T" + startTime) ||
-                              new Date(),
-                            endRecur:
-                              new Date(endDate + "T" + endTime) || new Date(),
-                            allDay: allDay || false,
-                            daysOfWeek: daysArray,
-                            groupId: Math.floor(Math.random() * 1000),
-                            extendedProps: {
-                              stream: parseInt(streamID, 10) || 1,
-                            },
-                          },
-                          {
-                            title: this.props.event.title,
-                            start: this.props.event.start,
-                            end: this.props.event.end,
-                            allDay: this.props.event.allDay,
-                            extendedProps: {
-                              stream: this.props.event.extendedProps.stream,
-                            },
-                          }
-                        );
-                      } else {
-                        onSubmitEvent(
-                          {
-                            title: title || "New Event",
-                            startRecur:
-                              new Date(startDate + "T" + startTime) ||
-                              new Date(),
-                            endRecur:
-                              new Date(endDate + "T" + endTime) || new Date(),
-                            allDay: allDay,
-                            daysOfWeek: daysArray,
-                            groupId: Math.floor(Math.random() * 1000),
-                            extendedProps: {
-                              stream: parseInt(streamID, 10) || 1,
-                            },
-                          },
-                          {
-                            title: this.props.event.title,
-                            start: this.props.event.start,
-                            end: this.props.event.end,
-                            allDay: this.props.event.allDay,
-                            extendedProps: {
-                              stream: this.props.event.extendedProps.stream,
-                            },
-                          }
-                        );
-                      }
-                    }
+                    );
                   }
                   onClose();
                 }}
@@ -522,16 +410,7 @@ class CreateEventOptions extends Component {
                   type="submit"
                   onClick={() => {
                     onSubmitEvent(
-                      {
-                        title: title || "New Event",
-                        start:
-                          new Date(startDate + "T" + startTime) || new Date(),
-                        end: new Date(endDate + "T" + endTime) || new Date(),
-                        allDay: allDay || false,
-                        extendedProps: {
-                          stream: parseInt(streamID, 10) || 1,
-                        },
-                      },
+                      this.newEvent(),
                       {
                         title: this.props.event.title,
                         start: this.props.event.start,
