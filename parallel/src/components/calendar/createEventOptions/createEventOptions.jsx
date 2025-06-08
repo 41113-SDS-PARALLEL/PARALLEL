@@ -139,6 +139,11 @@ class CreateEventOptions extends Component {
   }
 
   checkInput() {
+    const {
+      recurring,
+      days,
+      test,
+    } = this.state;
     if (
       this.state.startDate |
       this.state.endDate |
@@ -151,13 +156,26 @@ class CreateEventOptions extends Component {
       new Date(this.state.endDate + "T" + this.state.endTime)
     )
       this.setState({ badInput: true });
-    // else if (
-    //   recurring == true && (!mon && !tue && !wed && !thu && !fri && !sat && !sun)
-    // ) this.setState({ badInput: true });
+    else if ( recurring == true ) {
+      let pass = false;
+      for (let i = 0; i < this.state.test.length; i++) {
+        if (days[test[i]]) {
+          this.setState({ badInput: false });
+          pass = true;
+          break;
+        }
+      }
+      if (!pass) this.setState({ badInput: true });
+    }
     else this.setState({ badInput: false });
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const {
+      recurring,
+      days,
+      test,
+    } = this.state;
     if (
       new Date(this.state.startDate + "T" + this.state.startTime).toString() !==
       new Date(prevState.startDate + "T" + prevState.startTime).toString()
@@ -168,7 +186,8 @@ class CreateEventOptions extends Component {
       new Date(prevState.endDate + "T" + prevState.endTime).toString()
     )
       this.checkInput();
-    //Add checking for change in recurring variables after a better way of storing them is developed
+    if (recurring != prevState.recurring)
+      this.checkInput();
   }
 
   newEvent() {
@@ -395,7 +414,7 @@ class CreateEventOptions extends Component {
                           id={day}
                           name="Day"
                           checked={days[day]}
-                          onChange={(e) => {days[day] = !days[day]; this.forceUpdate()}}
+                          onChange={(e) => {days[day] = !days[day]; this.checkInput(); this.forceUpdate()}}
                       />
                     </label>
                   </div>
