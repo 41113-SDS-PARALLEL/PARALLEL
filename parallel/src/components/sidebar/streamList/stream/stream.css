@@ -1,0 +1,36 @@
+:root {
+    --list-element-height: 1.3rem;
+}
+
+.stream-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.stream-list-input {
+    height: var(--list-element-height);
+    width: var(--list-element-height);
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.stream-list-radio-border {
+    border-radius: 50%;
+    border: 2px solid transparent;
+}
+
+.stream-name {
+    overflow-x: hidden;
+    flex-grow: 1;
+}
+
+.stream-list-options-button {
+    height: 140%;
+}
+
+.stream-list-options-icon {
+    height: calc(var(--list-element-height) - 0.2rem);
+}

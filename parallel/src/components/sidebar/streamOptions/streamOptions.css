@@ -1,0 +1,80 @@
+:root {
+  --delete-button-color: #bd0000;
+}
+
+.stream-options-popup {
+  max-width: 8rem;
+}
+
+.stream-options-header {
+  height: 2rem;
+  border-bottom: 1px solid var(--content-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stream-name-input {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 2px;
+  border-radius: var(--radius);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background-color: var(--gray);
+  box-sizing: border-box;
+}
+
+.stream-name {
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.edit-stream-name-button {
+  height: 100%;
+}
+
+.edit-icon {
+  height: 1rem;
+}
+
+.stream-color-grid {
+  display: grid;
+  align-items: center;
+  justify-content: space-between;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.stream-color-button {
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+}
+
+.stream-color-button:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+.stream-options-actions button {
+  width: 100%;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--content-color);
+}
+
+.stream-options-actions button:hover {
+  background-color: light-dark(#4c4c4c50, #bababa50);
+}
+
+.delete-button:hover {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+.delete-button:hover {
+  color: var(--delete-button-color);
+}

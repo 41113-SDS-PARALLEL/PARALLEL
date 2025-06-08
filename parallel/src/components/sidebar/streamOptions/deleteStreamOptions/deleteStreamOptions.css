@@ -1,0 +1,3 @@
+.delete-stream-button:not(:disabled):hover {
+    color: var(--delete-button-color);
+}

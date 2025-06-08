@@ -1,0 +1,110 @@
+.calendar-container {
+    height: 100%;
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    
+    --fc-border-color: var(--gray);
+    --fc-today-bg-color: transparent;
+    --fc-page-bg-color: transparent;
+    --fc-now-indicator-color: var(--theme-color);
+}
+
+.calendar-container .fc {
+    height: 100%;
+}
+
+.calendar-container .fc-timegrid-slot-minor {
+    border-top: none;
+}
+
+.calendar-container .fc-scrollgrid {
+    background-color: light-dark(#f3f3f3, black);
+}
+
+.calendar-container .fc-daygrid-event {
+    color: var(--content-color);
+}
+
+.calendar-container .fc-timegrid-now-indicator-line {
+    border-width: 2px;
+    border-radius: var(--radius);
+}
+
+.calendar-container.month-view .fc-daygrid-day.fc-day-today {
+    background: var(--faded-theme-color);
+}
+
+.main-calendar {
+    border-top-left-radius: var(--radius);
+    overflow: hidden;
+    flex: 1 1 0;
+}
+
+.main-calendar table {
+    border-top-left-radius: var(--radius);
+}
+
+.split-calendar-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.split-calendar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex: 1 1 0;
+    min-height: 0;
+    border-bottom: 3px solid var(--gray);
+}
+
+.split-calendar table {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.split-calendar > .fc {
+    flex: 1 1 0;
+}
+
+.stream-header {
+    writing-mode: sideways-lr;
+    text-align: center;
+    min-width: 2.5rem;
+    max-width: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0;
+    overflow: hidden;
+}
+
+.calendar-header-container {
+    height: 4.5rem;
+    overflow: hidden;
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border-bottom: 3px solid var(--gray);
+}
+
+.date-calendar .fc-col-header-cell.fc-day-today {
+    background: var(--theme-color); 
+}
+
+.editing-times-calendar {
+    --fc-today-bg-color: none;
+    --fc-bg-event-opacity: 0.8;
+}
+
+.fc-event.task-event .fc-daygrid-event-dot {
+  display: none !important;
+}
+
+.fc-event:not(.task-event):hover {
+  cursor: pointer;
+}
