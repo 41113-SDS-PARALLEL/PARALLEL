@@ -35,8 +35,11 @@ class CreateEventOptions extends Component {
           ? formatDateTimeLocal(this.props.end).substring(11)
           : null,
         allDay: this.props.allDay ? this.props.allDay : false,
+        recurring: false,
         type: false,
+        badInput: true,
         days: {
+          id: "Day",
           mon: false,
           tue: false,
           wed: false,
@@ -52,22 +55,20 @@ class CreateEventOptions extends Component {
       if (this.props.event.groupId) { //Editing a recurring event
         for (let i = 0; i < this.props.events.length; i++) {
           if (this.props.events[i].groupId == this.props.event.groupId) {
-            // console.lo
+            console.log(this.props.events)
             this.state = {
               title: this.props.event.title,
               streamID: this.props.event.extendedProps.stream,
-              startDate: formatDateTimeLocal(
-                this.props.events[i].startRecur
-              ).substring(0, 10),
-              endDate: formatDateTimeLocal(
-                this.props.events[i].endRecur
-              ).substring(0, 10),
-              startTime: this.props.events[i].startTime ? this.props.events[i].startTime : "00:00:00",
-              endTime: this.props.events[i].endTime ? this.props.events[i].endTime : "00:00:00",
+              startDate: this.props.events[i].startRecur.substring(0, 10),
+              endDate: this.props.events[i].endRecur.substring(0, 10),
+              startTime: this.props.events[i].startTime ? this.props.events[i].startTime.substring(0, 5) : "00:00",
+              endTime: this.props.events[i].endTime ? this.props.events[i].endTime.substring(0, 5) : "00:00",
               allDay: this.props.event.allDay,
               recurring: true,
               type: true,
+              badInput: false,
               days: {
+                id: "Day",
                 mon: this.props.events[i].daysOfWeek.includes(1),
                 tue: this.props.events[i].daysOfWeek.includes(2),
                 wed: this.props.events[i].daysOfWeek.includes(3),
@@ -82,6 +83,7 @@ class CreateEventOptions extends Component {
           }
         }
       } else { //Editing a non-recurring event
+        console.log(this.props.events)
         this.state = {
           title: this.props.event.title,
           streamID: this.props.event.extendedProps.stream,
@@ -98,8 +100,11 @@ class CreateEventOptions extends Component {
             ? formatDateTimeLocal(this.props.event.end).substring(11)
             : null,
           allDay: this.props.event.allDay,
+          recurring: false,
           type: true,
+          badInput: false,
           days: {
+            id: "Day",
             mon: false,
             tue: false,
             wed: false,
@@ -182,9 +187,8 @@ class CreateEventOptions extends Component {
     if (!recurring) { // Non-Recurring Event
       return {
         title: title || "New Event",
-        start:
-          new Date(startDate + "T" + startTime) || new Date(),
-        end: new Date(endDate + "T" + endTime) || new Date(),
+        start: startDate + "T" + startTime || new Date(),
+        end: endDate + "T" + endTime || new Date(),
         allDay: allDay || false,
         extendedProps: {
           stream: parseInt(streamID, 10) || 1,
@@ -198,17 +202,16 @@ class CreateEventOptions extends Component {
       }
       if (days["sun"])
         daysArray.push(0);
-      console.log(daysArray)
       if (!allDay) { // Non All Day Recurring Event
         return {
           title: title || "New Event",
           startTime: startTime + ":00" || null,
           endTime: endTime + ":00" || null,
           startRecur:
-            new Date(startDate + "T" + startTime) ||
+            startDate + "T" + startTime ||
             new Date(),
           endRecur:
-            new Date(endDate + "T" + endTime) || new Date(),
+            endDate + "T" + endTime || new Date(),
           allDay: allDay || false,
           daysOfWeek: daysArray,
           groupId: Math.floor(Math.random() * 100),
@@ -220,9 +223,9 @@ class CreateEventOptions extends Component {
         return {
           title: title || "New Event",
           startRecur:
-            new Date(startDate + "T" + startTime) || new Date(),
+            startDate + "T" + startTime || new Date(),
           endRecur:
-            new Date(endDate + "T" + endTime) || new Date(),
+            endDate + "T" + endTime || new Date(),
           allDay: allDay,
           daysOfWeek: daysArray,
           groupId: Math.floor(Math.random() * 100),
@@ -231,6 +234,31 @@ class CreateEventOptions extends Component {
           },
         }
       }
+    }
+  }
+
+  oldEvent() {
+    if (!this.state.recurring) { // Non-Recurring Event
+      return {
+        title: this.props.event.title,
+        start: this.props.event.start,
+        end: this.props.event.end,
+        allDay: this.props.event.allDay,
+        extendedProps: {
+          stream: this.props.event.extendedProps.stream,
+        },
+      };
+    } else {
+      return {
+        groupId: this.props.event.groupId,
+        title: this.props.event.title,
+        start: this.props.event.start,
+        end: this.props.event.end,
+        allDay: this.props.event.allDay,
+        extendedProps: {
+          stream: this.props.event.extendedProps.stream,
+        },
+      };
     }
   }
 
@@ -380,22 +408,13 @@ class CreateEventOptions extends Component {
                 type="submit"
                 disabled={badInput}
                 onClick={() => {
-                  console.log(days)
                   if (!type) { //Create event
                     console.log(this.state);
                     onSubmitEvent(this.newEvent())
                   } else { // Edit event
                     onSubmitEvent(
                       this.newEvent(),
-                      {
-                        title: this.props.event.title,
-                        start: this.props.event.start,
-                        end: this.props.event.end,
-                        allDay: this.props.event.allDay,
-                        extendedProps: {
-                          stream: this.props.event.extendedProps.stream,
-                        },
-                      }
+                      this.oldEvent()
                     );
                   }
                   onClose();
@@ -411,15 +430,7 @@ class CreateEventOptions extends Component {
                   onClick={() => {
                     onSubmitEvent(
                       this.newEvent(),
-                      {
-                        title: this.props.event.title,
-                        start: this.props.event.start,
-                        end: this.props.event.end,
-                        allDay: this.props.event.allDay,
-                        extendedProps: {
-                          stream: this.props.event.extendedProps.stream,
-                        },
-                      },
+                      this.oldEvent(),
                       true
                     );
                     onClose();
