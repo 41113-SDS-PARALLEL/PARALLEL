@@ -18,7 +18,8 @@ class CreateEventOptions extends Component {
       return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
     };
 
-    if (this.props.eventOptionType == "Create") { //Create event
+    if (this.props.eventOptionType == "Create") {
+      //Create event
       this.state = {
         streamID:
           this.props.stream || (streams.length > 0 ? streams[0].id : null),
@@ -50,19 +51,21 @@ class CreateEventOptions extends Component {
         },
         test: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
       };
-    } else { //Edit event
-      console.log(this.props.event);
-      if (this.props.event.groupId) { //Editing a recurring event
+    } else {
+      if (this.props.event.groupId) {
         for (let i = 0; i < this.props.events.length; i++) {
           if (this.props.events[i].groupId == this.props.event.groupId) {
-            console.log(this.props.events)
             this.state = {
               title: this.props.event.title,
               streamID: this.props.event.extendedProps.stream,
               startDate: this.props.events[i].startRecur.substring(0, 10),
               endDate: this.props.events[i].endRecur.substring(0, 10),
-              startTime: this.props.events[i].startTime ? this.props.events[i].startTime.substring(0, 5) : "00:00",
-              endTime: this.props.events[i].endTime ? this.props.events[i].endTime.substring(0, 5) : "00:00",
+              startTime: this.props.events[i].startTime
+                ? this.props.events[i].startTime.substring(0, 5)
+                : "00:00",
+              endTime: this.props.events[i].endTime
+                ? this.props.events[i].endTime.substring(0, 5)
+                : "00:00",
               allDay: this.props.event.allDay,
               recurring: true,
               type: true,
@@ -82,8 +85,8 @@ class CreateEventOptions extends Component {
             break;
           }
         }
-      } else { //Editing a non-recurring event
-        console.log(this.props.events)
+      } else {
+        //Editing a non-recurring event
         this.state = {
           title: this.props.event.title,
           streamID: this.props.event.extendedProps.stream,
@@ -139,11 +142,7 @@ class CreateEventOptions extends Component {
   }
 
   checkInput() {
-    const {
-      recurring,
-      days,
-      test,
-    } = this.state;
+    const { recurring, days, test } = this.state;
     if (
       this.state.startDate |
       this.state.endDate |
@@ -156,7 +155,7 @@ class CreateEventOptions extends Component {
       new Date(this.state.endDate + "T" + this.state.endTime)
     )
       this.setState({ badInput: true });
-    else if ( recurring == true ) {
+    else if (recurring == true) {
       let pass = false;
       for (let i = 0; i < this.state.test.length; i++) {
         if (days[test[i]]) {
@@ -166,16 +165,11 @@ class CreateEventOptions extends Component {
         }
       }
       if (!pass) this.setState({ badInput: true });
-    }
-    else this.setState({ badInput: false });
+    } else this.setState({ badInput: false });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const {
-      recurring,
-      days,
-      test,
-    } = this.state;
+    const { recurring, days, test } = this.state;
     if (
       new Date(this.state.startDate + "T" + this.state.startTime).toString() !==
       new Date(prevState.startDate + "T" + prevState.startTime).toString()
@@ -186,8 +180,7 @@ class CreateEventOptions extends Component {
       new Date(prevState.endDate + "T" + prevState.endTime).toString()
     )
       this.checkInput();
-    if (recurring != prevState.recurring)
-      this.checkInput();
+    if (recurring != prevState.recurring) this.checkInput();
   }
 
   newEvent() {
@@ -203,8 +196,19 @@ class CreateEventOptions extends Component {
       days,
       test,
     } = this.state;
-    if (!recurring) { // Non-Recurring Event
+    if (!recurring) {
+      // Non-Recurring Event
       return {
+        id: (() => {
+          const { events } = this.props;
+          if (events.length === 0) return 1;
+          const usedIds = new Set(events.map((event) => event.id));
+          let nextId = 1;
+          while (usedIds.has(nextId)) {
+            nextId++;
+          }
+          return nextId;
+        })(),
         title: title || "New Event",
         start: startDate + "T" + startTime || new Date(),
         end: endDate + "T" + endTime || new Date(),
@@ -215,50 +219,47 @@ class CreateEventOptions extends Component {
       };
     } else {
       let daysArray = [];
-      for (let i = 0; i < test.length-1; i++) {
-        if (days[test[i]]) 
-          daysArray.push(i+1);
+      for (let i = 0; i < test.length - 1; i++) {
+        if (days[test[i]]) daysArray.push(i + 1);
       }
-      if (days["sun"])
-        daysArray.push(0);
-      if (!allDay) { // Non All Day Recurring Event
+      if (days["sun"]) daysArray.push(0);
+      if (!allDay) {
+        // Non All Day Recurring Event
         return {
           title: title || "New Event",
           startTime: startTime + ":00" || null,
           endTime: endTime + ":00" || null,
-          startRecur:
-            startDate + "T" + startTime ||
-            new Date(),
-          endRecur:
-            endDate + "T" + endTime || new Date(),
+          startRecur: startDate + "T" + startTime || new Date(),
+          endRecur: endDate + "T" + endTime || new Date(),
           allDay: allDay || false,
           daysOfWeek: daysArray,
           groupId: Math.floor(Math.random() * 100),
           extendedProps: {
             stream: parseInt(streamID, 10) || 1,
-          }
+          },
         };
-      } else { // All Day Recurring Event
+      } else {
+        // All Day Recurring Event
         return {
           title: title || "New Event",
-          startRecur:
-            startDate + "T" + startTime || new Date(),
-          endRecur:
-            endDate + "T" + endTime || new Date(),
+          startRecur: startDate + "T" + startTime || new Date(),
+          endRecur: endDate + "T" + endTime || new Date(),
           allDay: allDay,
           daysOfWeek: daysArray,
           groupId: Math.floor(Math.random() * 100),
           extendedProps: {
             stream: parseInt(streamID, 10) || 1,
           },
-        }
+        };
       }
     }
   }
 
   oldEvent() {
-    if (!this.state.recurring) { // Non-Recurring Event
+    if (!this.state.recurring) {
+      // Non-Recurring Event
       return {
+        id: parseInt(this.props.event.id, 10),
         title: this.props.event.title,
         start: this.props.event.start,
         end: this.props.event.end,
@@ -282,7 +283,8 @@ class CreateEventOptions extends Component {
   }
 
   render() {
-    const { onClose, onSubmitEvent, streams, eventOptionType } = this.props;
+    const { onClose, onSubmitEvent, streams, eventOptionType, onDeleteEvent } =
+      this.props;
     const {
       title,
       startDate,
@@ -397,24 +399,25 @@ class CreateEventOptions extends Component {
                 name="recurring"
                 value={recurring}
                 checked={recurring}
-                onChange={(e) =>
-                  this.setState({ recurring: !recurring })
-                }
+                onChange={(e) => this.setState({ recurring: !recurring })}
               />
             </label>
             {recurring && (
               <div className="recurring-day-select-container">
-                {
-                test.map((day) => (
-                  <div>
+                {test.map((day, idx) => (
+                  <div key={idx}>
                     <label className="recurring-day-select">
-                    {day.replace(/\b\w/, (c) => c.toUpperCase())}
+                      {day.replace(/\b\w/, (c) => c.toUpperCase())}
                       <input
-                          type="checkbox"
-                          id={day}
-                          name="Day"
-                          checked={days[day]}
-                          onChange={(e) => {days[day] = !days[day]; this.checkInput(); this.forceUpdate()}}
+                        type="checkbox"
+                        id={day}
+                        name="Day"
+                        checked={days[day]}
+                        onChange={(e) => {
+                          days[day] = !days[day];
+                          this.checkInput();
+                          this.forceUpdate();
+                        }}
                       />
                     </label>
                   </div>
@@ -427,14 +430,12 @@ class CreateEventOptions extends Component {
                 type="submit"
                 disabled={badInput}
                 onClick={() => {
-                  if (!type) { //Create event
-                    console.log(this.state);
-                    onSubmitEvent(this.newEvent())
-                  } else { // Edit event
-                    onSubmitEvent(
-                      this.newEvent(),
-                      this.oldEvent()
-                    );
+                  if (!type) {
+                    //Create event
+                    onSubmitEvent(this.newEvent());
+                  } else {
+                    // Edit event
+                    onSubmitEvent(this.newEvent(), this.oldEvent());
                   }
                   onClose();
                 }}
@@ -447,11 +448,8 @@ class CreateEventOptions extends Component {
                   id="submit"
                   type="submit"
                   onClick={() => {
-                    onSubmitEvent(
-                      this.newEvent(),
-                      this.oldEvent(),
-                      true
-                    );
+                    // onSubmitEvent(this.newEvent(), this.oldEvent(), true);
+                    onDeleteEvent(this.oldEvent());
                     onClose();
                   }}
                 >

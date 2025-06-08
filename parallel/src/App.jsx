@@ -18,79 +18,14 @@ class App extends Component {
       streams: JSON.parse(localStorage.getItem("streams")) || [
         {
           id: 1,
-          name: "Work",
+          name: "Personal",
           color: "#B4415A",
           selected: true,
-          timePeriods: [
-            { day: 1, startTime: "09:00", endTime: "17:00" },
-            { day: 3, startTime: "13:00", endTime: "17:00" },
-          ],
-        },
-        {
-          id: 2,
-          name: "University",
-          color: "#DB7C41",
-          selected: true,
-          timePeriods: [
-            { day: 2, startTime: "10:00", endTime: "12:00" },
-            { day: 4, startTime: "14:00", endTime: "16:00" },
-          ],
-        },
-        {
-          id: 3,
-          name: "Personal",
-          color: "#E9E985",
-          selected: true,
-          timePeriods: [
-            { day: 0, startTime: "08:00", endTime: "10:00" },
-            { day: 5, startTime: "18:00", endTime: "20:00" },
-          ],
+          timePeriods: [],
         },
       ],
-      events: JSON.parse(localStorage.getItem("events")) || [
-        {
-          title: "Meeting",
-          start: new Date(2025, 5, 5, 0, 30),
-          end: new Date(2025, 5, 5, 11, 30),
-          extendedProps: { stream: 1 },
-        },
-        {
-          title: "Conference",
-          start: new Date(2025, 5, 4, 11, 0),
-          end: new Date(2025, 5, 4, 11, 30),
-          extendedProps: { stream: 1 },
-        },
-        {
-          title: "Lecture",
-          start: new Date(2025, 5, 5, 17, 30),
-          end: new Date(2025, 5, 5, 19, 30),
-          extendedProps: { stream: 2 },
-        },
-        {
-          title: "Dinner",
-          start: new Date(2025, 5, 6, 19, 0),
-          end: new Date(2025, 5, 6, 20, 30),
-          extendedProps: { stream: 3 },
-        },
-        {
-          title: "Canyoning",
-          start: new Date(2025, 4, 24),
-          allDay: true,
-          extendedProps: { stream: 3 },
-        },
-      ],
-      tasks: JSON.parse(localStorage.getItem("tasks")) || [
-        {
-          title: "Gym",
-          duration: 60,
-          stream: 3,
-        },
-        {
-          title: "Assignment",
-          duration: 180,
-          stream: 2,
-        },
-      ],
+      events: JSON.parse(localStorage.getItem("events")) || [],
+      tasks: JSON.parse(localStorage.getItem("tasks")) || [],
       taskEvents: [],
       calendarTitle: "",
       colors: [
@@ -114,22 +49,6 @@ class App extends Component {
       creatingTask: false,
     };
   }
-
-  state = {
-    calendarTitle: null,
-    colors: null,
-    splitView: false,
-    editingStreamTimes: false,
-    selectedEditingStream: null,
-    erasingStreamTimes: false,
-    streams: null,
-    events: null,
-    tasks: null,
-    taskEvents: [],
-    creatingEvent: false,
-    eventOptionType: null,
-    creatingTask: false,
-  };
 
   mainCalendarRef = createRef();
   headerCalendarRef = createRef();
@@ -177,6 +96,9 @@ class App extends Component {
     }
     if (prevState.events !== this.state.events) {
       localStorage.setItem("events", JSON.stringify(this.state.events));
+    }
+    if (prevState.tasks !== this.state.tasks) {
+      localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
     }
   }
 
@@ -301,27 +223,46 @@ class App extends Component {
               })
             }
             onDeleteStream={(streamID, eventTransferStreamID) => {
-              const events =
+              const { events, tasks } =
                 eventTransferStreamID === null
-                  ? this.state.events.filter(
-                      (event) => event.extendedProps.stream !== streamID
-                    )
-                  : this.state.events.map((event) =>
-                      event.extendedProps.stream === streamID
-                        ? {
-                            ...event,
-                            extendedProps: {
-                              ...event.extendedProps,
+                  ? {
+                      events: this.state.events.filter(
+                        (event) => event.extendedProps.stream !== streamID
+                      ),
+                      tasks: this.state.streams.filter(
+                        (tasks) => tasks.stream !== streamID
+                      ),
+                    }
+                  : {
+                      events: this.state.events.map((event) =>
+                        event.extendedProps.stream === streamID
+                          ? {
+                              ...event,
+                              extendedProps: {
+                                ...event.extendedProps,
+                                stream: eventTransferStreamID,
+                              },
+                            }
+                          : event
+                      ),
+                      tasks: this.state.tasks.map((task) =>
+                        task.stream === streamID
+                          ? {
+                              ...task,
                               stream: eventTransferStreamID,
-                            },
-                          }
-                        : event
-                    );
-              this.setState({ events });
+                            }
+                          : task
+                      ),
+                    };
               this.setState({
+                events: events,
                 streams: this.state.streams.filter(
                   (stream) => stream.id !== streamID
                 ),
+                taskEvents: this.state.taskEvents.filter(
+                  (taskEvents) => taskEvents.extendedProps.stream !== streamID
+                ),
+                tasks: tasks,
               });
             }}
             onEditStream={(id, newName, newColor) => {
@@ -380,7 +321,6 @@ class App extends Component {
             }}
             onCreateEvent={(type) => {
               this.setState({ eventOptionType: type });
-              console.log(this.state.eventOptionType);
               this.setState({ creatingEvent: true });
             }}
             onCreateTask={() => {
@@ -394,34 +334,42 @@ class App extends Component {
             onCloseCreateTaskOptions={() => {
               this.setState({ creatingTask: false });
             }}
-            onSubmitEvent={(newEvent, oldEvent, remove) => {
-              if (oldEvent == null) { // Create Event
+            onDeleteEvent={(event) => {
+              this.setState({
+                events: this.state.events.filter((e) => e.id !== event.id),
+              });
+            }}
+            onSubmitEvent={(newEvent, oldEvent) => {
+              if (oldEvent == null) {
+                // Create Event
                 this.setState({
                   events: [...this.state.events, newEvent],
                 });
-              } else { // Edit/Delete Event
-                if (oldEvent.groupId) { // Recurring Event
+              } else {
+                // Edit/Delete Event
+                if (oldEvent.groupId) {
+                  // Recurring Event
                   for (var i = 0; i < this.state.events.length; i++) {
                     if (this.state.events[i].groupId == oldEvent.groupId) {
                       this.state.events.splice(i, 1);
-                      if (!remove) {
-                        this.setState({
-                          events: [...this.state.events, newEvent],
-                        });
-                      }
+                      this.setState({
+                        events: [...this.state.events, newEvent],
+                      });
                       break;
                     }
                   }
-                } else { // Non-Recurring
+                } else {
+                  // Non-Recurring
                   for (var i = 0; i < this.state.events.length; i++) {
-                    console.log(new Date(this.state.events[i].start).toString().substring(0, 15))
-                    if (this.state.events[i].title == oldEvent.title && new Date(this.state.events[i].start).toString() == oldEvent.start.toString()) {
+                    if (
+                      this.state.events[i].title == oldEvent.title &&
+                      new Date(this.state.events[i].start).toString() ==
+                        oldEvent.start.toString()
+                    ) {
                       this.state.events.splice(i, 1);
-                      if (!remove) {
-                        this.setState({
-                          events: [...this.state.events, newEvent],
-                        });
-                      }
+                      this.setState({
+                        events: [...this.state.events, newEvent],
+                      });
                       break;
                     }
                   }
