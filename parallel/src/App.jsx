@@ -334,40 +334,45 @@ class App extends Component {
             onCloseCreateTaskOptions={() => {
               this.setState({ creatingTask: false });
             }}
-            onSubmitEvent={(newEvent, oldEvent, remove) => {
+            onDeleteEvent={(event) => {
+              this.setState({
+                events: this.state.events.filter((e) => e.id !== event.id),
+              });
+            }}
+            onSubmitEvent={(newEvent, oldEvent) => {
               if (oldEvent == null) {
+                // Create Event
                 this.setState({
                   events: [...this.state.events, newEvent],
                 });
               } else {
-                let matches = [];
-                for (var i = 0; i < this.state.events.length; i++) {
-                  if (this.state.events[i].title == oldEvent.title) {
-                    matches.push(i);
-                  }
-                }
-                for (var i = 0; i < matches.length; i++) {
-                  if (this.state.events[matches[i]].start == null) {
-                    this.state.events.splice(matches[i], 1);
-                    if (!remove) {
+                // Edit/Delete Event
+                if (oldEvent.groupId) {
+                  // Recurring Event
+                  for (var i = 0; i < this.state.events.length; i++) {
+                    if (this.state.events[i].groupId == oldEvent.groupId) {
+                      this.state.events.splice(i, 1);
                       this.setState({
                         events: [...this.state.events, newEvent],
                       });
+                      break;
                     }
-                    break;
                   }
-                  if (
-                    this.state.events[matches[i]].start.toString() !=
-                    oldEvent.start
-                  ) {
-                    matches.splice(i, 1);
+                } else {
+                  // Non-Recurring
+                  for (var i = 0; i < this.state.events.length; i++) {
+                    if (
+                      this.state.events[i].title == oldEvent.title &&
+                      new Date(this.state.events[i].start).toString() ==
+                        oldEvent.start.toString()
+                    ) {
+                      this.state.events.splice(i, 1);
+                      this.setState({
+                        events: [...this.state.events, newEvent],
+                      });
+                      break;
+                    }
                   }
-                }
-                this.state.events.splice(matches[0], 1);
-                if (!remove) {
-                  this.setState({
-                    events: [...this.state.events, newEvent],
-                  });
                 }
               }
             }}

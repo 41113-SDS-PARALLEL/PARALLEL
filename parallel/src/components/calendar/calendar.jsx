@@ -15,7 +15,6 @@ class Calendar extends Component {
     selectedStreamID: null,
     selectedAllDay: null,
     selectedEvent: null,
-    popupType: null,
   };
   splitScrollListeners = [];
   splitCalendarDomRefs = {};
@@ -402,6 +401,7 @@ class Calendar extends Component {
       events,
       onSubmitEvent,
       eventOptionType,
+      onDeleteEvent,
     } = this.props;
 
     return (
@@ -419,6 +419,7 @@ class Calendar extends Component {
         event={this.state.selectedEvent}
         eventOptionType={eventOptionType}
         events={events}
+        onDeleteEvent={onDeleteEvent}
       />
     );
   };
