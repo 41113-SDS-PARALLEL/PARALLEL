@@ -116,6 +116,7 @@ class StreamOptions extends Component {
                 onClose();
               }
             }}
+            disabled={streams.length === 1}
           >
             Delete Stream
           </button>
