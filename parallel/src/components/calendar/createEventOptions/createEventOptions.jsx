@@ -183,6 +183,17 @@ class CreateEventOptions extends Component {
     if (recurring != prevState.recurring) this.checkInput();
   }
 
+  nextGroupId() {
+    const { events } = this.props;
+    if (events.length === 0) return 1;
+    const usedIds = new Set(events.map((event) => event.groupId));
+    let nextId = 1;
+    while (usedIds.has(nextId)) {
+      nextId++;
+    }
+    return nextId;
+  }
+
   newEvent() {
     const {
       title,
@@ -233,7 +244,7 @@ class CreateEventOptions extends Component {
           endRecur: endDate + "T" + endTime || new Date(),
           allDay: allDay || false,
           daysOfWeek: daysArray,
-          groupId: Math.floor(Math.random() * 100),
+          groupId: this.nextGroupId(),
           extendedProps: {
             stream: parseInt(streamID, 10) || 1,
           },
@@ -246,7 +257,7 @@ class CreateEventOptions extends Component {
           endRecur: endDate + "T" + endTime || new Date(),
           allDay: allDay,
           daysOfWeek: daysArray,
-          groupId: Math.floor(Math.random() * 100),
+          groupId: this.nextGroupId(),
           extendedProps: {
             stream: parseInt(streamID, 10) || 1,
           },
@@ -270,7 +281,7 @@ class CreateEventOptions extends Component {
       };
     } else {
       return {
-        groupId: this.props.event.groupId,
+        groupId: parseInt(this.props.event.groupId, 10),
         title: this.props.event.title,
         start: this.props.event.start,
         end: this.props.event.end,

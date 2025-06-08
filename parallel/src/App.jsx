@@ -335,9 +335,17 @@ class App extends Component {
               this.setState({ creatingTask: false });
             }}
             onDeleteEvent={(event) => {
-              this.setState({
-                events: this.state.events.filter((e) => e.id !== event.id),
-              });
+              if (!event.groupId) {
+                this.setState({
+                  events: this.state.events.filter((e) => e.id !== event.id),
+                });
+              } else {
+                this.setState({
+                  events: this.state.events.filter(
+                    (e) => e.groupId !== event.groupId
+                  ),
+                });
+              }
             }}
             onSubmitEvent={(newEvent, oldEvent) => {
               if (oldEvent == null) {
